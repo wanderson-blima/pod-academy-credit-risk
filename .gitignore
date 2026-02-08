@@ -30,12 +30,25 @@ Thumbs.db
 
 # AIOS Framework & Agent Infrastructure (não é código do projeto)
 .agent/
+.aios/
 .aios-core/
 .antigravity/
 .claude/
 .env.example
+squads/
+docs/
 
-# Documentos internos do hackathon (apenas contexto local)
+# Documentos internos do hackathon (PDFs originais — apenas contexto local)
 0-docs/Parceria com a Oracle.pdf
 0-docs/prévia- Apresentação Hackthon 2025.pdf
 0-docs/Super Hackathon 2025 - PoD Academy \[Squads\].pdf
+
+# Handoffs de sessao AIOS (não fazem parte da entrega)
+0-docs/sessions/
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+# Windows artifacts
+nul
