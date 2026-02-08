@@ -14,6 +14,7 @@ Uso:
 import json
 import joblib
 import mlflow
+from mlflow.tracking import MlflowClient
 from datetime import datetime
 from pathlib import Path
 import numpy as np
@@ -111,21 +112,73 @@ def export_model(pipeline, model_name, X_test, y_test, feature_names, metrics_di
         mlflow.log_artifact(pkl_path)
         mlflow.log_artifact(metadata_path)
 
-        # Log model
+        # Log model + register
+        registered_name = f"credit-risk-fpd-{model_name}"
         mlflow.sklearn.log_model(
             pipeline,
             artifact_path="model",
-            registered_model_name=f"credit-risk-fpd-{model_name}"
+            registered_model_name=registered_name,
         )
 
         run_id = mlflow.active_run().info.run_id
         print(f"MLflow Run ID: {run_id}")
 
+    # =========================================================================
+    # 4. Transicionar para Staging + adicionar descricao
+    # =========================================================================
+    client = MlflowClient()
+    versions = client.get_latest_versions(registered_name, stages=["None"])
+    if versions:
+        version = versions[0].version
+        client.transition_model_version_stage(
+            name=registered_name,
+            version=version,
+            stage="Staging",
+        )
+        desc_parts = [f"FPD model — {len(feature_names)} features"]
+        if metrics_dict:
+            for k, v in metrics_dict.items():
+                if isinstance(v, (int, float)) and not np.isnan(v):
+                    desc_parts.append(f"{k}: {v:.3f}")
+        client.update_model_version(
+            name=registered_name,
+            version=version,
+            description=", ".join(desc_parts),
+        )
+        print(f"Modelo {registered_name} v{version} transicionado para Staging")
+
     return {
         "pkl_path": pkl_path,
         "metadata_path": metadata_path,
-        "mlflow_run_id": run_id
+        "mlflow_run_id": run_id,
+        "registered_name": registered_name,
     }
+
+
+def promote_to_production(model_name, version=None):
+    """Promove modelo de Staging para Production.
+
+    Args:
+        model_name: Nome registrado no MLflow (e.g., 'credit-risk-fpd-lgbm_baseline').
+        version: Versao especifica. Se None, usa a ultima em Staging.
+
+    Returns:
+        str: Versao promovida.
+    """
+    client = MlflowClient()
+    if version is None:
+        versions = client.get_latest_versions(model_name, stages=["Staging"])
+        if not versions:
+            raise RuntimeError(f"Nenhuma versao em Staging para '{model_name}'")
+        version = versions[0].version
+
+    client.transition_model_version_stage(
+        name=model_name,
+        version=version,
+        stage="Production",
+    )
+    print(f"Modelo {model_name} v{version} promovido para Production")
+    return version
 
 
 # =============================================================================
