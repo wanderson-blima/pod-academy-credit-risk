@@ -22,6 +22,7 @@ import mlflow
 from mlflow.tracking import MlflowClient
 from scipy.stats import ks_2samp
 from sklearn.metrics import roc_auc_score
+from pyspark.sql import functions as F
 
 import sys; sys.path.insert(0, "/lakehouse/default/Files/projeto-final")
 from config.pipeline_config import (
@@ -177,11 +178,11 @@ def run_monitoring(spark):
     # -------------------------------------------------------------------------
     # 2. Carregar dados baseline e atual
     # -------------------------------------------------------------------------
-    baseline_list = ", ".join(str(s) for s in BASELINE_SAFRAS)
+    # C1: Use parametrized F.col() API instead of f-string SQL (defense-in-depth)
     df_baseline = spark.read.format("delta").load(PATH_FEATURE_STORE) \
-        .filter(f"SAFRA IN ({baseline_list})")
+        .filter(F.col("SAFRA").isin(BASELINE_SAFRAS))
     df_current = spark.read.format("delta").load(PATH_FEATURE_STORE) \
-        .filter(f"SAFRA = {MONITOR_SAFRA}")
+        .filter(F.col("SAFRA") == MONITOR_SAFRA)
 
     n_baseline = df_baseline.count()
     n_current = df_current.count()
@@ -304,12 +305,14 @@ def run_monitoring(spark):
     perf_drift = {}
 
     if "FPD" in pdf_current.columns:
-        y_current = pdf_current["FPD"].values
-        mask = ~np.isnan(y_current.astype(float))
+        # H4: Use pd.to_numeric(errors="coerce") instead of astype(float)
+        # to handle string FPD values gracefully (converts non-numeric to NaN)
+        y_current = pd.to_numeric(pdf_current["FPD"], errors="coerce").values
+        mask = ~np.isnan(y_current)
 
         # M3: Validar que FPD contem apenas valores binarios {0, 1}
         if mask.sum() > 0:
-            fpd_unique = set(np.unique(y_current[mask].astype(float)))
+            fpd_unique = set(np.unique(y_current[mask]))
             unexpected_vals = fpd_unique - {0.0, 1.0}
             if unexpected_vals:
                 logger.warning(
@@ -332,8 +335,9 @@ def run_monitoring(spark):
             }
 
             # Calcular metricas baseline para comparacao
-            y_baseline = pdf_baseline["FPD"].values
-            mask_bl = ~np.isnan(y_baseline.astype(float))
+            # H4: Use pd.to_numeric(errors="coerce") for baseline FPD as well
+            y_baseline = pd.to_numeric(pdf_baseline["FPD"], errors="coerce").values
+            mask_bl = ~np.isnan(y_baseline)
             if mask_bl.sum() > 100 and len(np.unique(y_baseline[mask_bl])) >= 2:
                 baseline_ks = ks_stat(y_baseline[mask_bl], scores_baseline[mask_bl])
                 baseline_auc = roc_auc_score(y_baseline[mask_bl], scores_baseline[mask_bl])

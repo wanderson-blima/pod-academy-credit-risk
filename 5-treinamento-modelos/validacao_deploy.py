@@ -21,6 +21,7 @@ import mlflow
 from mlflow.tracking import MlflowClient
 from scipy.stats import ks_2samp
 from sklearn.metrics import roc_auc_score
+from pyspark.sql import functions as F
 
 import sys; sys.path.insert(0, "/lakehouse/default/Files/projeto-final")
 from config.pipeline_config import (
@@ -114,8 +115,9 @@ def validate_deploy(spark):
     # -------------------------------------------------------------------------
     # 3. Carregar dados OOS e predizer
     # -------------------------------------------------------------------------
+    # C1: Use parametrized F.col() API instead of f-string SQL (defense-in-depth)
     df = spark.read.format("delta").load(PATH_FEATURE_STORE) \
-        .filter(f"SAFRA = {VALIDATION_SAFRA}")
+        .filter(F.col("SAFRA") == VALIDATION_SAFRA)
 
     n_records = df.count()
     logger.info("Registros SAFRA %d: %d", VALIDATION_SAFRA, n_records)
@@ -133,18 +135,20 @@ def validate_deploy(spark):
 
     df_pd = df.select(["FPD"] + feature_names).toPandas()
 
-    # H2: Validate FPD is binary {0,1} and not all null
-    y_true = df_pd["FPD"].values
-    if pd.isna(y_true).all():
+    # H2+H4: Validate FPD is binary {0,1} and not all null
+    # H4: Use pd.to_numeric(errors="coerce") to handle string FPD values gracefully
+    y_true = pd.to_numeric(df_pd["FPD"], errors="coerce").values
+    if np.isnan(y_true).all():
         raise RuntimeError("FPD e inteiramente nulo — impossivel validar modelo")
-    fpd_unique = set(pd.Series(y_true).dropna().unique())
+    fpd_unique = set(np.unique(y_true[~np.isnan(y_true)]))
     if not fpd_unique.issubset({0, 1, 0.0, 1.0}):
         raise RuntimeError(
             f"FPD contem valores nao-binarios: {fpd_unique - {0, 1, 0.0, 1.0}} — "
             "esperado apenas {{0, 1}}"
         )
 
-    X = df_pd[feature_names]
+    # H1: .copy() to avoid SettingWithCopyWarning when modifying with fillna
+    X = df_pd[feature_names].copy()
 
     # M3: fillna strategy — numeric columns filled with 0 (neutral value for tree-based
     # models and does not shift distributions significantly); categorical/string columns
