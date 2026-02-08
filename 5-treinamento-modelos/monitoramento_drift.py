@@ -11,6 +11,7 @@ Uso:
     Ajustar MONITOR_SAFRA antes de executar.
 """
 
+import glob
 import logging
 import json
 from datetime import datetime
@@ -70,6 +71,7 @@ def calculate_psi(expected, actual, n_bins=10):
 
     Returns:
         float: PSI value. < 0.10 = estavel, 0.10-0.25 = atencao, > 0.25 = instavel.
+               Returns NaN if bins collapse below 3 (e.g., zero-inflated features).
     """
     if len(expected) == 0 or len(actual) == 0:
         return np.nan
@@ -77,15 +79,25 @@ def calculate_psi(expected, actual, n_bins=10):
     breakpoints = np.percentile(expected, np.linspace(0, 100, n_bins + 1))
     breakpoints[0] = -np.inf
     breakpoints[-1] = np.inf
-    # Remover breakpoints duplicados
+    # Remover breakpoints duplicados (pode ocorrer em features zero-inflated)
     breakpoints = np.unique(breakpoints)
+
+    # C5: Se bins colapsaram demais, PSI nao e confiavel — retornar NaN
+    if len(breakpoints) < 3:
+        logger.warning(
+            "PSI: breakpoints colapsaram para %d valores unicos (minimo 3 necessarios). "
+            "Feature provavelmente zero-inflated ou constante. Retornando NaN.",
+            len(breakpoints),
+        )
+        return np.nan
 
     expected_percents = np.histogram(expected, breakpoints)[0] / len(expected)
     actual_percents = np.histogram(actual, breakpoints)[0] / len(actual)
 
-    # Clip para evitar divisao por zero e log(0)
-    expected_percents = np.clip(expected_percents, 0.001, None)
-    actual_percents = np.clip(actual_percents, 0.001, None)
+    # Clip para evitar divisao por zero e log(0).
+    # Usa 0.0001 (H2: 0.001 era agressivo demais — inflava bins com poucos samples em 100x).
+    expected_percents = np.clip(expected_percents, 0.0001, None)
+    actual_percents = np.clip(actual_percents, 0.0001, None)
 
     psi = np.sum((actual_percents - expected_percents) *
                  np.log(actual_percents / expected_percents))
@@ -132,6 +144,14 @@ def run_monitoring(spark):
     logger.info("=== Monitoramento de Drift ===")
     logger.info("Baseline: %s | Monitor: %d", BASELINE_SAFRAS, MONITOR_SAFRA)
 
+    # H4: Validar que SAFRA de monitoramento nao esta nas SAFRAs de baseline
+    if MONITOR_SAFRA in BASELINE_SAFRAS:
+        raise ValueError(
+            f"MONITOR_SAFRA ({MONITOR_SAFRA}) esta contida em BASELINE_SAFRAS "
+            f"({BASELINE_SAFRAS}). O monitoramento deve comparar SAFRAs distintas — "
+            f"incluir a mesma SAFRA em ambos invalida a deteccao de drift."
+        )
+
     # -------------------------------------------------------------------------
     # 1. Carregar modelo
     # -------------------------------------------------------------------------
@@ -146,7 +166,6 @@ def run_monitoring(spark):
     logger.info("Modelo: %s v%s", mv.name, mv.version)
 
     # Feature names do metadata
-    import glob
     artifacts_path = client.download_artifacts(mv.run_id, "")
     metadata_files = glob.glob(f"{artifacts_path}/*metadata*.json")
     if not metadata_files:
@@ -175,9 +194,31 @@ def run_monitoring(spark):
     cols_needed = feature_names + ["FPD"]
     cols_available = [c for c in cols_needed if c in df_baseline.columns]
 
+    # M1: Alertar sobre features do metadata que nao existem no DataFrame
+    cols_missing = [c for c in cols_needed if c not in df_baseline.columns]
+    if cols_missing:
+        logger.warning(
+            "M1: %d colunas do metadata nao encontradas no DataFrame e serao ignoradas: %s",
+            len(cols_missing), cols_missing[:10],  # limitar a 10 para nao poluir log
+        )
+
+    # H5: Validar que ao menos as features do modelo estao presentes
+    feature_missing = [f for f in feature_names if f not in df_baseline.columns]
+    if feature_missing:
+        raise ValueError(
+            f"H5: {len(feature_missing)} features do metadata nao encontradas no "
+            f"DataFrame. Primeiras 10: {feature_missing[:10]}. "
+            f"Verifique se o feature_store esta atualizado e se o metadata corresponde."
+        )
+
     pdf_baseline = df_baseline.select(cols_available).toPandas()
     pdf_current = df_current.select(cols_available).toPandas()
 
+    # M2: fillna(0) — estrategia conservadora para features numericas do modelo.
+    # Justificativa: features de books (REC_, PAG_, FAT_) sao agregacoes numericas
+    # onde ausencia indica inexistencia de atividade no periodo (ex: nenhuma recarga),
+    # portanto 0 e semanticamente correto. Para features categoricas (ja encodadas
+    # como numericas no feature_store), 0 representa a categoria de referencia.
     X_baseline = pdf_baseline[feature_names].fillna(0)
     X_current = pdf_current[feature_names].fillna(0)
 
@@ -187,12 +228,23 @@ def run_monitoring(spark):
     logger.info("Calculando scores...")
 
     def _predict_proba(model, X):
-        scores = model.predict(X)
+        """Extrai probabilidades P(classe=1) do modelo.
+
+        Raises:
+            ValueError: Se o modelo nao possui predict_proba — scores de classe
+                        {0,1} invalidariam o PSI de score.
+        """
         if hasattr(model, '_model_impl'):
             inner = model._model_impl
             if hasattr(inner, 'predict_proba'):
                 scores = inner.predict_proba(X)[:, 1]
-        return np.asarray(scores, dtype=float)
+                return np.asarray(scores, dtype=float)
+        # H1: Nao retornar model.predict() (class labels 0/1) — isso tornaria o PSI inutil
+        raise ValueError(
+            "Modelo nao possui predict_proba acessivel via _model_impl. "
+            "PSI requer probabilidades continuas, nao labels de classe {0,1}. "
+            "Verifique se o modelo foi exportado corretamente com MLflow."
+        )
 
     scores_baseline = _predict_proba(model, X_baseline)
     scores_current = _predict_proba(model, X_current)
@@ -219,6 +271,15 @@ def run_monitoring(spark):
                 if len(importances) == len(feature_names):
                     idx = np.argsort(importances)[::-1][:TOP_N_FEATURES]
                     top_features = [feature_names[i] for i in idx]
+                else:
+                    # C6: Log warning explicito sobre mismatch ao inves de falhar silenciosamente
+                    logger.warning(
+                        "Feature importance length mismatch: modelo tem %d importances, "
+                        "mas metadata lista %d features. Usando primeiras %d features "
+                        "do metadata como fallback. Possivel causa: transformacao no "
+                        "pipeline (ex: one-hot encoding) alterou o numero de features.",
+                        len(importances), len(feature_names), TOP_N_FEATURES,
+                    )
 
     feature_drift = {}
     for feat in top_features:
@@ -246,6 +307,17 @@ def run_monitoring(spark):
         y_current = pdf_current["FPD"].values
         mask = ~np.isnan(y_current.astype(float))
 
+        # M3: Validar que FPD contem apenas valores binarios {0, 1}
+        if mask.sum() > 0:
+            fpd_unique = set(np.unique(y_current[mask].astype(float)))
+            unexpected_vals = fpd_unique - {0.0, 1.0}
+            if unexpected_vals:
+                logger.warning(
+                    "M3: FPD contem valores nao-binarios: %s. "
+                    "Esperado apenas {0, 1}. Metricas de performance podem ser invalidas.",
+                    unexpected_vals,
+                )
+
         if mask.sum() > 100 and len(np.unique(y_current[mask])) >= 2:
             logger.info("FPD disponivel — calculando metricas de performance...")
 
@@ -267,9 +339,11 @@ def run_monitoring(spark):
                 baseline_auc = roc_auc_score(y_baseline[mask_bl], scores_baseline[mask_bl])
                 baseline_gini = (2 * baseline_auc - 1) * 100
 
-                ks_drift = baseline_ks - current_ks
-                auc_drift = baseline_auc - current_auc
-                gini_drift = baseline_gini - current_gini
+                # C4: Convencao credit risk — drift = current - baseline.
+                # Positivo = melhoria, Negativo = degradacao (requer retreino).
+                ks_drift = current_ks - baseline_ks
+                auc_drift = current_auc - baseline_auc
+                gini_drift = current_gini - baseline_gini
 
                 perf_drift = {
                     "ks_drift_pp": round(ks_drift, 2),
@@ -280,9 +354,18 @@ def run_monitoring(spark):
                     "gini_status": "RED" if abs(gini_drift) > THRESHOLDS["gini_drift_max_pp"] else "GREEN",
                 }
 
-                logger.info("KS drift: %.1f pp [%s]", ks_drift, perf_drift["ks_status"])
-                logger.info("AUC drift: %.4f [%s]", auc_drift, perf_drift["auc_status"])
-                logger.info("Gini drift: %.1f pp [%s]", gini_drift, perf_drift["gini_status"])
+                logger.info(
+                    "KS drift: %+.1f pp [%s] (negativo = degradacao)",
+                    ks_drift, perf_drift["ks_status"],
+                )
+                logger.info(
+                    "AUC drift: %+.4f [%s] (negativo = degradacao)",
+                    auc_drift, perf_drift["auc_status"],
+                )
+                logger.info(
+                    "Gini drift: %+.1f pp [%s] (negativo = degradacao)",
+                    gini_drift, perf_drift["gini_status"],
+                )
         else:
             logger.info("FPD insuficiente ou sem variancia — skip performance check")
     else:
@@ -302,7 +385,12 @@ def run_monitoring(spark):
         alerts.append(f"{n_red} features com drift RED: {red_feats[:5]}")
 
     if perf_drift.get("ks_status") == "RED":
-        alerts.append(f"KS drift {perf_drift['ks_drift_pp']:.1f}pp > {THRESHOLDS['ks_drift_max_pp']}pp — considerar retreino")
+        # C4: drift = current - baseline; negativo indica degradacao
+        direction = "degradacao" if perf_drift["ks_drift_pp"] < 0 else "variacao"
+        alerts.append(
+            f"KS drift {perf_drift['ks_drift_pp']:+.1f}pp (|drift| > "
+            f"{THRESHOLDS['ks_drift_max_pp']}pp) — {direction}, considerar retreino"
+        )
 
     if not alerts:
         recommendation = "ESTAVEL — nenhuma acao necessaria"
@@ -368,6 +456,9 @@ def run_monitoring(spark):
             mlflow.log_metric("gini_drift_pp", perf_drift["gini_drift_pp"])
 
         # Salvar relatorio JSON
+        # M4: Artefatos temporarios em /tmp — sao copiados para MLflow artifact store
+        # via log_artifact() e podem ser removidos apos a execucao. No Fabric,
+        # /tmp e efemero e limpo automaticamente ao final da sessao Spark.
         report_path = f"/tmp/monitoring_safra_{MONITOR_SAFRA}.json"
         with open(report_path, "w") as f:
             json.dump(report, f, indent=2, default=str)
@@ -398,7 +489,25 @@ def run_monitoring(spark):
         print(f"  KS atual:      {perf_metrics['ks']:.1f}")
         print(f"  AUC atual:     {perf_metrics['auc']:.4f}")
     if perf_drift:
-        print(f"  KS drift:      {perf_drift['ks_drift_pp']:.1f}pp [{perf_drift['ks_status']}]")
+        # M5: Mostrar drift com sinal e direcao explicita
+        ks_d = perf_drift['ks_drift_pp']
+        auc_d = perf_drift['auc_drift']
+        gini_d = perf_drift['gini_drift_pp']
+        print(f"  KS drift:      {ks_d:+.1f}pp [{perf_drift['ks_status']}]")
+        print(f"  AUC drift:     {auc_d:+.4f} [{perf_drift['auc_status']}]")
+        print(f"  Gini drift:    {gini_d:+.1f}pp [{perf_drift['gini_status']}]")
+        # Resumo de direcao
+        if ks_d < 0 or auc_d < 0 or gini_d < 0:
+            degraded = []
+            if ks_d < 0:
+                degraded.append("KS")
+            if auc_d < 0:
+                degraded.append("AUC")
+            if gini_d < 0:
+                degraded.append("Gini")
+            print(f"  Direcao:       DEGRADACAO em {', '.join(degraded)} (current < baseline)")
+        else:
+            print(f"  Direcao:       ESTAVEL/MELHORIA (current >= baseline)")
     print(f"  Recomendacao:  {recommendation}")
     if alerts:
         print(f"\n  Alertas:")
@@ -411,5 +520,8 @@ def run_monitoring(spark):
 
 # =============================================================================
 # EXECUCAO PRINCIPAL
+# Guard: so executa automaticamente se 'spark' estiver no escopo global
+# (padrao Fabric notebooks). Previne execucao acidental em import.
 # =============================================================================
-report = run_monitoring(spark)
+if "spark" in dir() and spark is not None:
+    report = run_monitoring(spark)
