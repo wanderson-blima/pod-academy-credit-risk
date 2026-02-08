@@ -88,7 +88,9 @@ def build_book_consolidado(spark, safras=None):
 
     # Broadcast join threshold (10MB) — consistente com os 3 books individuais
     spark.sql("SET spark.sql.autoBroadcastJoinThreshold = 10485760")
-    logger.info("autoBroadcastJoinThreshold definido para 10MB")
+    spark.conf.set("spark.sql.adaptive.enabled", "true")
+    spark.conf.set("spark.sql.shuffle.partitions", "200")
+    logger.info("autoBroadcastJoinThreshold=10MB, AQE=true, shuffle.partitions=200")
 
     logger.info("Book Consolidado — carregando fontes...")
 
@@ -198,11 +200,9 @@ FROM dados_cadastrais c
     # -------------------------------------------------------------------------
     try:
         df_result = spark.sql(query)
-        df_result.cache()
 
-        total_registros = df_result.count()
         total_colunas = len(df_result.columns)
-        logger.info("Resultado: %d registros x %d colunas", total_registros, total_colunas)
+        logger.info("Query executada — %d colunas. Escrevendo em Delta...", total_colunas)
 
         df_result.write.format("delta") \
             .mode("overwrite") \
@@ -210,20 +210,16 @@ FROM dados_cadastrais c
             .option("overwriteSchema", "true") \
             .save(PATH_FEATURE_STORE)
 
-        df_result.unpersist()
         logger.info("Salvo em: %s", PATH_FEATURE_STORE)
 
         # ---------------------------------------------------------------------
-        # VALIDACAO
+        # VALIDACAO (leitura pos-escrita, sem cache pre-escrita)
         # ---------------------------------------------------------------------
         df_check = spark.read.format("delta").load(PATH_FEATURE_STORE)
         saved_count = df_check.count()
         saved_cols = len(df_check.columns)
 
-        if saved_count != total_registros:
-            logger.error("DIVERGENCIA: gerados=%d, salvos=%d", total_registros, saved_count)
-        else:
-            logger.info("Validacao OK: %d registros, %d colunas", saved_count, saved_cols)
+        logger.info("Validacao: %d registros, %d colunas", saved_count, saved_cols)
 
         # Listar SAFRAs
         safras_saved = [row["SAFRA"] for row in df_check.select("SAFRA").distinct().orderBy("SAFRA").collect()]

@@ -155,6 +155,7 @@ agregado AS (
         AVG(DATEDIFF(DAT_BAIXA_ATIVIDADE, DAT_CRIACAO_ATIVIDADE)) AS DIAS_MEDIO_BAIXA,
         AVG(DATEDIFF(DAT_DEPOSITO_ATIVIDADE, DAT_CRIACAO_ATIVIDADE)) AS DIAS_MEDIO_DEPOSITO,
         COUNT(DISTINCT DATE_FORMAT(DAT_STATUS_FATURA, 'yyyyMM')) AS QTD_MESES_ATIVOS,
+        -- NOTA: FIRST() sem ORDER BY e nao-deterministico, aceitavel (colunas descritivas nao usadas na modelagem)
         FIRST(DSC_FORMA_PAGAMENTO) AS FORMA_PAGAMENTO_PRINCIPAL,
         FIRST(DSC_TIPO_INSTITUICAO) AS TIPO_INSTITUICAO_PRINCIPAL,
         FIRST(DSC_TIPO_FATURAMENTO_ABREV) AS TIPO_FATURAMENTO_PRINCIPAL,
@@ -221,6 +222,8 @@ def _safra_to_cutoff(safra):
 def _load_views(spark):
     """Carrega tabelas Delta e registra views temporarias com broadcast."""
     spark.conf.set("spark.sql.autoBroadcastJoinThreshold", "10485760")
+    spark.conf.set("spark.sql.adaptive.enabled", "true")
+    spark.conf.set("spark.sql.shuffle.partitions", "200")
 
     spark.read.format("delta").load(PATH_PAGAMENTO).createOrReplaceTempView("pagamento")
 
@@ -258,22 +261,25 @@ def build_book_pagamento(spark, safras=None):
 
             query = SQL_TEMPLATE.format(safra=safra, data_cutoff=cutoff)
             df = spark.sql(query)
-            df.cache()
-            cnt = df.count()
 
-            mode = "overwrite" if i == 0 else "append"
             df.write.format("delta") \
-                .mode(mode) \
+                .mode("overwrite") \
+                .option("replaceWhere", f"SAFRA = {safra}") \
                 .partitionBy("SAFRA") \
-                .option("overwriteSchema", "true" if mode == "overwrite" else "false") \
+                .option("overwriteSchema", "true" if i == 0 else "false") \
                 .save(PATH_OUTPUT)
 
-            df.unpersist()
-            results[safra] = cnt
-            logger.info("  SAFRA %d: %d registros (modo: %s)", safra, cnt, mode)
+            logger.info("  SAFRA %d escrita com sucesso", safra)
         except Exception as e:
             logger.error("SAFRA %d falhou: %s", safra, e)
             continue
+
+    # Contagem final via Delta (evita cache/count no loop)
+    df_final = spark.read.format("delta").load(PATH_OUTPUT)
+    for safra in safras:
+        cnt = df_final.filter(f"SAFRA = {safra}").count()
+        results[safra] = cnt
+        logger.info("  SAFRA %d: %d registros", safra, cnt)
 
     logger.info("Book Pagamento concluido — %d registros total",
                 sum(results.values()))

@@ -286,22 +286,25 @@ def build_book_faturamento(spark, safras=None):
 
             query = SQL_TEMPLATE.format(safra=safra, data_cutoff=cutoff)
             df = spark.sql(query)
-            df.cache()
-            cnt = df.count()
 
-            mode = "overwrite" if i == 0 else "append"
             df.write.format("delta") \
-                .mode(mode) \
+                .mode("overwrite") \
+                .option("replaceWhere", f"SAFRA = {safra}") \
                 .partitionBy("SAFRA") \
-                .option("overwriteSchema", "true" if mode == "overwrite" else "false") \
+                .option("overwriteSchema", "true" if i == 0 else "false") \
                 .save(PATH_OUTPUT)
 
-            df.unpersist()
-            results[safra] = cnt
-            logger.info("  SAFRA %d: %d registros (modo: %s)", safra, cnt, mode)
+            logger.info("  SAFRA %d escrita com sucesso", safra)
         except Exception as e:
             logger.error("SAFRA %d falhou: %s", safra, e)
             continue
+
+    # Contagem final via Delta (evita cache/count no loop)
+    df_final = spark.read.format("delta").load(PATH_OUTPUT)
+    for safra in safras:
+        cnt = df_final.filter(f"SAFRA = {safra}").count()
+        results[safra] = cnt
+        logger.info("  SAFRA %d: %d registros", safra, cnt)
 
     logger.info("Book Faturamento concluido — %d registros total",
                 sum(results.values()))
