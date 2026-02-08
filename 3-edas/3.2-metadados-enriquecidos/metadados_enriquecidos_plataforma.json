@@ -1,0 +1,247 @@
+{
+  "tabela": "rawdata.plataforma",
+  "data_geracao": "2026-01-15 04:07:00",
+  "total_registros": 28,
+  "total_colunas": 11,
+  "colunas_utilizaveis_book": 4,
+  "resumo_tipos": {
+    "IDENTIFICADOR_PK": 3,
+    "TEMPORAL": 3,
+    "CATEGORICA_MEDIA": 1,
+    "CATEGORICA_FLAG": 1,
+    "METADADO_SISTEMA": 3
+  },
+  "metadados_colunas": [
+    {
+      "coluna": "COD_PLATAFORMA",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "IDENTIFICADOR_PK",
+      "cardinalidade": 28,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "DSC_PLATAFORMA",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "IDENTIFICADOR_PK",
+      "cardinalidade": 28,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "DAT_EXPIRACAO_DW",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 0,
+      "pct_null": 100.0,
+      "qualidade_modelo": "BAIXA_MUITOS_NULLS",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_EXPIRACAO_DW",
+        "DIAS_ATE_EXPIRACAO_DW",
+        "MES_EXPIRACAO_DW"
+      ]
+    },
+    {
+      "coluna": "DAT_ATUALIZACAO_DW",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 24,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_ATUALIZACAO_DW",
+        "DIAS_ATE_ATUALIZACAO_DW",
+        "MES_ATUALIZACAO_DW"
+      ]
+    },
+    {
+      "coluna": "DAT_CRIACAO_DW",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 24,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_CRIACAO_DW",
+        "DIAS_ATE_CRIACAO_DW",
+        "MES_CRIACAO_DW"
+      ]
+    },
+    {
+      "coluna": "DSC_PLATAFORMA_BI",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "IDENTIFICADOR_PK",
+      "cardinalidade": 28,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "COD_GRUPO_PLATAFORMA_BI",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_MEDIA",
+      "cardinalidade": 13,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT",
+        "MODE",
+        "TAXA_TOP_VALORES"
+      ],
+      "valores_frequentes": [
+        {
+          "valor": "POSPG",
+          "frequencia": 8
+        },
+        {
+          "valor": "PREPG",
+          "frequencia": 4
+        },
+        {
+          "valor": "AUTOC",
+          "frequencia": 3
+        },
+        {
+          "valor": "MVNO",
+          "frequencia": 2
+        },
+        {
+          "valor": "POSTL",
+          "frequencia": 2
+        }
+      ],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "DSC_GRUPO_PLATAFORMA",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_FLAG",
+      "cardinalidade": 6,
+      "pct_null": 3.57,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "TAXA_POR_VALOR",
+        "FLAG_TEM_VALOR",
+        "COUNT",
+        "MODE"
+      ],
+      "valores_frequentes": [
+        {
+          "valor": "Pós Pago",
+          "frequencia": 9
+        },
+        {
+          "valor": "Outros",
+          "frequencia": 5
+        },
+        {
+          "valor": "Pré Pago",
+          "frequencia": 5
+        },
+        {
+          "valor": "Telemetria",
+          "frequencia": 4
+        },
+        {
+          "valor": "Controle",
+          "frequencia": 3
+        }
+      ],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "TAXA_DSC_GRUPO_PLATAFORMA_[VALOR]",
+        "FLAG_DSC_GRUPO_PLATAFORMA_[VALOR]",
+        "QTD_DSC_GRUPO_PLATAFORMA_DISTINTOS"
+      ]
+    },
+    {
+      "coluna": "_execution_id",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "METADADO_SISTEMA",
+      "cardinalidade": 1,
+      "pct_null": 0.0,
+      "qualidade_modelo": "INUTILIZAVEL_CONSTANTE",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "_data_inclusao",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "METADADO_SISTEMA",
+      "cardinalidade": 1,
+      "pct_null": 0.0,
+      "qualidade_modelo": "INUTILIZAVEL_CONSTANTE",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "_data_alteracao_silver",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "METADADO_SISTEMA",
+      "cardinalidade": 1,
+      "pct_null": 0.0,
+      "qualidade_modelo": "INUTILIZAVEL_CONSTANTE",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    }
+  ]
+}

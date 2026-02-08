@@ -1,0 +1,160 @@
+{
+  "tabela": "rawdata.tipo_faturamento",
+  "data_geracao": "2026-01-15 01:40:39",
+  "total_registros": 72,
+  "total_colunas": 9,
+  "colunas_utilizaveis_book": 2,
+  "resumo_tipos": {
+    "IDENTIFICADOR_PK": 3,
+    "TEMPORAL": 2,
+    "CATEGORICA_MEDIA": 1,
+    "METADADO_SISTEMA": 3
+  },
+  "metadados_colunas": [
+    {
+      "coluna": "DW_TIPO_FATURAMENTO",
+      "tipo_spark": "IntegerType()",
+      "tipo_variavel": "IDENTIFICADOR_PK",
+      "cardinalidade": 72,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "DSC_TIPO_FATURAMENTO",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "IDENTIFICADOR_PK",
+      "cardinalidade": 69,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "COD_TIPO_FATURAMENTO",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "IDENTIFICADOR_PK",
+      "cardinalidade": 70,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "DAT_EXPIRACAO_DW",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 2,
+      "pct_null": 97.22,
+      "qualidade_modelo": "BAIXA_MUITOS_NULLS",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_EXPIRACAO_DW",
+        "DIAS_ATE_EXPIRACAO_DW",
+        "MES_EXPIRACAO_DW"
+      ]
+    },
+    {
+      "coluna": "DAT_CRIACAO_DW",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 10,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_CRIACAO_DW",
+        "DIAS_ATE_CRIACAO_DW",
+        "MES_CRIACAO_DW"
+      ]
+    },
+    {
+      "coluna": "DSC_TIPO_FATURAMENTO_ABREV",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_MEDIA",
+      "cardinalidade": 65,
+      "pct_null": 4.17,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT",
+        "MODE",
+        "TAXA_TOP_VALORES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "_execution_id",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "METADADO_SISTEMA",
+      "cardinalidade": 1,
+      "pct_null": 0.0,
+      "qualidade_modelo": "INUTILIZAVEL_CONSTANTE",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "_data_inclusao",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "METADADO_SISTEMA",
+      "cardinalidade": 1,
+      "pct_null": 0.0,
+      "qualidade_modelo": "INUTILIZAVEL_CONSTANTE",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "_data_alteracao_silver",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "METADADO_SISTEMA",
+      "cardinalidade": 1,
+      "pct_null": 0.0,
+      "qualidade_modelo": "INUTILIZAVEL_CONSTANTE",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    }
+  ]
+}

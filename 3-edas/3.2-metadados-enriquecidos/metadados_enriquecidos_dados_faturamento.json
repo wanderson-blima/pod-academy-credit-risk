@@ -1,0 +1,1593 @@
+{
+  "tabela": "rawdata.dados_faturamento",
+  "data_geracao": "2026-01-15 02:30:22",
+  "total_registros": 32687219,
+  "total_colunas": 53,
+  "colunas_utilizaveis_book": 45,
+  "resumo_tipos": {
+    "TEXTO_LIVRE": 3,
+    "TEMPORAL": 12,
+    "NUMERICA_VALOR": 27,
+    "CATEGORICA_MEDIA": 1,
+    "CATEGORICA_FLAG": 7,
+    "METADADO_SISTEMA": 3
+  },
+  "metadados_colunas": [
+    {
+      "coluna": "NUM_CPF",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "TEXTO_LIVRE",
+      "cardinalidade": 607641,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "DAT_REFERENCIA",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 18,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_REFERENCIA",
+        "DIAS_ATE_REFERENCIA",
+        "MES_REFERENCIA"
+      ]
+    },
+    {
+      "coluna": "NUM_FATURA_HASH",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "TEXTO_LIVRE",
+      "cardinalidade": 891094,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "NUM_ENT_SEQ_FATURA",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 696,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": 1.0,
+        "p25": 4.0,
+        "p50": 19.0,
+        "p75": 55.0,
+        "p95": 143.0,
+        "p99": 276.0,
+        "max": 1361.0,
+        "media": 40.0186,
+        "desvio_padrao": 57.1676
+      },
+      "sugestoes_variaveis": [
+        "VLR_ENT_SEQ_FATURA_TOTAL",
+        "VLR_ENT_SEQ_FATURA_MEDIO",
+        "VLR_ENT_SEQ_FATURA_MAX",
+        "QTD_ENT_SEQ_FATURA"
+      ]
+    },
+    {
+      "coluna": "CONTRATO",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "TEXTO_LIVRE",
+      "cardinalidade": 684281,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "DW_UN_NEGOCIO",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 10,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": 1.0,
+        "p25": 3.0,
+        "p50": 4.0,
+        "p75": 6.0,
+        "p95": 10.0,
+        "p99": 10.0,
+        "max": 10.0,
+        "media": 4.573,
+        "desvio_padrao": 2.5822
+      },
+      "sugestoes_variaveis": [
+        "VLR_DW_UN_NEGOCIO_TOTAL",
+        "VLR_DW_UN_NEGOCIO_MEDIO",
+        "VLR_DW_UN_NEGOCIO_MAX",
+        "QTD_DW_UN_NEGOCIO"
+      ]
+    },
+    {
+      "coluna": "DW_HIS_PONTO_VENDA_COMTA",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 35047,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": -3.0,
+        "p25": 3760331.0,
+        "p50": 9304102.0,
+        "p75": 10027202.0,
+        "p95": 10428694.0,
+        "p99": 10439463.0,
+        "max": 10488310.0,
+        "media": 6997747.6054,
+        "desvio_padrao": 3836235.233
+      },
+      "sugestoes_variaveis": [
+        "VLR_DW_HIS_PONTO_VENDA_COMTA_TOTAL",
+        "VLR_DW_HIS_PONTO_VENDA_COMTA_MEDIO",
+        "VLR_DW_HIS_PONTO_VENDA_COMTA_MAX",
+        "QTD_DW_HIS_PONTO_VENDA_COMTA"
+      ]
+    },
+    {
+      "coluna": "DW_NUM_CLIENTE",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 693518,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": 291960506.0,
+        "p25": 1167425077.0,
+        "p50": 1404080957.0,
+        "p75": 1454936347.0,
+        "p95": 1477254282.0,
+        "p99": 1482566429.0,
+        "max": 1487815113.0,
+        "media": 1311449620.6892,
+        "desvio_padrao": 180731468.9829
+      },
+      "sugestoes_variaveis": [
+        "VLR_DW_CLIENTE_TOTAL",
+        "VLR_DW_CLIENTE_MEDIO",
+        "VLR_DW_CLIENTE_MAX",
+        "QTD_DW_CLIENTE"
+      ]
+    },
+    {
+      "coluna": "DW_AREA",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 69,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": -3.0,
+        "p25": 6.0,
+        "p50": 22.0,
+        "p75": 36.0,
+        "p95": 58.0,
+        "p99": 66.0,
+        "max": 67.0,
+        "media": 22.8039,
+        "desvio_padrao": 19.0576
+      },
+      "sugestoes_variaveis": [
+        "VLR_DW_AREA_TOTAL",
+        "VLR_DW_AREA_MEDIO",
+        "VLR_DW_AREA_MAX",
+        "QTD_DW_AREA"
+      ]
+    },
+    {
+      "coluna": "DW_CICLO",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 47,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": 3.0,
+        "p25": 28.0,
+        "p50": 70.0,
+        "p75": 81.0,
+        "p95": 100.0,
+        "p99": 101.0,
+        "max": 101.0,
+        "media": 59.4175,
+        "desvio_padrao": 30.7706
+      },
+      "sugestoes_variaveis": [
+        "VLR_DW_CICLO_TOTAL",
+        "VLR_DW_CICLO_MEDIO",
+        "VLR_DW_CICLO_MAX",
+        "QTD_DW_CICLO"
+      ]
+    },
+    {
+      "coluna": "DW_TIPO_CLIENTE_CONTA",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 32,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": -1.0,
+        "p25": 6.0,
+        "p50": 6.0,
+        "p75": 52.0,
+        "p95": 532.0,
+        "p99": 792.0,
+        "max": 822.0,
+        "media": 92.5677,
+        "desvio_padrao": 192.8011
+      },
+      "sugestoes_variaveis": [
+        "VLR_DW_TIPO_CLIENTE_CONTA_TOTAL",
+        "VLR_DW_TIPO_CLIENTE_CONTA_MEDIO",
+        "VLR_DW_TIPO_CLIENTE_CONTA_MAX",
+        "QTD_DW_TIPO_CLIENTE_CONTA"
+      ]
+    },
+    {
+      "coluna": "DW_OFERTA",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 838,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": -3.0,
+        "p25": 154954.0,
+        "p50": 158574.0,
+        "p75": 159086.0,
+        "p95": 160733.0,
+        "p99": 161026.0,
+        "max": 161430.0,
+        "media": 139521.5806,
+        "desvio_padrao": 50360.8876
+      },
+      "sugestoes_variaveis": [
+        "VLR_DW_OFERTA_TOTAL",
+        "VLR_DW_OFERTA_MEDIO",
+        "VLR_DW_OFERTA_MAX",
+        "QTD_DW_OFERTA"
+      ]
+    },
+    {
+      "coluna": "DW_FAIXA_AGING_FATURA",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 24,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": 277.0,
+        "p25": 277.0,
+        "p50": 277.0,
+        "p75": 278.0,
+        "p95": 286.0,
+        "p99": 362.0,
+        "max": 369.0,
+        "media": 279.6275,
+        "desvio_padrao": 10.6541
+      },
+      "sugestoes_variaveis": [
+        "VLR_DW_FAIXA_AGING_FATURA_TOTAL",
+        "VLR_DW_FAIXA_AGING_FATURA_MEDIO",
+        "VLR_DW_FAIXA_AGING_FATURA_MAX",
+        "QTD_DW_FAIXA_AGING_FATURA"
+      ]
+    },
+    {
+      "coluna": "DW_FAIXA_AGING_DIVIDA",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 16,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": 261.0,
+        "p25": 261.0,
+        "p50": 262.0,
+        "p75": 263.0,
+        "p95": 270.0,
+        "p99": 276.0,
+        "max": 276.0,
+        "media": 262.797,
+        "desvio_padrao": 3.1451
+      },
+      "sugestoes_variaveis": [
+        "VLR_DW_FAIXA_AGING_DIVIDA_TOTAL",
+        "VLR_DW_FAIXA_AGING_DIVIDA_MEDIO",
+        "VLR_DW_FAIXA_AGING_DIVIDA_MAX",
+        "QTD_DW_FAIXA_AGING_DIVIDA"
+      ]
+    },
+    {
+      "coluna": "DW_FAIXA_TEMPO_BASE",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 7,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": -3.0,
+        "p25": 353.0,
+        "p50": 355.0,
+        "p75": 356.0,
+        "p95": 356.0,
+        "p99": 356.0,
+        "max": 356.0,
+        "media": 349.0845,
+        "desvio_padrao": 43.6275
+      },
+      "sugestoes_variaveis": [
+        "VLR_DW_FAIXA_TEMPO_BASE_TOTAL",
+        "VLR_DW_FAIXA_TEMPO_BASE_MEDIO",
+        "VLR_DW_FAIXA_TEMPO_BASE_MAX",
+        "QTD_DW_FAIXA_TEMPO_BASE"
+      ]
+    },
+    {
+      "coluna": "DW_FAIXA_AGING_PROX_FECH",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 17,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": -1.0,
+        "p25": 303.0,
+        "p50": 303.0,
+        "p75": 305.0,
+        "p95": 312.0,
+        "p99": 317.0,
+        "max": 317.0,
+        "media": 300.0604,
+        "desvio_padrao": 37.4954
+      },
+      "sugestoes_variaveis": [
+        "VLR_DW_FAIXA_AGING_PROX_FECH_TOTAL",
+        "VLR_DW_FAIXA_AGING_PROX_FECH_MEDIO",
+        "VLR_DW_FAIXA_AGING_PROX_FECH_MAX",
+        "QTD_DW_FAIXA_AGING_PROX_FECH"
+      ]
+    },
+    {
+      "coluna": "DW_TIPO_FATURAMENTO",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 24,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": 32527.0,
+        "p25": 32529.0,
+        "p50": 32529.0,
+        "p75": 32529.0,
+        "p95": 32541.0,
+        "p99": 33523.0,
+        "max": 33543.0,
+        "media": 32552.0663,
+        "desvio_padrao": 141.6645
+      },
+      "sugestoes_variaveis": [
+        "VLR_DW_TIPO_FATURAMENTO_TOTAL",
+        "VLR_DW_TIPO_FATURAMENTO_MEDIO",
+        "VLR_DW_TIPO_FATURAMENTO_MAX",
+        "QTD_DW_TIPO_FATURAMENTO"
+      ]
+    },
+    {
+      "coluna": "COD_PLATAFORMA",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_MEDIA",
+      "cardinalidade": 12,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT",
+        "MODE",
+        "TAXA_TOP_VALORES"
+      ],
+      "valores_frequentes": [
+        {
+          "valor": "AUTOC",
+          "frequencia": 545064
+        },
+        {
+          "valor": "POSPG",
+          "frequencia": 348952
+        },
+        {
+          "valor": "-2",
+          "frequencia": 69832
+        },
+        {
+          "valor": "PREPG",
+          "frequencia": 23139
+        },
+        {
+          "valor": "POSBL",
+          "frequencia": 7702
+        }
+      ],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "DAT_CRIACAO_REGISTRO_TRANS",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 661459,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_CRIACAO_REGISTRO_TRANS",
+        "DIAS_ATE_CRIACAO_REGISTRO_TRANS",
+        "MES_CRIACAO_REGISTRO_TRANS"
+      ]
+    },
+    {
+      "coluna": "DAT_ALTERACAO_REGISTRO_TRANS",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 616371,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_ALTERACAO_REGISTRO_TRANS",
+        "DIAS_ATE_ALTERACAO_REGISTRO_TRANS",
+        "MES_ALTERACAO_REGISTRO_TRANS"
+      ]
+    },
+    {
+      "coluna": "DAT_CANCELAMENTO_FAT",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 0,
+      "pct_null": 100.0,
+      "qualidade_modelo": "BAIXA_MUITOS_NULLS",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_CANCELAMENTO_FAT",
+        "DIAS_ATE_CANCELAMENTO_FAT",
+        "MES_CANCELAMENTO_FAT"
+      ]
+    },
+    {
+      "coluna": "DAT_ORIGINAL_VCTO_FAT",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 1936,
+      "pct_null": 6.74,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_ORIGINAL_VCTO_FAT",
+        "DIAS_ATE_ORIGINAL_VCTO_FAT",
+        "MES_ORIGINAL_VCTO_FAT"
+      ]
+    },
+    {
+      "coluna": "DAT_ALTERACAO_VCTO_FAT",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 470,
+      "pct_null": 99.73,
+      "qualidade_modelo": "BAIXA_MUITOS_NULLS",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_ALTERACAO_VCTO_FAT",
+        "DIAS_ATE_ALTERACAO_VCTO_FAT",
+        "MES_ALTERACAO_VCTO_FAT"
+      ]
+    },
+    {
+      "coluna": "DAT_CRIACAO_FAT",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 2156,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_CRIACAO_FAT",
+        "DIAS_ATE_CRIACAO_FAT",
+        "MES_CRIACAO_FAT"
+      ]
+    },
+    {
+      "coluna": "DAT_VENCIMENTO_FAT",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 1841,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_VENCIMENTO_FAT",
+        "DIAS_ATE_VENCIMENTO_FAT",
+        "MES_VENCIMENTO_FAT"
+      ]
+    },
+    {
+      "coluna": "DAT_STATUS_FAT",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 2441,
+      "pct_null": 6.6,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_STATUS_FAT",
+        "DIAS_ATE_STATUS_FAT",
+        "MES_STATUS_FAT"
+      ]
+    },
+    {
+      "coluna": "DAT_MIN_VENCIMENTO_FAT",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 1603,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_MIN_VENCIMENTO_FAT",
+        "DIAS_ATE_MIN_VENCIMENTO_FAT",
+        "MES_MIN_VENCIMENTO_FAT"
+      ]
+    },
+    {
+      "coluna": "NUM_BILL_SEQ_FAT",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 254,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": 1.0,
+        "p25": 3.0,
+        "p50": 14.0,
+        "p75": 36.0,
+        "p95": 86.0,
+        "p99": 146.0,
+        "max": 254.0,
+        "media": 25.4748,
+        "desvio_padrao": 31.1121
+      },
+      "sugestoes_variaveis": [
+        "VLR_BILL_SEQ_FAT_TOTAL",
+        "VLR_BILL_SEQ_FAT_MEDIO",
+        "VLR_BILL_SEQ_FAT_MAX",
+        "QTD_BILL_SEQ_FAT"
+      ]
+    },
+    {
+      "coluna": "NUM_SEQ_ACORDO_FAT",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 53,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": -3.0,
+        "p25": -2.0,
+        "p50": -2.0,
+        "p75": -2.0,
+        "p95": -2.0,
+        "p99": 3.0,
+        "max": 56.0,
+        "media": -1.966,
+        "desvio_padrao": 1.317
+      },
+      "sugestoes_variaveis": [
+        "VLR_SEQ_ACORDO_FAT_TOTAL",
+        "VLR_SEQ_ACORDO_FAT_MEDIO",
+        "VLR_SEQ_ACORDO_FAT_MAX",
+        "QTD_SEQ_ACORDO_FAT"
+      ]
+    },
+    {
+      "coluna": "IND_ISENCAO_COB_FAT",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_FLAG",
+      "cardinalidade": 4,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "TAXA_POR_VALOR",
+        "FLAG_TEM_VALOR",
+        "COUNT",
+        "MODE"
+      ],
+      "valores_frequentes": [
+        {
+          "valor": "-2",
+          "frequencia": 889480
+        },
+        {
+          "valor": "N",
+          "frequencia": 109818
+        },
+        {
+          "valor": "Y",
+          "frequencia": 124
+        },
+        {
+          "valor": "S",
+          "frequencia": 32
+        }
+      ],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "TAXA_ISENCAO_COB_FAT_[VALOR]",
+        "FLAG_ISENCAO_COB_FAT_[VALOR]",
+        "QTD_ISENCAO_COB_FAT_DISTINTOS"
+      ]
+    },
+    {
+      "coluna": "IND_WO",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_FLAG",
+      "cardinalidade": 3,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "TAXA_POR_VALOR",
+        "FLAG_TEM_VALOR",
+        "COUNT",
+        "MODE"
+      ],
+      "valores_frequentes": [
+        {
+          "valor": "R",
+          "frequencia": 933738
+        },
+        {
+          "valor": "W",
+          "frequencia": 50549
+        },
+        {
+          "valor": "-1",
+          "frequencia": 15167
+        }
+      ],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "TAXA_WO_[VALOR]",
+        "FLAG_WO_[VALOR]",
+        "QTD_WO_DISTINTOS"
+      ]
+    },
+    {
+      "coluna": "IND_PDD",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_FLAG",
+      "cardinalidade": 3,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "TAXA_POR_VALOR",
+        "FLAG_TEM_VALOR",
+        "COUNT",
+        "MODE"
+      ],
+      "valores_frequentes": [
+        {
+          "valor": "N",
+          "frequencia": 899175
+        },
+        {
+          "valor": "S",
+          "frequencia": 85112
+        },
+        {
+          "valor": "-1",
+          "frequencia": 15167
+        }
+      ],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "TAXA_PDD_[VALOR]",
+        "FLAG_PDD_[VALOR]",
+        "QTD_PDD_DISTINTOS"
+      ]
+    },
+    {
+      "coluna": "IND_PCCR",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_FLAG",
+      "cardinalidade": 4,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "TAXA_POR_VALOR",
+        "FLAG_TEM_VALOR",
+        "COUNT",
+        "MODE"
+      ],
+      "valores_frequentes": [
+        {
+          "valor": "C",
+          "frequencia": 955249
+        },
+        {
+          "valor": "W",
+          "frequencia": 29005
+        },
+        {
+          "valor": "-1",
+          "frequencia": 15167
+        },
+        {
+          "valor": "A",
+          "frequencia": 33
+        }
+      ],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "TAXA_PCCR_[VALOR]",
+        "FLAG_PCCR_[VALOR]",
+        "QTD_PCCR_DISTINTOS"
+      ]
+    },
+    {
+      "coluna": "IND_ACA",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_FLAG",
+      "cardinalidade": 3,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "TAXA_POR_VALOR",
+        "FLAG_TEM_VALOR",
+        "COUNT",
+        "MODE"
+      ],
+      "valores_frequentes": [
+        {
+          "valor": "N",
+          "frequencia": 996872
+        },
+        {
+          "valor": "S",
+          "frequencia": 2578
+        },
+        {
+          "valor": "A",
+          "frequencia": 4
+        }
+      ],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "TAXA_ACA_[VALOR]",
+        "FLAG_ACA_[VALOR]",
+        "QTD_ACA_DISTINTOS"
+      ]
+    },
+    {
+      "coluna": "IND_PRIMEIRA_FAT",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_FLAG",
+      "cardinalidade": 2,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "TAXA_POR_VALOR",
+        "FLAG_TEM_VALOR",
+        "COUNT",
+        "MODE"
+      ],
+      "valores_frequentes": [
+        {
+          "valor": "N",
+          "frequencia": 872553
+        },
+        {
+          "valor": "S",
+          "frequencia": 126901
+        }
+      ],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "TAXA_PRIMEIRA_FAT_[VALOR]",
+        "FLAG_PRIMEIRA_FAT_[VALOR]",
+        "QTD_PRIMEIRA_FAT_DISTINTOS"
+      ]
+    },
+    {
+      "coluna": "IND_FRAUDE",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_FLAG",
+      "cardinalidade": 2,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "TAXA_POR_VALOR",
+        "FLAG_TEM_VALOR",
+        "COUNT",
+        "MODE"
+      ],
+      "valores_frequentes": [
+        {
+          "valor": "N",
+          "frequencia": 997702
+        },
+        {
+          "valor": "S",
+          "frequencia": 1752
+        }
+      ],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "TAXA_FRAUDE_[VALOR]",
+        "FLAG_FRAUDE_[VALOR]",
+        "QTD_FRAUDE_DISTINTOS"
+      ]
+    },
+    {
+      "coluna": "VAL_FAT_LIQUIDO",
+      "tipo_spark": "DecimalType(18,4)",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 33408,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": null,
+        "p25": 10.34,
+        "p50": 44.89,
+        "p75": 65.47,
+        "p95": 155.24,
+        "p99": 287.66,
+        "max": 506834.16,
+        "media": 70.7612,
+        "desvio_padrao": 1312.6659
+      },
+      "sugestoes_variaveis": [
+        "VLR_FAT_LIQUIDO_TOTAL",
+        "VLR_FAT_LIQUIDO_MEDIO",
+        "VLR_FAT_LIQUIDO_MAX",
+        "QTD_FAT_LIQUIDO"
+      ]
+    },
+    {
+      "coluna": "VAL_FAT_BRUTO",
+      "tipo_spark": "DecimalType(18,4)",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 39178,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": null,
+        "p25": 18.9,
+        "p50": 56.21,
+        "p75": 83.57,
+        "p95": 175.93,
+        "p99": 350.5,
+        "max": 644106.16,
+        "media": 99.4235,
+        "desvio_padrao": 2735.3014
+      },
+      "sugestoes_variaveis": [
+        "VLR_FAT_BRUTO_TOTAL",
+        "VLR_FAT_BRUTO_MEDIO",
+        "VLR_FAT_BRUTO_MAX",
+        "QTD_FAT_BRUTO"
+      ]
+    },
+    {
+      "coluna": "VAL_FAT_CREDITO",
+      "tipo_spark": "DecimalType(18,4)",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 13401,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": null,
+        "p25": 0.0,
+        "p50": 4.08,
+        "p75": 15.8,
+        "p95": 49.09,
+        "p99": 86.0,
+        "max": 583948.04,
+        "media": 27.174,
+        "desvio_padrao": 2121.4632
+      },
+      "sugestoes_variaveis": [
+        "VLR_FAT_CREDITO_TOTAL",
+        "VLR_FAT_CREDITO_MEDIO",
+        "VLR_FAT_CREDITO_MAX",
+        "QTD_FAT_CREDITO"
+      ]
+    },
+    {
+      "coluna": "VAL_FAT_AJUSTE",
+      "tipo_spark": "DecimalType(18,4)",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 1476,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": null,
+        "p25": 0.0,
+        "p50": null,
+        "p75": 0.0,
+        "p95": null,
+        "p99": null,
+        "max": 164121.01,
+        "media": 0.6562,
+        "desvio_padrao": 233.6048
+      },
+      "sugestoes_variaveis": [
+        "VLR_FAT_AJUSTE_TOTAL",
+        "VLR_FAT_AJUSTE_MEDIO",
+        "VLR_FAT_AJUSTE_MAX",
+        "QTD_FAT_AJUSTE"
+      ]
+    },
+    {
+      "coluna": "VAL_FAT_BRUTO_BC",
+      "tipo_spark": "DecimalType(18,4)",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 33548,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": null,
+        "p25": 14.9,
+        "p50": 45.78,
+        "p75": 65.9,
+        "p95": 156.25,
+        "p99": 289.42,
+        "max": 506834.16,
+        "media": 72.2495,
+        "desvio_padrao": 1340.7318
+      },
+      "sugestoes_variaveis": [
+        "VLR_FAT_BRUTO_BC_TOTAL",
+        "VLR_FAT_BRUTO_BC_MEDIO",
+        "VLR_FAT_BRUTO_BC_MAX",
+        "QTD_FAT_BRUTO_BC"
+      ]
+    },
+    {
+      "coluna": "VAL_FAT_PAGAMENTO_BRUTO",
+      "tipo_spark": "DecimalType(18,4)",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 7253,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": null,
+        "p25": 0.0,
+        "p50": null,
+        "p75": 0.0,
+        "p95": null,
+        "p99": 25.24,
+        "max": 434524.44,
+        "media": 5.1781,
+        "desvio_padrao": 731.3319
+      },
+      "sugestoes_variaveis": [
+        "VLR_FAT_PAGAMENTO_BRUTO_TOTAL",
+        "VLR_FAT_PAGAMENTO_BRUTO_MEDIO",
+        "VLR_FAT_PAGAMENTO_BRUTO_MAX",
+        "QTD_FAT_PAGAMENTO_BRUTO"
+      ]
+    },
+    {
+      "coluna": "VAL_FAT_ABERTO",
+      "tipo_spark": "DecimalType(18,4)",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 33273,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": null,
+        "p25": 12.77,
+        "p50": 44.89,
+        "p75": 65.37,
+        "p95": 154.46,
+        "p99": 284.37,
+        "max": 506834.16,
+        "media": 66.4152,
+        "desvio_padrao": 1016.7811
+      },
+      "sugestoes_variaveis": [
+        "VLR_FAT_ABERTO_TOTAL",
+        "VLR_FAT_ABERTO_MEDIO",
+        "VLR_FAT_ABERTO_MAX",
+        "QTD_FAT_ABERTO"
+      ]
+    },
+    {
+      "coluna": "VAL_FAT_ABERTO_LIQ",
+      "tipo_spark": "DecimalType(18,4)",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 31669,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": -15625.2,
+        "p25": 8.63,
+        "p50": 43.54,
+        "p75": 64.81,
+        "p95": 151.21,
+        "p99": 273.46,
+        "max": 487631.81,
+        "media": 63.665,
+        "desvio_padrao": 967.7864
+      },
+      "sugestoes_variaveis": [
+        "VLR_FAT_ABERTO_LIQ_TOTAL",
+        "VLR_FAT_ABERTO_LIQ_MEDIO",
+        "VLR_FAT_ABERTO_LIQ_MAX",
+        "QTD_FAT_ABERTO_LIQ"
+      ]
+    },
+    {
+      "coluna": "VAL_MULTA_JUROS",
+      "tipo_spark": "DecimalType(18,4)",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 2032,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": null,
+        "p25": 0.0,
+        "p50": null,
+        "p75": 0.78,
+        "p95": 2.47,
+        "p99": 5.2,
+        "max": 24457.74,
+        "media": 0.882,
+        "desvio_padrao": 49.3136
+      },
+      "sugestoes_variaveis": [
+        "VLR_MULTA_JUROS_TOTAL",
+        "VLR_MULTA_JUROS_MEDIO",
+        "VLR_MULTA_JUROS_MAX",
+        "QTD_MULTA_JUROS"
+      ]
+    },
+    {
+      "coluna": "VAL_MULTA_CANCELAMENTO",
+      "tipo_spark": "DecimalType(18,4)",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 2734,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": null,
+        "p25": 0.0,
+        "p50": null,
+        "p75": 0.0,
+        "p95": null,
+        "p99": 58.68,
+        "max": 219147.6,
+        "media": 2.6846,
+        "desvio_padrao": 270.0538
+      },
+      "sugestoes_variaveis": [
+        "VLR_MULTA_CANCELAMENTO_TOTAL",
+        "VLR_MULTA_CANCELAMENTO_MEDIO",
+        "VLR_MULTA_CANCELAMENTO_MAX",
+        "QTD_MULTA_CANCELAMENTO"
+      ]
+    },
+    {
+      "coluna": "VAL_PARC_APARELHO_LIQ",
+      "tipo_spark": "DecimalType(18,4)",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 167,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": null,
+        "p25": 0.0,
+        "p50": null,
+        "p75": 0.0,
+        "p95": null,
+        "p99": null,
+        "max": 174670.0,
+        "media": 2.3579,
+        "desvio_padrao": 510.1618
+      },
+      "sugestoes_variaveis": [
+        "VLR_PARC_APARELHO_LIQ_TOTAL",
+        "VLR_PARC_APARELHO_LIQ_MEDIO",
+        "VLR_PARC_APARELHO_LIQ_MAX",
+        "QTD_PARC_APARELHO_LIQ"
+      ]
+    },
+    {
+      "coluna": "VAL_FAT_LIQ_JM_MC",
+      "tipo_spark": "DecimalType(18,4)",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 31350,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": -616.11,
+        "p25": 9.64,
+        "p50": 44.8,
+        "p75": 64.9,
+        "p95": 153.48,
+        "p99": 275.9,
+        "max": 487631.81,
+        "media": 68.1934,
+        "desvio_padrao": 1261.066
+      },
+      "sugestoes_variaveis": [
+        "VLR_FAT_LIQ_JM_MC_TOTAL",
+        "VLR_FAT_LIQ_JM_MC_MEDIO",
+        "VLR_FAT_LIQ_JM_MC_MAX",
+        "QTD_FAT_LIQ_JM_MC"
+      ]
+    },
+    {
+      "coluna": "DAT_ATIVACAO_CONTA_CLI",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 7009,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_ATIVACAO_CONTA_CLI",
+        "DIAS_ATE_ATIVACAO_CONTA_CLI",
+        "MES_ATIVACAO_CONTA_CLI"
+      ]
+    },
+    {
+      "coluna": "DAT_CRIACAO_DW",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 141859,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_CRIACAO_DW",
+        "DIAS_ATE_CRIACAO_DW",
+        "MES_CRIACAO_DW"
+      ]
+    },
+    {
+      "coluna": "_execution_id",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "METADADO_SISTEMA",
+      "cardinalidade": 2,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "_data_inclusao",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "METADADO_SISTEMA",
+      "cardinalidade": 1,
+      "pct_null": 0.0,
+      "qualidade_modelo": "INUTILIZAVEL_CONSTANTE",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "_data_alteracao_silver",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "METADADO_SISTEMA",
+      "cardinalidade": 2,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    }
+  ]
+}

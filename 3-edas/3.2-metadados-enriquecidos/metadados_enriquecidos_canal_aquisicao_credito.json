@@ -1,0 +1,391 @@
+{
+  "tabela": "rawdata.canal_aquisicao_credito",
+  "data_geracao": "2026-01-15 13:35:44",
+  "total_registros": 5899,
+  "total_colunas": 15,
+  "colunas_utilizaveis_book": 7,
+  "resumo_tipos": {
+    "IDENTIFICADOR_PK": 1,
+    "TEXTO_LIVRE": 2,
+    "NUMERICA_VALOR": 2,
+    "TEMPORAL": 3,
+    "CATEGORICA_MEDIA": 3,
+    "CATEGORICA_FLAG": 1,
+    "METADADO_SISTEMA": 3
+  },
+  "metadados_colunas": [
+    {
+      "coluna": "COD_CANAL_AQUISICAO",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "IDENTIFICADOR_PK",
+      "cardinalidade": 5899,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "DSC_CANAL_AQUISICAO",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "TEXTO_LIVRE",
+      "cardinalidade": 4243,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "COD_SISTEMA_DW",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 9,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": -3.0,
+        "p25": 21.0,
+        "p50": 21.0,
+        "p75": 21.0,
+        "p95": 21.0,
+        "p99": 21.0,
+        "max": 21.0,
+        "media": 20.3789,
+        "desvio_padrao": 2.7387
+      },
+      "sugestoes_variaveis": [
+        "VLR_COD_SISTEMA_DW_TOTAL",
+        "VLR_COD_SISTEMA_DW_MEDIO",
+        "VLR_COD_SISTEMA_DW_MAX",
+        "QTD_COD_SISTEMA_DW"
+      ]
+    },
+    {
+      "coluna": "DAT_ATUALIZACAO_DW",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 79,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_ATUALIZACAO_DW",
+        "DIAS_ATE_ATUALIZACAO_DW",
+        "MES_ATUALIZACAO_DW"
+      ]
+    },
+    {
+      "coluna": "DAT_CRIACAO_DW",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 321,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_CRIACAO_DW",
+        "DIAS_ATE_CRIACAO_DW",
+        "MES_CRIACAO_DW"
+      ]
+    },
+    {
+      "coluna": "COD_CANAL_AQUISICAO_BI",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 17,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": -3.0,
+        "p25": -3.0,
+        "p50": -3.0,
+        "p75": -3.0,
+        "p95": 5.0,
+        "p99": 12.0,
+        "max": 16.0,
+        "media": -2.1707,
+        "desvio_padrao": 3.0105
+      },
+      "sugestoes_variaveis": [
+        "VLR_COD_CANAL_AQUISICAO_BI_TOTAL",
+        "VLR_COD_CANAL_AQUISICAO_BI_MEDIO",
+        "VLR_COD_CANAL_AQUISICAO_BI_MAX",
+        "QTD_COD_CANAL_AQUISICAO_BI"
+      ]
+    },
+    {
+      "coluna": "DSC_CANAL_AQUISICAO_BI",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_MEDIA",
+      "cardinalidade": 19,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT",
+        "MODE",
+        "TAXA_TOP_VALORES"
+      ],
+      "valores_frequentes": [
+        {
+          "valor": "-3",
+          "frequencia": 5262
+        },
+        {
+          "valor": "Cr?dito Digital",
+          "frequencia": 201
+        },
+        {
+          "valor": "Bancos",
+          "frequencia": 104
+        },
+        {
+          "valor": "N?o ? Inser??o",
+          "frequencia": 73
+        },
+        {
+          "valor": "N?O ? CR?DITO",
+          "frequencia": 72
+        }
+      ],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "COD_AGENTE_CREDITO",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "TEXTO_LIVRE",
+      "cardinalidade": 5105,
+      "pct_null": 4.98,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "DAT_EXPIRACAO_DW",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 32,
+      "pct_null": 16.78,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_EXPIRACAO_DW",
+        "DIAS_ATE_EXPIRACAO_DW",
+        "MES_EXPIRACAO_DW"
+      ]
+    },
+    {
+      "coluna": "COD_TIPO_CREDITO",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_FLAG",
+      "cardinalidade": 3,
+      "pct_null": 4.98,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "TAXA_POR_VALOR",
+        "FLAG_TEM_VALOR",
+        "COUNT",
+        "MODE"
+      ],
+      "valores_frequentes": [
+        {
+          "valor": "CV",
+          "frequencia": 5208
+        },
+        {
+          "valor": "CF",
+          "frequencia": 315
+        },
+        {
+          "valor": "None",
+          "frequencia": 294
+        },
+        {
+          "valor": "-3",
+          "frequencia": 82
+        }
+      ],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "TAXA_TIPO_CREDITO_[VALOR]",
+        "FLAG_TIPO_CREDITO_[VALOR]",
+        "QTD_TIPO_CREDITO_DISTINTOS"
+      ]
+    },
+    {
+      "coluna": "COD_TIPO_INSTITUICAO",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_MEDIA",
+      "cardinalidade": 11,
+      "pct_null": 89.3,
+      "qualidade_modelo": "BAIXA_MUITOS_NULLS",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT",
+        "MODE",
+        "TAXA_TOP_VALORES"
+      ],
+      "valores_frequentes": [
+        {
+          "valor": "None",
+          "frequencia": 5268
+        },
+        {
+          "valor": "4",
+          "frequencia": 238
+        },
+        {
+          "valor": "11",
+          "frequencia": 201
+        },
+        {
+          "valor": "2",
+          "frequencia": 53
+        },
+        {
+          "valor": "13",
+          "frequencia": 34
+        }
+      ],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "DSC_TIPO_INSTITUICAO",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_MEDIA",
+      "cardinalidade": 13,
+      "pct_null": 89.3,
+      "qualidade_modelo": "BAIXA_MUITOS_NULLS",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT",
+        "MODE",
+        "TAXA_TOP_VALORES"
+      ],
+      "valores_frequentes": [
+        {
+          "valor": "None",
+          "frequencia": 5268
+        },
+        {
+          "valor": "Distribuidor Regional",
+          "frequencia": 238
+        },
+        {
+          "valor": "Street Seller",
+          "frequencia": 201
+        },
+        {
+          "valor": "Venda Direta",
+          "frequencia": 50
+        },
+        {
+          "valor": "Distribuidor Nacional",
+          "frequencia": 34
+        }
+      ],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "_execution_id",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "METADADO_SISTEMA",
+      "cardinalidade": 1,
+      "pct_null": 0.0,
+      "qualidade_modelo": "INUTILIZAVEL_CONSTANTE",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "_data_inclusao",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "METADADO_SISTEMA",
+      "cardinalidade": 1,
+      "pct_null": 0.0,
+      "qualidade_modelo": "INUTILIZAVEL_CONSTANTE",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "_data_alteracao_silver",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "METADADO_SISTEMA",
+      "cardinalidade": 1,
+      "pct_null": 0.0,
+      "qualidade_modelo": "INUTILIZAVEL_CONSTANTE",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    }
+  ]
+}

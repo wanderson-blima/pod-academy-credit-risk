@@ -1,0 +1,2075 @@
+{
+  "tabela": "rawdata.pagamento",
+  "data_geracao": "2026-01-15 01:12:17",
+  "total_registros": 27948583,
+  "total_colunas": 76,
+  "colunas_utilizaveis_book": 42,
+  "resumo_tipos": {
+    "NUMERICA_VALOR": 29,
+    "TEXTO_LIVRE": 17,
+    "CATEGORICA_FLAG": 10,
+    "TEMPORAL": 13,
+    "CATEGORICA_MEDIA": 4,
+    "METADADO_SISTEMA": 3
+  },
+  "metadados_colunas": [
+    {
+      "coluna": "SEQ_ARQUIVO_PAGAMENTO",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 5432,
+      "pct_null": 71.19,
+      "qualidade_modelo": "BAIXA_MUITOS_NULLS",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": 103.0,
+        "p25": 3923.0,
+        "p50": 5263.0,
+        "p75": 6118.0,
+        "p95": 6781.0,
+        "p99": 23939.0,
+        "max": 26558.0,
+        "media": 5083.437,
+        "desvio_padrao": 3293.0992
+      },
+      "sugestoes_variaveis": [
+        "VLR_SEQ_ARQUIVO_PAGAMENTO_TOTAL",
+        "VLR_SEQ_ARQUIVO_PAGAMENTO_MEDIO",
+        "VLR_SEQ_ARQUIVO_PAGAMENTO_MAX",
+        "QTD_SEQ_ARQUIVO_PAGAMENTO"
+      ]
+    },
+    {
+      "coluna": "NUM_PARCELA_PAGAMENTO",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 484,
+      "pct_null": 98.0,
+      "qualidade_modelo": "BAIXA_MUITOS_NULLS",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": 103.0,
+        "p25": 333.0,
+        "p50": 401.0,
+        "p75": 459.0,
+        "p95": 2802.0,
+        "p99": 2834.0,
+        "max": 2854.0,
+        "media": 638.3081,
+        "desvio_padrao": 758.0587
+      },
+      "sugestoes_variaveis": [
+        "VLR_PARCELA_PAGAMENTO_TOTAL",
+        "VLR_PARCELA_PAGAMENTO_MEDIO",
+        "VLR_PARCELA_PAGAMENTO_MAX",
+        "QTD_PARCELA_PAGAMENTO"
+      ]
+    },
+    {
+      "coluna": "NUM_AGRUPADOR_PAGAMENTO",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "TEXTO_LIVRE",
+      "cardinalidade": 85924,
+      "pct_null": 79.51,
+      "qualidade_modelo": "BAIXA_MUITOS_NULLS",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "DSC_PAGAMENTO",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "TEXTO_LIVRE",
+      "cardinalidade": 104540,
+      "pct_null": 89.36,
+      "qualidade_modelo": "BAIXA_MUITOS_NULLS",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "VAL_ATUAL_PAGAMENTO",
+      "tipo_spark": "DecimalType(18,4)",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 37093,
+      "pct_null": 43.77,
+      "qualidade_modelo": "MEDIA_REQUER_TRATAMENTO",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": 0.01,
+        "p25": 39.89,
+        "p50": 59.89,
+        "p75": 93.53,
+        "p95": 224.9,
+        "p99": 403.72,
+        "max": 3407335.19,
+        "media": 101.7696,
+        "desvio_padrao": 4662.6533
+      },
+      "sugestoes_variaveis": [
+        "VLR_ATUAL_PAGAMENTO_TOTAL",
+        "VLR_ATUAL_PAGAMENTO_MEDIO",
+        "VLR_ATUAL_PAGAMENTO_MAX",
+        "QTD_ATUAL_PAGAMENTO"
+      ]
+    },
+    {
+      "coluna": "COD_METODO_PAGAMENTO",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 6,
+      "pct_null": 80.2,
+      "qualidade_modelo": "BAIXA_MUITOS_NULLS",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": 1.0,
+        "p25": 1.0,
+        "p50": 3.0,
+        "p75": 5.0,
+        "p95": 5.0,
+        "p99": 5.0,
+        "max": 6.0,
+        "media": 2.9746,
+        "desvio_padrao": 1.5454
+      },
+      "sugestoes_variaveis": [
+        "VLR_COD_METODO_PAGAMENTO_TOTAL",
+        "VLR_COD_METODO_PAGAMENTO_MEDIO",
+        "VLR_COD_METODO_PAGAMENTO_MAX",
+        "QTD_COD_METODO_PAGAMENTO"
+      ]
+    },
+    {
+      "coluna": "IND_STATUS_PAGAMENTO",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_FLAG",
+      "cardinalidade": 4,
+      "pct_null": 54.04,
+      "qualidade_modelo": "BAIXA_MUITOS_NULLS",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "TAXA_POR_VALOR",
+        "FLAG_TEM_VALOR",
+        "COUNT",
+        "MODE"
+      ],
+      "valores_frequentes": [
+        {
+          "valor": "None",
+          "frequencia": 540455
+        },
+        {
+          "valor": "R",
+          "frequencia": 339650
+        },
+        {
+          "valor": "C",
+          "frequencia": 105056
+        },
+        {
+          "valor": "P",
+          "frequencia": 14488
+        },
+        {
+          "valor": "B",
+          "frequencia": 404
+        }
+      ],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "TAXA_PAGAMENTO_[VALOR]",
+        "FLAG_PAGAMENTO_[VALOR]",
+        "QTD_PAGAMENTO_DISTINTOS"
+      ]
+    },
+    {
+      "coluna": "DAT_STATUS_PAGAMENTO",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 354,
+      "pct_null": 43.77,
+      "qualidade_modelo": "MEDIA_REQUER_TRATAMENTO",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_STATUS_PAGAMENTO",
+        "DIAS_ATE_STATUS_PAGAMENTO",
+        "MES_STATUS_PAGAMENTO"
+      ]
+    },
+    {
+      "coluna": "COD_ARQUIVO_PAGAMENTO",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "TEXTO_LIVRE",
+      "cardinalidade": 121539,
+      "pct_null": 87.71,
+      "qualidade_modelo": "BAIXA_MUITOS_NULLS",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "COD_NETUNO_PAGAMENTO",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_FLAG",
+      "cardinalidade": 0,
+      "pct_null": 100.0,
+      "qualidade_modelo": "BAIXA_MUITOS_NULLS",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "TAXA_POR_VALOR",
+        "FLAG_TEM_VALOR",
+        "COUNT",
+        "MODE"
+      ],
+      "valores_frequentes": [
+        {
+          "valor": "None",
+          "frequencia": 1000053
+        }
+      ],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "TAXA_NETUNO_PAGAMENTO_[VALOR]",
+        "FLAG_NETUNO_PAGAMENTO_[VALOR]",
+        "QTD_NETUNO_PAGAMENTO_DISTINTOS"
+      ]
+    },
+    {
+      "coluna": "DAT_CRIACAO_CREDITO",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 511501,
+      "pct_null": 43.77,
+      "qualidade_modelo": "MEDIA_REQUER_TRATAMENTO",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_CRIACAO_CREDITO",
+        "DIAS_ATE_CRIACAO_CREDITO",
+        "MES_CRIACAO_CREDITO"
+      ]
+    },
+    {
+      "coluna": "DAT_ATUALIZACAO_CREDITO",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 0,
+      "pct_null": 100.0,
+      "qualidade_modelo": "BAIXA_MUITOS_NULLS",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_ATUALIZACAO_CREDITO",
+        "DIAS_ATE_ATUALIZACAO_CREDITO",
+        "MES_ATUALIZACAO_CREDITO"
+      ]
+    },
+    {
+      "coluna": "COD_LOGIN_CREDITO",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "TEXTO_LIVRE",
+      "cardinalidade": 323,
+      "pct_null": 72.74,
+      "qualidade_modelo": "BAIXA_MUITOS_NULLS",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "VAL_PAGAMENTO_CREDITO",
+      "tipo_spark": "DecimalType(18,4)",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 27231,
+      "pct_null": 43.77,
+      "qualidade_modelo": "MEDIA_REQUER_TRATAMENTO",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": 0.01,
+        "p25": 24.89,
+        "p50": 45.16,
+        "p75": 64.81,
+        "p95": 148.69,
+        "p99": 272.47,
+        "max": 126067.88,
+        "media": 58.1528,
+        "desvio_padrao": 449.8169
+      },
+      "sugestoes_variaveis": [
+        "VLR_PAGAMENTO_CREDITO_TOTAL",
+        "VLR_PAGAMENTO_CREDITO_MEDIO",
+        "VLR_PAGAMENTO_CREDITO_MAX",
+        "QTD_PAGAMENTO_CREDITO"
+      ]
+    },
+    {
+      "coluna": "IND_TIPO_CREDITO",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_FLAG",
+      "cardinalidade": 1,
+      "pct_null": 43.77,
+      "qualidade_modelo": "MEDIA_REQUER_TRATAMENTO",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "TAXA_POR_VALOR",
+        "FLAG_TEM_VALOR",
+        "COUNT",
+        "MODE"
+      ],
+      "valores_frequentes": [
+        {
+          "valor": "P",
+          "frequencia": 562361
+        },
+        {
+          "valor": "None",
+          "frequencia": 437692
+        }
+      ],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "TAXA_TIPO_CREDITO_[VALOR]",
+        "FLAG_TIPO_CREDITO_[VALOR]",
+        "QTD_TIPO_CREDITO_DISTINTOS"
+      ]
+    },
+    {
+      "coluna": "SEQ_PAGAMENTO_CREDITO",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 295,
+      "pct_null": 43.77,
+      "qualidade_modelo": "MEDIA_REQUER_TRATAMENTO",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": 1.0,
+        "p25": 3.0,
+        "p50": 15.0,
+        "p75": 40.0,
+        "p95": 94.0,
+        "p99": 164.0,
+        "max": 360.0,
+        "media": 27.8482,
+        "desvio_padrao": 34.751
+      },
+      "sugestoes_variaveis": [
+        "VLR_SEQ_PAGAMENTO_CREDITO_TOTAL",
+        "VLR_SEQ_PAGAMENTO_CREDITO_MEDIO",
+        "VLR_SEQ_PAGAMENTO_CREDITO_MAX",
+        "QTD_SEQ_PAGAMENTO_CREDITO"
+      ]
+    },
+    {
+      "coluna": "SEQ_FATURA_CREDITO",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 680,
+      "pct_null": 43.77,
+      "qualidade_modelo": "MEDIA_REQUER_TRATAMENTO",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": 1.0,
+        "p25": 4.0,
+        "p50": 19.0,
+        "p75": 61.0,
+        "p95": 153.0,
+        "p99": 292.0,
+        "max": 1349.0,
+        "media": 42.6741,
+        "desvio_padrao": 61.2699
+      },
+      "sugestoes_variaveis": [
+        "VLR_SEQ_FATURA_CREDITO_TOTAL",
+        "VLR_SEQ_FATURA_CREDITO_MEDIO",
+        "VLR_SEQ_FATURA_CREDITO_MAX",
+        "QTD_SEQ_FATURA_CREDITO"
+      ]
+    },
+    {
+      "coluna": "COD_ALOCACAO_CREDITO",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_FLAG",
+      "cardinalidade": 8,
+      "pct_null": 43.77,
+      "qualidade_modelo": "MEDIA_REQUER_TRATAMENTO",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "TAXA_POR_VALOR",
+        "FLAG_TEM_VALOR",
+        "COUNT",
+        "MODE"
+      ],
+      "valores_frequentes": [
+        {
+          "valor": "PYM",
+          "frequencia": 535221
+        },
+        {
+          "valor": "None",
+          "frequencia": 437692
+        },
+        {
+          "valor": "CRT",
+          "frequencia": 24777
+        },
+        {
+          "valor": "CRTW",
+          "frequencia": 1767
+        },
+        {
+          "valor": "CRF",
+          "frequencia": 223
+        }
+      ],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "TAXA_ALOCACAO_CREDITO_[VALOR]",
+        "FLAG_ALOCACAO_CREDITO_[VALOR]",
+        "QTD_ALOCACAO_CREDITO_DISTINTOS"
+      ]
+    },
+    {
+      "coluna": "COD_DESALOCACAO_CREDITO",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_FLAG",
+      "cardinalidade": 0,
+      "pct_null": 100.0,
+      "qualidade_modelo": "BAIXA_MUITOS_NULLS",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "TAXA_POR_VALOR",
+        "FLAG_TEM_VALOR",
+        "COUNT",
+        "MODE"
+      ],
+      "valores_frequentes": [
+        {
+          "valor": "None",
+          "frequencia": 1000053
+        }
+      ],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "TAXA_DESALOCACAO_CREDITO_[VALOR]",
+        "FLAG_DESALOCACAO_CREDITO_[VALOR]",
+        "QTD_DESALOCACAO_CREDITO_DISTINTOS"
+      ]
+    },
+    {
+      "coluna": "SEQ_ENTIDADE_CREDITO",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 1614,
+      "pct_null": 43.77,
+      "qualidade_modelo": "MEDIA_REQUER_TRATAMENTO",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": 1.0,
+        "p25": 3.0,
+        "p50": 22.0,
+        "p75": 71.0,
+        "p95": 211.0,
+        "p99": 445.0,
+        "max": 321101.0,
+        "media": 65.3052,
+        "desvio_padrao": 1226.5826
+      },
+      "sugestoes_variaveis": [
+        "VLR_SEQ_ENTIDADE_CREDITO_TOTAL",
+        "VLR_SEQ_ENTIDADE_CREDITO_MEDIO",
+        "VLR_SEQ_ENTIDADE_CREDITO_MAX",
+        "QTD_SEQ_ENTIDADE_CREDITO"
+      ]
+    },
+    {
+      "coluna": "COD_TIPO_FATURA",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_MEDIA",
+      "cardinalidade": 19,
+      "pct_null": 43.77,
+      "qualidade_modelo": "MEDIA_REQUER_TRATAMENTO",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT",
+        "MODE",
+        "TAXA_TOP_VALORES"
+      ],
+      "valores_frequentes": [
+        {
+          "valor": "B",
+          "frequencia": 438239
+        },
+        {
+          "valor": "None",
+          "frequencia": 437692
+        },
+        {
+          "valor": "21",
+          "frequencia": 102766
+        },
+        {
+          "valor": "PA",
+          "frequencia": 10389
+        },
+        {
+          "valor": "P1",
+          "frequencia": 2638
+        }
+      ],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "DAT_ATIVIDADE_CREDITO",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 373,
+      "pct_null": 43.77,
+      "qualidade_modelo": "MEDIA_REQUER_TRATAMENTO",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_ATIVIDADE_CREDITO",
+        "DIAS_ATE_ATIVIDADE_CREDITO",
+        "MES_ATIVIDADE_CREDITO"
+      ]
+    },
+    {
+      "coluna": "DAT_VENCIMENTO_CREDITO",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 776,
+      "pct_null": 43.77,
+      "qualidade_modelo": "MEDIA_REQUER_TRATAMENTO",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_VENCIMENTO_CREDITO",
+        "DIAS_ATE_VENCIMENTO_CREDITO",
+        "MES_VENCIMENTO_CREDITO"
+      ]
+    },
+    {
+      "coluna": "_execution_id",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "METADADO_SISTEMA",
+      "cardinalidade": 2,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "_data_inclusao",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "METADADO_SISTEMA",
+      "cardinalidade": 1,
+      "pct_null": 0.0,
+      "qualidade_modelo": "INUTILIZAVEL_CONSTANTE",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "NUM_CPF",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "TEXTO_LIVRE",
+      "cardinalidade": 588552,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "DAT_STATUS_FATURA",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 548,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_STATUS_FATURA",
+        "DIAS_ATE_STATUS_FATURA",
+        "MES_STATUS_FATURA"
+      ]
+    },
+    {
+      "coluna": "CONTRATO",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "TEXTO_LIVRE",
+      "cardinalidade": 672205,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "SEQ_FATURA",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 255,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": null,
+        "p25": 5.0,
+        "p50": 21.0,
+        "p75": 43.0,
+        "p95": 96.0,
+        "p99": 165.0,
+        "max": 254.0,
+        "media": 31.2293,
+        "desvio_padrao": 34.6157
+      },
+      "sugestoes_variaveis": [
+        "VLR_SEQ_FATURA_TOTAL",
+        "VLR_SEQ_FATURA_MEDIO",
+        "VLR_SEQ_FATURA_MAX",
+        "QTD_SEQ_FATURA"
+      ]
+    },
+    {
+      "coluna": "NUM_SUB_SEQ_FATURA",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 737,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": 1.0,
+        "p25": 7.0,
+        "p50": 28.0,
+        "p75": 65.0,
+        "p95": 170.0,
+        "p99": 308.0,
+        "max": 1349.0,
+        "media": 49.1102,
+        "desvio_padrao": 63.8248
+      },
+      "sugestoes_variaveis": [
+        "VLR_SUB_SEQ_FATURA_TOTAL",
+        "VLR_SUB_SEQ_FATURA_MEDIO",
+        "VLR_SUB_SEQ_FATURA_MAX",
+        "QTD_SUB_SEQ_FATURA"
+      ]
+    },
+    {
+      "coluna": "NUM_CREDITO_SEQ",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 311,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": 1.0,
+        "p25": 5.0,
+        "p50": 22.0,
+        "p75": 44.0,
+        "p95": 98.0,
+        "p99": 171.0,
+        "max": 360.0,
+        "media": 31.7845,
+        "desvio_padrao": 35.4855
+      },
+      "sugestoes_variaveis": [
+        "VLR_CREDITO_SEQ_TOTAL",
+        "VLR_CREDITO_SEQ_MEDIO",
+        "VLR_CREDITO_SEQ_MAX",
+        "QTD_CREDITO_SEQ"
+      ]
+    },
+    {
+      "coluna": "DW_TIPO_FATURA",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 20,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": -2.0,
+        "p25": -2.0,
+        "p50": -2.0,
+        "p75": -2.0,
+        "p95": 118.0,
+        "p99": 146.0,
+        "max": 186.0,
+        "media": 27.0465,
+        "desvio_padrao": 53.0779
+      },
+      "sugestoes_variaveis": [
+        "VLR_DW_TIPO_FATURA_TOTAL",
+        "VLR_DW_TIPO_FATURA_MEDIO",
+        "VLR_DW_TIPO_FATURA_MAX",
+        "QTD_DW_TIPO_FATURA"
+      ]
+    },
+    {
+      "coluna": "IND_STATUS_FATURA",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_FLAG",
+      "cardinalidade": 2,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "TAXA_POR_VALOR",
+        "FLAG_TEM_VALOR",
+        "COUNT",
+        "MODE"
+      ],
+      "valores_frequentes": [
+        {
+          "valor": "C",
+          "frequencia": 994013
+        },
+        {
+          "valor": "O",
+          "frequencia": 6040
+        }
+      ],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "TAXA_FATURA_[VALOR]",
+        "FLAG_FATURA_[VALOR]",
+        "QTD_FATURA_DISTINTOS"
+      ]
+    },
+    {
+      "coluna": "DW_NUM_CLIENTE",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "TEXTO_LIVRE",
+      "cardinalidade": 683133,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "DW_AREA",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 68,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": -3.0,
+        "p25": -3.0,
+        "p50": -3.0,
+        "p75": -3.0,
+        "p95": -3.0,
+        "p99": 16.0,
+        "max": 67.0,
+        "media": -2.5658,
+        "desvio_padrao": 4.0814
+      },
+      "sugestoes_variaveis": [
+        "VLR_DW_AREA_TOTAL",
+        "VLR_DW_AREA_MEDIO",
+        "VLR_DW_AREA_MAX",
+        "QTD_DW_AREA"
+      ]
+    },
+    {
+      "coluna": "DW_UN_NEGOCIO",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 10,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": 1.0,
+        "p25": 3.0,
+        "p50": 4.0,
+        "p75": 6.0,
+        "p95": 9.0,
+        "p99": 10.0,
+        "max": 10.0,
+        "media": 4.5121,
+        "desvio_padrao": 2.5195
+      },
+      "sugestoes_variaveis": [
+        "VLR_DW_UN_NEGOCIO_TOTAL",
+        "VLR_DW_UN_NEGOCIO_MEDIO",
+        "VLR_DW_UN_NEGOCIO_MAX",
+        "QTD_DW_UN_NEGOCIO"
+      ]
+    },
+    {
+      "coluna": "DW_FORMA_PAGAMENTO",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 4,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": 10.0,
+        "p25": 10.0,
+        "p50": 12.0,
+        "p75": 14.0,
+        "p95": 14.0,
+        "p99": 15.0,
+        "max": 15.0,
+        "media": 12.0446,
+        "desvio_padrao": 1.8559
+      },
+      "sugestoes_variaveis": [
+        "VLR_DW_FORMA_PAGAMENTO_TOTAL",
+        "VLR_DW_FORMA_PAGAMENTO_MEDIO",
+        "VLR_DW_FORMA_PAGAMENTO_MAX",
+        "QTD_DW_FORMA_PAGAMENTO"
+      ]
+    },
+    {
+      "coluna": "VAL_PAGAMENTO_FATURA",
+      "tipo_spark": "DecimalType(18,4)",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 32951,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": 0.01,
+        "p25": 24.89,
+        "p50": 47.99,
+        "p75": 66.22,
+        "p95": 153.99,
+        "p99": 280.86,
+        "max": 159659.49,
+        "media": 61.5782,
+        "desvio_padrao": 533.7586
+      },
+      "sugestoes_variaveis": [
+        "VLR_PAGAMENTO_FATURA_TOTAL",
+        "VLR_PAGAMENTO_FATURA_MEDIO",
+        "VLR_PAGAMENTO_FATURA_MAX",
+        "QTD_PAGAMENTO_FATURA"
+      ]
+    },
+    {
+      "coluna": "DAT_CRIACAO_DW",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 46405,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_CRIACAO_DW",
+        "DIAS_ATE_CRIACAO_DW",
+        "MES_CRIACAO_DW"
+      ]
+    },
+    {
+      "coluna": "DW_BANCO",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 52,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": -3.0,
+        "p25": -3.0,
+        "p50": -3.0,
+        "p75": 1368.0,
+        "p95": 1694.0,
+        "p99": 1950.0,
+        "max": 1994.0,
+        "media": 528.7391,
+        "desvio_padrao": 705.4054
+      },
+      "sugestoes_variaveis": [
+        "VLR_DW_BANCO_TOTAL",
+        "VLR_DW_BANCO_MEDIO",
+        "VLR_DW_BANCO_MAX",
+        "QTD_DW_BANCO"
+      ]
+    },
+    {
+      "coluna": "DW_TIPO_PAGAMENTO",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 4,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": 30001.0,
+        "p25": 30001.0,
+        "p50": 30003.0,
+        "p75": 30007.0,
+        "p95": 30007.0,
+        "p99": 30007.0,
+        "max": 30007.0,
+        "media": 30003.8591,
+        "desvio_padrao": 2.7559
+      },
+      "sugestoes_variaveis": [
+        "VLR_DW_TIPO_PAGAMENTO_TOTAL",
+        "VLR_DW_TIPO_PAGAMENTO_MEDIO",
+        "VLR_DW_TIPO_PAGAMENTO_MAX",
+        "QTD_DW_TIPO_PAGAMENTO"
+      ]
+    },
+    {
+      "coluna": "NUM_BANCO_PAGAMENTO",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_MEDIA",
+      "cardinalidade": 41,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT",
+        "MODE",
+        "TAXA_TOP_VALORES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "NUM_AGENCIA_PAGAMENTO",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "TEXTO_LIVRE",
+      "cardinalidade": 8524,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "NUM_CC_PAGAMENTO",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "TEXTO_LIVRE",
+      "cardinalidade": 96006,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "DW_MOTIVO_ESTORNO",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 1,
+      "pct_null": 0.0,
+      "qualidade_modelo": "INUTILIZAVEL_CONSTANTE",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": -3.0,
+        "p25": -3.0,
+        "p50": -3.0,
+        "p75": -3.0,
+        "p95": -3.0,
+        "p99": -3.0,
+        "max": -3.0,
+        "media": -3.0,
+        "desvio_padrao": null
+      },
+      "sugestoes_variaveis": [
+        "VLR_DW_MOTIVO_ESTORNO_TOTAL",
+        "VLR_DW_MOTIVO_ESTORNO_MEDIO",
+        "VLR_DW_MOTIVO_ESTORNO_MAX",
+        "QTD_DW_MOTIVO_ESTORNO"
+      ]
+    },
+    {
+      "coluna": "VAL_DESCONTO_ITEM",
+      "tipo_spark": "DecimalType(18,4)",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 1,
+      "pct_null": 0.0,
+      "qualidade_modelo": "INUTILIZAVEL_CONSTANTE",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": null,
+        "p25": 0.0,
+        "p50": null,
+        "p75": 0.0,
+        "p95": null,
+        "p99": null,
+        "max": null,
+        "media": null,
+        "desvio_padrao": null
+      },
+      "sugestoes_variaveis": [
+        "VLR_DESCONTO_ITEM_TOTAL",
+        "VLR_DESCONTO_ITEM_MEDIO",
+        "VLR_DESCONTO_ITEM_MAX",
+        "QTD_DESCONTO_ITEM"
+      ]
+    },
+    {
+      "coluna": "VAL_PAGAMENTO_ITEM",
+      "tipo_spark": "DecimalType(18,4)",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 32951,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": 0.01,
+        "p25": 24.89,
+        "p50": 47.99,
+        "p75": 66.22,
+        "p95": 153.99,
+        "p99": 280.83,
+        "max": 159659.49,
+        "media": 61.5782,
+        "desvio_padrao": 533.7586
+      },
+      "sugestoes_variaveis": [
+        "VLR_PAGAMENTO_ITEM_TOTAL",
+        "VLR_PAGAMENTO_ITEM_MEDIO",
+        "VLR_PAGAMENTO_ITEM_MAX",
+        "QTD_PAGAMENTO_ITEM"
+      ]
+    },
+    {
+      "coluna": "VAL_JUROS_MULTAS_ITEM",
+      "tipo_spark": "DecimalType(18,4)",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 1757,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": null,
+        "p25": 0.0,
+        "p50": null,
+        "p75": 0.72,
+        "p95": 2.27,
+        "p99": 4.91,
+        "max": 6146.07,
+        "media": 0.5653,
+        "desvio_padrao": 10.6714
+      },
+      "sugestoes_variaveis": [
+        "VLR_JUROS_MULTAS_ITEM_TOTAL",
+        "VLR_JUROS_MULTAS_ITEM_MEDIO",
+        "VLR_JUROS_MULTAS_ITEM_MAX",
+        "QTD_JUROS_MULTAS_ITEM"
+      ]
+    },
+    {
+      "coluna": "VAL_MULTA_EQUIP_ITEM",
+      "tipo_spark": "DecimalType(18,4)",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 1061,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": null,
+        "p25": 0.0,
+        "p50": null,
+        "p75": 0.0,
+        "p95": null,
+        "p99": null,
+        "max": 56186.43,
+        "media": 0.3443,
+        "desvio_padrao": 59.9088
+      },
+      "sugestoes_variaveis": [
+        "VLR_MULTA_EQUIP_ITEM_TOTAL",
+        "VLR_MULTA_EQUIP_ITEM_MEDIO",
+        "VLR_MULTA_EQUIP_ITEM_MAX",
+        "QTD_MULTA_EQUIP_ITEM"
+      ]
+    },
+    {
+      "coluna": "VAL_MULTA_EQUIP_TOTAL",
+      "tipo_spark": "DecimalType(18,4)",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 1061,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": null,
+        "p25": 0.0,
+        "p50": null,
+        "p75": 0.0,
+        "p95": null,
+        "p99": null,
+        "max": 56186.43,
+        "media": 0.3443,
+        "desvio_padrao": 59.9088
+      },
+      "sugestoes_variaveis": [
+        "VLR_MULTA_EQUIP_TOTAL_TOTAL",
+        "VLR_MULTA_EQUIP_TOTAL_MEDIO",
+        "VLR_MULTA_EQUIP_TOTAL_MAX",
+        "QTD_MULTA_EQUIP_TOTAL"
+      ]
+    },
+    {
+      "coluna": "VAL_MULTA_FID_ITEM",
+      "tipo_spark": "DecimalType(18,4)",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 1,
+      "pct_null": 0.0,
+      "qualidade_modelo": "INUTILIZAVEL_CONSTANTE",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": null,
+        "p25": 0.0,
+        "p50": null,
+        "p75": 0.0,
+        "p95": null,
+        "p99": null,
+        "max": null,
+        "media": null,
+        "desvio_padrao": null
+      },
+      "sugestoes_variaveis": [
+        "VLR_MULTA_FID_ITEM_TOTAL",
+        "VLR_MULTA_FID_ITEM_MEDIO",
+        "VLR_MULTA_FID_ITEM_MAX",
+        "QTD_MULTA_FID_ITEM"
+      ]
+    },
+    {
+      "coluna": "COD_ORIGEM_NETUNO",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "TEXTO_LIVRE",
+      "cardinalidade": 138437,
+      "pct_null": 60.73,
+      "qualidade_modelo": "BAIXA_MUITOS_NULLS",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "COD_CONTA_ATIVIDADE",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "TEXTO_LIVRE",
+      "cardinalidade": 472138,
+      "pct_null": 43.77,
+      "qualidade_modelo": "MEDIA_REQUER_TRATAMENTO",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "SEQ_ENTIDADE_ATIVIDADE",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 295,
+      "pct_null": 43.77,
+      "qualidade_modelo": "MEDIA_REQUER_TRATAMENTO",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": 1.0,
+        "p25": 3.0,
+        "p50": 15.0,
+        "p75": 40.0,
+        "p95": 94.0,
+        "p99": 164.0,
+        "max": 360.0,
+        "media": 27.8482,
+        "desvio_padrao": 34.751
+      },
+      "sugestoes_variaveis": [
+        "VLR_SEQ_ENTIDADE_ATIVIDADE_TOTAL",
+        "VLR_SEQ_ENTIDADE_ATIVIDADE_MEDIO",
+        "VLR_SEQ_ENTIDADE_ATIVIDADE_MAX",
+        "QTD_SEQ_ENTIDADE_ATIVIDADE"
+      ]
+    },
+    {
+      "coluna": "DAT_CRIACAO_ATIVIDADE",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 511448,
+      "pct_null": 43.77,
+      "qualidade_modelo": "MEDIA_REQUER_TRATAMENTO",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_CRIACAO_ATIVIDADE",
+        "DIAS_ATE_CRIACAO_ATIVIDADE",
+        "MES_CRIACAO_ATIVIDADE"
+      ]
+    },
+    {
+      "coluna": "DAT_ATUALIZACAO_ATIVIDADE",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 34350,
+      "pct_null": 96.08,
+      "qualidade_modelo": "BAIXA_MUITOS_NULLS",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_ATUALIZACAO_ATIVIDADE",
+        "DIAS_ATE_ATUALIZACAO_ATIVIDADE",
+        "MES_ATUALIZACAO_ATIVIDADE"
+      ]
+    },
+    {
+      "coluna": "COD_LOGIN_OPERADOR_ATIVIDADE",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "TEXTO_LIVRE",
+      "cardinalidade": 301,
+      "pct_null": 72.71,
+      "qualidade_modelo": "BAIXA_MUITOS_NULLS",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "COD_ATIVIDADE",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_FLAG",
+      "cardinalidade": 4,
+      "pct_null": 43.77,
+      "qualidade_modelo": "MEDIA_REQUER_TRATAMENTO",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "TAXA_POR_VALOR",
+        "FLAG_TEM_VALOR",
+        "COUNT",
+        "MODE"
+      ],
+      "valores_frequentes": [
+        {
+          "valor": "PYM",
+          "frequencia": 561690
+        },
+        {
+          "valor": "None",
+          "frequencia": 437692
+        },
+        {
+          "valor": "BCK",
+          "frequencia": 404
+        },
+        {
+          "valor": "FNTT",
+          "frequencia": 263
+        },
+        {
+          "valor": "FNTF",
+          "frequencia": 4
+        }
+      ],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "TAXA_ATIVIDADE_[VALOR]",
+        "FLAG_ATIVIDADE_[VALOR]",
+        "QTD_ATIVIDADE_DISTINTOS"
+      ]
+    },
+    {
+      "coluna": "COD_RAZAO_ATIVIDADE",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_FLAG",
+      "cardinalidade": 6,
+      "pct_null": 52.09,
+      "qualidade_modelo": "BAIXA_MUITOS_NULLS",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "TAXA_POR_VALOR",
+        "FLAG_TEM_VALOR",
+        "COUNT",
+        "MODE"
+      ],
+      "valores_frequentes": [
+        {
+          "valor": "None",
+          "frequencia": 520897
+        },
+        {
+          "valor": "CA",
+          "frequencia": 259775
+        },
+        {
+          "valor": "PB",
+          "frequencia": 209021
+        },
+        {
+          "valor": "PA",
+          "frequencia": 9689
+        },
+        {
+          "valor": "ECBBCK",
+          "frequencia": 270
+        }
+      ],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "TAXA_RAZAO_ATIVIDADE_[VALOR]",
+        "FLAG_RAZAO_ATIVIDADE_[VALOR]",
+        "QTD_RAZAO_ATIVIDADE_DISTINTOS"
+      ]
+    },
+    {
+      "coluna": "DAT_BAIXA_ATIVIDADE",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 350,
+      "pct_null": 43.77,
+      "qualidade_modelo": "MEDIA_REQUER_TRATAMENTO",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_BAIXA_ATIVIDADE",
+        "DIAS_ATE_BAIXA_ATIVIDADE",
+        "MES_BAIXA_ATIVIDADE"
+      ]
+    },
+    {
+      "coluna": "VAL_BAIXA_ATIVIDADE",
+      "tipo_spark": "DecimalType(18,4)",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 37443,
+      "pct_null": 43.77,
+      "qualidade_modelo": "MEDIA_REQUER_TRATAMENTO",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": -2763.53,
+        "p25": 39.89,
+        "p50": 59.89,
+        "p75": 93.41,
+        "p95": 224.81,
+        "p99": 403.1,
+        "max": 3407335.19,
+        "media": 101.1942,
+        "desvio_padrao": 4659.7747
+      },
+      "sugestoes_variaveis": [
+        "VLR_BAIXA_ATIVIDADE_TOTAL",
+        "VLR_BAIXA_ATIVIDADE_MEDIO",
+        "VLR_BAIXA_ATIVIDADE_MAX",
+        "QTD_BAIXA_ATIVIDADE"
+      ]
+    },
+    {
+      "coluna": "DAT_DEPOSITO_ATIVIDADE",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 422,
+      "pct_null": 43.77,
+      "qualidade_modelo": "MEDIA_REQUER_TRATAMENTO",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_DEPOSITO_ATIVIDADE",
+        "DIAS_ATE_DEPOSITO_ATIVIDADE",
+        "MES_DEPOSITO_ATIVIDADE"
+      ]
+    },
+    {
+      "coluna": "COD_FUNDO_ATIVIDADE",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "TEXTO_LIVRE",
+      "cardinalidade": 189,
+      "pct_null": 99.96,
+      "qualidade_modelo": "BAIXA_MUITOS_NULLS",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "COD_BANCO_ATIVIDADE",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_MEDIA",
+      "cardinalidade": 37,
+      "pct_null": 71.06,
+      "qualidade_modelo": "BAIXA_MUITOS_NULLS",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT",
+        "MODE",
+        "TAXA_TOP_VALORES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "NUM_CONTA_ATIVIDADE",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "TEXTO_LIVRE",
+      "cardinalidade": 63630,
+      "pct_null": 91.68,
+      "qualidade_modelo": "BAIXA_MUITOS_NULLS",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "COD_AGENCIA_ATIVIDADE",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "TEXTO_LIVRE",
+      "cardinalidade": 8169,
+      "pct_null": 75.9,
+      "qualidade_modelo": "BAIXA_MUITOS_NULLS",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "SEQ_ENTIDADE_PAGAMENTO",
+      "tipo_spark": "LongType()",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 295,
+      "pct_null": 43.77,
+      "qualidade_modelo": "MEDIA_REQUER_TRATAMENTO",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": 1.0,
+        "p25": 3.0,
+        "p50": 15.0,
+        "p75": 40.0,
+        "p95": 94.0,
+        "p99": 164.0,
+        "max": 360.0,
+        "media": 27.8482,
+        "desvio_padrao": 34.751
+      },
+      "sugestoes_variaveis": [
+        "VLR_SEQ_ENTIDADE_PAGAMENTO_TOTAL",
+        "VLR_SEQ_ENTIDADE_PAGAMENTO_MEDIO",
+        "VLR_SEQ_ENTIDADE_PAGAMENTO_MAX",
+        "QTD_SEQ_ENTIDADE_PAGAMENTO"
+      ]
+    },
+    {
+      "coluna": "DAT_CRIACAO_PAGAMENTO",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 511343,
+      "pct_null": 43.77,
+      "qualidade_modelo": "MEDIA_REQUER_TRATAMENTO",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_CRIACAO_PAGAMENTO",
+        "DIAS_ATE_CRIACAO_PAGAMENTO",
+        "MES_CRIACAO_PAGAMENTO"
+      ]
+    },
+    {
+      "coluna": "DAT_ATUALIZACAO_PAGAMENTO",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "TEMPORAL",
+      "cardinalidade": 44410,
+      "pct_null": 89.47,
+      "qualidade_modelo": "BAIXA_MUITOS_NULLS",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "MIN",
+        "MAX",
+        "DATEDIFF",
+        "COUNT_DISTINCT_MES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "DIAS_DESDE_ATUALIZACAO_PAGAMENTO",
+        "DIAS_ATE_ATUALIZACAO_PAGAMENTO",
+        "MES_ATUALIZACAO_PAGAMENTO"
+      ]
+    },
+    {
+      "coluna": "COD_LOGIN_PAGAMENTO",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "TEXTO_LIVRE",
+      "cardinalidade": 301,
+      "pct_null": 73.88,
+      "qualidade_modelo": "BAIXA_MUITOS_NULLS",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "COD_FORMA_PAGAMENTO",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_FLAG",
+      "cardinalidade": 4,
+      "pct_null": 43.77,
+      "qualidade_modelo": "MEDIA_REQUER_TRATAMENTO",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "TAXA_POR_VALOR",
+        "FLAG_TEM_VALOR",
+        "COUNT",
+        "MODE"
+      ],
+      "valores_frequentes": [
+        {
+          "valor": "None",
+          "frequencia": 437692
+        },
+        {
+          "valor": "CA",
+          "frequencia": 259800
+        },
+        {
+          "valor": "PB",
+          "frequencia": 209665
+        },
+        {
+          "valor": "DD",
+          "frequencia": 83206
+        },
+        {
+          "valor": "PA",
+          "frequencia": 9690
+        }
+      ],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "TAXA_FORMA_PAGAMENTO_[VALOR]",
+        "FLAG_FORMA_PAGAMENTO_[VALOR]",
+        "QTD_FORMA_PAGAMENTO_DISTINTOS"
+      ]
+    },
+    {
+      "coluna": "VAL_ORIGINAL_PAGAMENTO",
+      "tipo_spark": "DecimalType(18,4)",
+      "tipo_variavel": "NUMERICA_VALOR",
+      "cardinalidade": 37118,
+      "pct_null": 43.77,
+      "qualidade_modelo": "MEDIA_REQUER_TRATAMENTO",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "SUM",
+        "AVG",
+        "MAX",
+        "MIN",
+        "STDDEV",
+        "COUNT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {
+        "min": 0.01,
+        "p25": 39.89,
+        "p50": 59.89,
+        "p75": 93.72,
+        "p95": 225.55,
+        "p99": 408.42,
+        "max": 6281737.26,
+        "media": 1297.0111,
+        "desvio_padrao": 71964.6273
+      },
+      "sugestoes_variaveis": [
+        "VLR_ORIGINAL_PAGAMENTO_TOTAL",
+        "VLR_ORIGINAL_PAGAMENTO_MEDIO",
+        "VLR_ORIGINAL_PAGAMENTO_MAX",
+        "QTD_ORIGINAL_PAGAMENTO"
+      ]
+    },
+    {
+      "coluna": "NUM_FATURA_PAGAMENTO",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "TEXTO_LIVRE",
+      "cardinalidade": 532285,
+      "pct_null": 46.36,
+      "qualidade_modelo": "MEDIA_REQUER_TRATAMENTO",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "COD_TIPO_PAGAMENTO",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_FLAG",
+      "cardinalidade": 5,
+      "pct_null": 43.77,
+      "qualidade_modelo": "MEDIA_REQUER_TRATAMENTO",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "TAXA_POR_VALOR",
+        "FLAG_TEM_VALOR",
+        "COUNT",
+        "MODE"
+      ],
+      "valores_frequentes": [
+        {
+          "valor": "None",
+          "frequencia": 437692
+        },
+        {
+          "valor": "O",
+          "frequencia": 259340
+        },
+        {
+          "valor": "P",
+          "frequencia": 206196
+        },
+        {
+          "valor": "D",
+          "frequencia": 83206
+        },
+        {
+          "valor": "B",
+          "frequencia": 13159
+        }
+      ],
+      "percentis": {},
+      "sugestoes_variaveis": [
+        "TAXA_TIPO_PAGAMENTO_[VALOR]",
+        "FLAG_TIPO_PAGAMENTO_[VALOR]",
+        "QTD_TIPO_PAGAMENTO_DISTINTOS"
+      ]
+    },
+    {
+      "coluna": "DSC_NOME_BANCO_PAGAMENTO",
+      "tipo_spark": "StringType()",
+      "tipo_variavel": "CATEGORICA_MEDIA",
+      "cardinalidade": 74,
+      "pct_null": 43.77,
+      "qualidade_modelo": "MEDIA_REQUER_TRATAMENTO",
+      "usar_no_book": true,
+      "agregacoes_sugeridas": [
+        "COUNT_DISTINCT",
+        "MODE",
+        "TAXA_TOP_VALORES"
+      ],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    },
+    {
+      "coluna": "_data_alteracao_silver",
+      "tipo_spark": "TimestampType()",
+      "tipo_variavel": "METADADO_SISTEMA",
+      "cardinalidade": 2,
+      "pct_null": 0.0,
+      "qualidade_modelo": "BOA",
+      "usar_no_book": false,
+      "agregacoes_sugeridas": [],
+      "valores_frequentes": [],
+      "percentis": {},
+      "sugestoes_variaveis": []
+    }
+  ]
+}

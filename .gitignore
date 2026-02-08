@@ -1,0 +1,41 @@
+
+
+# Environment & Secrets (AIOS)
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+
+# Dependencies (AIOS)
+node_modules/
+node_modules
+
+# Build & Logs (AIOS)
+dist/
+build/
+*.log
+logs/
+
+# IDE & OS (AIOS)
+.DS_Store
+Thumbs.db
+.idea/
+*.swp
+
+# AIOS Local (AIOS)
+.aios-core/local/
+.claude/settings.local.json
+.aios/install-log.txt
+
+# AIOS Framework & Agent Infrastructure (não é código do projeto)
+.agent/
+.aios-core/
+.antigravity/
+.claude/
+.env.example
+
+# Documentos internos do hackathon (apenas contexto local)
+0-docs/Parceria com a Oracle.pdf
+0-docs/prévia- Apresentação Hackthon 2025.pdf
+0-docs/Super Hackathon 2025 - PoD Academy \[Squads\].pdf
