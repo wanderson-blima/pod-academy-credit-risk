@@ -28,6 +28,7 @@ from config.pipeline_config import (
     PATH_DADOS_CADASTRAIS, PATH_TELCO, PATH_SCORE_BUREAU,
     PATH_BOOK_RECARGA_CMV, PATH_BOOK_PAGAMENTO, PATH_BOOK_FATURAMENTO,
     PATH_FEATURE_STORE, SAFRAS as DEFAULT_SAFRAS,
+    SPARK_BROADCAST_THRESHOLD, SPARK_SHUFFLE_PARTITIONS, SPARK_AQE_ENABLED,
 )
 
 logging.basicConfig(
@@ -87,10 +88,12 @@ def build_book_consolidado(spark, safras=None):
         safras = DEFAULT_SAFRAS
 
     # Broadcast join threshold (10MB) — consistente com os 3 books individuais
-    spark.sql("SET spark.sql.autoBroadcastJoinThreshold = 10485760")
-    spark.conf.set("spark.sql.adaptive.enabled", "true")
-    spark.conf.set("spark.sql.shuffle.partitions", "200")
-    logger.info("autoBroadcastJoinThreshold=10MB, AQE=true, shuffle.partitions=200")
+    spark.conf.set("spark.sql.autoBroadcastJoinThreshold", str(SPARK_BROADCAST_THRESHOLD))
+    spark.conf.set("spark.sql.adaptive.enabled", str(SPARK_AQE_ENABLED).lower())
+    spark.conf.set("spark.sql.shuffle.partitions", str(SPARK_SHUFFLE_PARTITIONS))
+    spark.conf.set("spark.sql.sources.partitionOverwriteMode", "dynamic")
+    logger.info("AQE=%s, broadcast=%dMB, shuffle=%d, partitionOverwrite=dynamic",
+                SPARK_AQE_ENABLED, SPARK_BROADCAST_THRESHOLD // 1048576, SPARK_SHUFFLE_PARTITIONS)
 
     logger.info("Book Consolidado — carregando fontes...")
 

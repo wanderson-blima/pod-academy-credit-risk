@@ -28,6 +28,7 @@ import logging
 import sys; sys.path.insert(0, "/lakehouse/default/Files/projeto-final")
 from config.pipeline_config import (
     SILVER_BASE, PATH_BOOK_FATURAMENTO, SAFRAS as DEFAULT_SAFRAS,
+    SPARK_BROADCAST_THRESHOLD, SPARK_SHUFFLE_PARTITIONS, SPARK_AQE_ENABLED,
 )
 
 logging.basicConfig(
@@ -245,9 +246,9 @@ def _safra_to_cutoff(safra):
 
 def _load_views(spark):
     """Carrega tabelas Delta e registra views temporarias com broadcast."""
-    spark.conf.set("spark.sql.autoBroadcastJoinThreshold", "10485760")
-    spark.conf.set("spark.sql.shuffle.partitions", "200")
-    spark.conf.set("spark.sql.adaptive.enabled", "true")
+    spark.conf.set("spark.sql.autoBroadcastJoinThreshold", str(SPARK_BROADCAST_THRESHOLD))
+    spark.conf.set("spark.sql.shuffle.partitions", str(SPARK_SHUFFLE_PARTITIONS))
+    spark.conf.set("spark.sql.adaptive.enabled", str(SPARK_AQE_ENABLED).lower())
 
     spark.read.format("delta").load(PATH_FATURAMENTO).createOrReplaceTempView("fato_faturamento")
 
@@ -279,7 +280,13 @@ def build_book_faturamento(spark, safras=None):
     _load_views(spark)
 
     results = {}
+    failed = []
+    first_success = True
     for i, safra in enumerate(safras):
+        # Validar SAFRA
+        y, m = divmod(safra, 100)
+        if not (1 <= m <= 12):
+            raise ValueError(f"SAFRA invalida {safra}: mes {m} fora de 1-12")
         try:
             logger.info("[%d/%d] SAFRA %d", i + 1, len(safras), safra)
             cutoff = _safra_to_cutoff(safra)
@@ -291,20 +298,28 @@ def build_book_faturamento(spark, safras=None):
                 .mode("overwrite") \
                 .option("replaceWhere", f"SAFRA = {safra}") \
                 .partitionBy("SAFRA") \
-                .option("overwriteSchema", "true" if i == 0 else "false") \
+                .option("overwriteSchema", "true" if first_success else "false") \
                 .save(PATH_OUTPUT)
 
+            first_success = False
             logger.info("  SAFRA %d escrita com sucesso", safra)
         except Exception as e:
-            logger.error("SAFRA %d falhou: %s", safra, e)
+            logger.error("SAFRA %d falhou: %s", safra, e, exc_info=True)
+            failed.append(safra)
             continue
+
+    if failed:
+        logger.warning("SAFRAs com falha: %s", failed)
 
     # Contagem final via Delta (evita cache/count no loop)
     df_final = spark.read.format("delta").load(PATH_OUTPUT)
     for safra in safras:
         cnt = df_final.filter(f"SAFRA = {safra}").count()
         results[safra] = cnt
-        logger.info("  SAFRA %d: %d registros", safra, cnt)
+        if cnt == 0 and safra not in failed:
+            logger.warning("  SAFRA %d: 0 registros (possivel problema no filtro)", safra)
+        else:
+            logger.info("  SAFRA %d: %d registros", safra, cnt)
 
     logger.info("Book Faturamento concluido — %d registros total",
                 sum(results.values()))

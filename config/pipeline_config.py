@@ -77,6 +77,13 @@ SILVER_TABLES = ["score_bureau_movel_full", "dados_cadastrais", "telco"]
 EXPERIMENT_NAME = "hackathon-pod-academy/credit-risk-fpd"
 
 # =============================================================================
+# SPARK PERFORMANCE TUNING
+# =============================================================================
+SPARK_BROADCAST_THRESHOLD = 52428800   # 50MB — broadcast JOINs para dimensoes
+SPARK_SHUFFLE_PARTITIONS = 200         # AQE shuffle partitions default
+SPARK_AQE_ENABLED = True               # Adaptive Query Execution
+
+# =============================================================================
 # DATA QUALITY CONFIG
 # =============================================================================
 LEAKAGE_BLACKLIST = ["FAT_VLR_FPD"]
