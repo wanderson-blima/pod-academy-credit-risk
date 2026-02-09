@@ -24,6 +24,7 @@ from mlflow.tracking import MlflowClient
 from scipy.stats import ks_2samp
 from sklearn.metrics import roc_auc_score
 from pyspark.sql import functions as F
+from pyspark.sql.types import FloatType, IntegerType, DoubleType, LongType
 
 import sys; sys.path.insert(0, "/lakehouse/default/Files/projeto-final")
 from config.pipeline_config import (
@@ -142,6 +143,8 @@ def run_monitoring(spark):
     spark.conf.set("spark.sql.autoBroadcastJoinThreshold", str(SPARK_BROADCAST_THRESHOLD))
     spark.conf.set("spark.sql.adaptive.enabled", str(SPARK_AQE_ENABLED).lower())
     spark.conf.set("spark.sql.shuffle.partitions", str(SPARK_SHUFFLE_PARTITIONS))
+    spark.conf.set("spark.sql.execution.arrow.pyspark.enabled", "true")
+    spark.conf.set("spark.sql.execution.arrow.pyspark.selfDestruct.enabled", "true")
 
     logger.info("=== Monitoramento de Drift ===")
     logger.info("Baseline: %s | Monitor: %d", BASELINE_SAFRAS, MONITOR_SAFRA)
@@ -214,8 +217,22 @@ def run_monitoring(spark):
             f"Verifique se o feature_store esta atualizado e se o metadata corresponde."
         )
 
-    pdf_baseline = df_baseline.select(cols_available).toPandas()
-    pdf_current = df_current.select(cols_available).toPandas()
+    # ---- Type cast Double->Float, Long->Int para reduzir serializacao ----
+    df_bl_sel = df_baseline.select(cols_available)
+    df_cur_sel = df_current.select(cols_available)
+    cast_exprs = []
+    for field in df_bl_sel.schema.fields:
+        if isinstance(field.dataType, DoubleType):
+            cast_exprs.append(F.col(field.name).cast(FloatType()).alias(field.name))
+        elif isinstance(field.dataType, LongType):
+            cast_exprs.append(F.col(field.name).cast(IntegerType()).alias(field.name))
+        else:
+            cast_exprs.append(F.col(field.name))
+    df_bl_sel = df_bl_sel.select(*cast_exprs)
+    df_cur_sel = df_cur_sel.select(*cast_exprs)
+
+    pdf_baseline = df_bl_sel.toPandas()
+    pdf_current = df_cur_sel.toPandas()
 
     # M2: fillna(0) — estrategia conservadora para features numericas do modelo.
     # Justificativa: features de books (REC_, PAG_, FAT_) sao agregacoes numericas
