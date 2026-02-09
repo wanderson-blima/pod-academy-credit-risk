@@ -207,11 +207,15 @@ FROM dados_cadastrais c
         total_colunas = len(df_result.columns)
         logger.info("Query executada — %d colunas. Escrevendo em Delta...", total_colunas)
 
+        # dynamic partition overwrite e incompativel com overwriteSchema;
+        # como o consolidado faz overwrite total, usar static temporariamente
+        spark.conf.set("spark.sql.sources.partitionOverwriteMode", "static")
         df_result.write.format("delta") \
             .mode("overwrite") \
             .partitionBy("SAFRA") \
             .option("overwriteSchema", "true") \
             .save(PATH_FEATURE_STORE)
+        spark.conf.set("spark.sql.sources.partitionOverwriteMode", "dynamic")
 
         logger.info("Salvo em: %s", PATH_FEATURE_STORE)
 
