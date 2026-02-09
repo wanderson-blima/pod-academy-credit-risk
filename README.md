@@ -242,6 +242,8 @@ executar: 5-treinamento-modelos/monitoramento_drift.py
 ```
 
 > Todos os scripts importam configuracao de `config/pipeline_config.py`. Nenhum ID ou path de Lakehouse e hardcoded nos scripts.
+>
+> Para o guia completo de configuracao no Fabric (Lakehouse attachments, parametros, troubleshooting), veja **[0-docs/architecture/guia-execucao-fabric.md](0-docs/architecture/guia-execucao-fabric.md)**.
 
 ## Configuracao Centralizada
 
