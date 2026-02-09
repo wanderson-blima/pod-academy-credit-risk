@@ -1,0 +1,2 @@
+# Force LF line endings for Jupyter notebooks — Fabric rejects CRLF on import
+*.ipynb text eol=lf
