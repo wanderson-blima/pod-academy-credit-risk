@@ -19,6 +19,7 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 import mlflow
+import mlflow.sklearn
 from mlflow.tracking import MlflowClient
 from scipy.stats import ks_2samp
 from sklearn.metrics import roc_auc_score
@@ -26,7 +27,7 @@ from pyspark.sql import functions as F
 
 import sys; sys.path.insert(0, "/lakehouse/default/Files/projeto-final")
 from config.pipeline_config import (
-    PATH_FEATURE_STORE, EXPERIMENT_NAME,
+    PATH_FEATURE_STORE, EXPERIMENT_NAME, REGISTERED_MODEL_NAME,
     SPARK_BROADCAST_THRESHOLD, SPARK_SHUFFLE_PARTITIONS, SPARK_AQE_ENABLED,
 )
 
@@ -36,7 +37,7 @@ logger = logging.getLogger("monitoramento_drift")
 # =============================================================================
 # PARAMETROS
 # =============================================================================
-MODEL_NAME = "credit-risk-fpd-lgbm_baseline"
+MODEL_NAME = REGISTERED_MODEL_NAME
 MODEL_STAGE = "Production"
 
 BASELINE_SAFRAS = [202410, 202411, 202412]  # SAFRAs de treino
@@ -163,8 +164,9 @@ def run_monitoring(spark):
 
     mv = model_versions[0]
     model_uri = f"models:/{MODEL_NAME}/{MODEL_STAGE}"
-    model = mlflow.pyfunc.load_model(model_uri)
-    logger.info("Modelo: %s v%s", mv.name, mv.version)
+    # L2-FIX: usar mlflow.sklearn.load_model para acesso direto a predict_proba
+    model = mlflow.sklearn.load_model(model_uri)
+    logger.info("Modelo (sklearn): %s v%s", mv.name, mv.version)
 
     # Feature names do metadata
     artifacts_path = client.download_artifacts(mv.run_id, "")
@@ -232,17 +234,14 @@ def run_monitoring(spark):
         """Extrai probabilidades P(classe=1) do modelo.
 
         Raises:
-            ValueError: Se o modelo nao possui predict_proba — scores de classe
-                        {0,1} invalidariam o PSI de score.
+            ValueError: Se o modelo nao possui predict_proba.
         """
-        if hasattr(model, '_model_impl'):
-            inner = model._model_impl
-            if hasattr(inner, 'predict_proba'):
-                scores = inner.predict_proba(X)[:, 1]
-                return np.asarray(scores, dtype=float)
-        # H1: Nao retornar model.predict() (class labels 0/1) — isso tornaria o PSI inutil
+        # L2-FIX: Com mlflow.sklearn.load_model, predict_proba esta acessivel diretamente
+        if hasattr(model, 'predict_proba'):
+            scores = model.predict_proba(X)[:, 1]
+            return np.asarray(scores, dtype=float)
         raise ValueError(
-            "Modelo nao possui predict_proba acessivel via _model_impl. "
+            "Modelo nao possui predict_proba. "
             "PSI requer probabilidades continuas, nao labels de classe {0,1}. "
             "Verifique se o modelo foi exportado corretamente com MLflow."
         )
@@ -260,27 +259,40 @@ def run_monitoring(spark):
     # -------------------------------------------------------------------------
     logger.info("Calculando feature drift (top %d)...", TOP_N_FEATURES)
 
-    # Determinar top features via modelo (se LGBM) ou todas
+    # M3-FIX + L2-FIX: Determinar top features via modelo (se LGBM) ou todas.
+    # Com sklearn.load_model, o modelo e o pipeline sklearn diretamente.
     top_features = feature_names[:TOP_N_FEATURES]
-    if hasattr(model, '_model_impl'):
-        inner = model._model_impl
-        if hasattr(inner, 'named_steps'):
-            final_step = inner.steps[-1][1]
-            if hasattr(final_step, 'feature_importances_'):
-                importances = final_step.feature_importances_
-                # Mapear para nomes (pode ter transformacao no pipeline)
+    if hasattr(model, 'named_steps'):
+        final_step = model.steps[-1][1]
+        if hasattr(final_step, 'feature_importances_'):
+            importances = final_step.feature_importances_
+            # M3-FIX: Usar get_feature_names_out() do ColumnTransformer para mapear
+            # importances aos nomes corretos pos-transformacao
+            try:
+                transformed_names = model.named_steps['prep'].get_feature_names_out()
+                if len(importances) == len(transformed_names):
+                    idx = np.argsort(importances)[::-1][:TOP_N_FEATURES]
+                    # Converter nomes transformados (num__X, cat__X) de volta para originais
+                    top_features = []
+                    for i in idx:
+                        name = transformed_names[i]
+                        raw_name = name.split('__', 1)[-1] if '__' in name else name
+                        if raw_name in feature_names:
+                            top_features.append(raw_name)
+                        else:
+                            top_features.append(name)
+                    logger.info("Top %d features por importancia LGBM", len(top_features))
+                else:
+                    logger.warning(
+                        "Feature importance length mismatch: modelo tem %d importances, "
+                        "transformed names tem %d. Usando primeiras %d features do metadata.",
+                        len(importances), len(transformed_names), TOP_N_FEATURES,
+                    )
+            except Exception as e:
+                logger.warning("Erro ao mapear feature importances: %s. Usando fallback.", e)
                 if len(importances) == len(feature_names):
                     idx = np.argsort(importances)[::-1][:TOP_N_FEATURES]
                     top_features = [feature_names[i] for i in idx]
-                else:
-                    # C6: Log warning explicito sobre mismatch ao inves de falhar silenciosamente
-                    logger.warning(
-                        "Feature importance length mismatch: modelo tem %d importances, "
-                        "mas metadata lista %d features. Usando primeiras %d features "
-                        "do metadata como fallback. Possivel causa: transformacao no "
-                        "pipeline (ex: one-hot encoding) alterou o numero de features.",
-                        len(importances), len(feature_names), TOP_N_FEATURES,
-                    )
 
     feature_drift = {}
     for feat in top_features:

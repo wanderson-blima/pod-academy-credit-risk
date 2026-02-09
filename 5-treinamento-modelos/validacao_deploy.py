@@ -18,6 +18,7 @@ import numpy as np
 import pandas as pd
 from pandas.api.types import is_numeric_dtype  # M2: proper numeric type detection
 import mlflow
+import mlflow.sklearn
 from mlflow.tracking import MlflowClient
 from scipy.stats import ks_2samp
 from sklearn.metrics import roc_auc_score
@@ -25,7 +26,7 @@ from pyspark.sql import functions as F
 
 import sys; sys.path.insert(0, "/lakehouse/default/Files/projeto-final")
 from config.pipeline_config import (
-    PATH_FEATURE_STORE, EXPERIMENT_NAME,
+    PATH_FEATURE_STORE, EXPERIMENT_NAME, REGISTERED_MODEL_NAME,
     SPARK_BROADCAST_THRESHOLD, SPARK_SHUFFLE_PARTITIONS, SPARK_AQE_ENABLED,
 )
 
@@ -35,7 +36,7 @@ logger = logging.getLogger("validacao_deploy")
 # =============================================================================
 # PARAMETROS
 # =============================================================================
-MODEL_NAME = "credit-risk-fpd-lgbm_baseline"
+MODEL_NAME = REGISTERED_MODEL_NAME
 MODEL_STAGE = "Staging"
 VALIDATION_SAFRA = 202501  # OOS — SAFRA com FPD conhecido
 
@@ -82,8 +83,9 @@ def validate_deploy(spark):
 
     mv = model_versions[0]
     model_uri = f"models:/{MODEL_NAME}/{MODEL_STAGE}"
-    model = mlflow.pyfunc.load_model(model_uri)
-    logger.info("Modelo carregado: v%s (run_id=%s)", mv.version, mv.run_id)
+    # L2-FIX: usar mlflow.sklearn.load_model para acesso direto a predict_proba
+    model = mlflow.sklearn.load_model(model_uri)
+    logger.info("Modelo carregado (sklearn): v%s (run_id=%s)", mv.version, mv.run_id)
 
     # -------------------------------------------------------------------------
     # 2. Recuperar feature names e metricas do run original
@@ -160,37 +162,14 @@ def validate_deploy(spark):
         else:
             X[col] = X[col].fillna("MISSING")
 
-    # H1+M5: Try predict_proba first (continuous probabilities), fallback to predict
-    scores = None
-    if hasattr(model, '_model_impl'):
-        inner = model._model_impl
-        if hasattr(inner, 'predict_proba'):
-            try:
-                scores = inner.predict_proba(X)[:, 1]
-            except Exception as e:
-                raise RuntimeError(
-                    f"predict_proba() falhou ({type(e).__name__}): {e}"
-                ) from e
-        else:
-            logger.warning(
-                "_model_impl encontrado mas sem predict_proba — "
-                "fallback para predict() (scores podem ser classes, nao probabilidades)"
-            )
-    else:
-        logger.warning(
-            "_model_impl nao encontrado no modelo pyfunc — "
-            "fallback para predict() (scores podem ser classes, nao probabilidades)"
-        )
-
-    # Fallback: model.predict() se predict_proba nao disponivel
-    if scores is None:
-        try:
-            scores = model.predict(X)
-        except Exception as e:
-            raise RuntimeError(
-                f"model.predict() falhou ({type(e).__name__}): {e} — "
-                "verifique compatibilidade de features e tipos de dados"
-            ) from e
+    # L2-FIX: Com mlflow.sklearn.load_model, predict_proba esta acessivel diretamente
+    try:
+        scores = model.predict_proba(X)[:, 1]
+    except Exception as e:
+        raise RuntimeError(
+            f"predict_proba() falhou ({type(e).__name__}): {e} — "
+            "verifique compatibilidade de features e tipos de dados"
+        ) from e
 
     # -------------------------------------------------------------------------
     # 4. Calcular metricas
@@ -232,10 +211,15 @@ def validate_deploy(spark):
         })
         logger.error("Gini e NaN — FAIL automatico")
 
-    # Tentar pegar metricas de referencia (nomes podem variar)
-    ref_ks = ref_metrics.get("ks_oos", ref_metrics.get("ks_oot", None))
-    ref_auc = ref_metrics.get("auc_oos", ref_metrics.get("auc_oot", None))
-    ref_gini = ref_metrics.get("gini_oos", ref_metrics.get("gini_oot", None))
+    # M2-FIX: Preferir metrica especifica da safra de validacao (ex: ks_oos_202501),
+    # depois fallback para ks_oos (agregado), depois ks_oot
+    safra_suffix = f"_{VALIDATION_SAFRA}"
+    ref_ks = ref_metrics.get(f"ks_oos{safra_suffix}",
+             ref_metrics.get("ks_oos", ref_metrics.get("ks_oot", None)))
+    ref_auc = ref_metrics.get(f"auc_oos{safra_suffix}",
+              ref_metrics.get("auc_oos", ref_metrics.get("auc_oot", None)))
+    ref_gini = ref_metrics.get(f"gini_oos{safra_suffix}",
+               ref_metrics.get("gini_oos", ref_metrics.get("gini_oot", None)))
 
     # C3/H4: Scale detection — use > 2.0 as heuristic threshold.
     # KS and Gini values between 1 and 2 are valid in the 0-100 scale

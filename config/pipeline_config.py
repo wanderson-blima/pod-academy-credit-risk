@@ -75,6 +75,7 @@ SILVER_TABLES = ["score_bureau_movel_full", "dados_cadastrais", "telco"]
 # MLFLOW
 # =============================================================================
 EXPERIMENT_NAME = "hackathon-pod-academy/credit-risk-fpd"
+REGISTERED_MODEL_NAME = "credit-risk-fpd-lgbm_baseline"
 
 # =============================================================================
 # SPARK PERFORMANCE TUNING
