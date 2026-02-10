@@ -32,6 +32,16 @@ from config.pipeline_config import (
     SPARK_BROADCAST_THRESHOLD, SPARK_SHUFFLE_PARTITIONS, SPARK_AQE_ENABLED,
 )
 
+# FIX: sklearn >= 1.6 renamed force_all_finite -> ensure_all_finite
+# LightGBM sklearn wrapper still uses old name, causing TypeError on predict_proba
+import lightgbm.sklearn as _lgbm_sklearn
+_orig_check = _lgbm_sklearn._LGBMCheckArray
+def _patched_lgbm_check(*args, **kwargs):
+    kwargs.pop('force_all_finite', None)
+    kwargs.pop('ensure_all_finite', None)
+    return _orig_check(*args, **kwargs)
+_lgbm_sklearn._LGBMCheckArray = _patched_lgbm_check
+
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s", datefmt="%H:%M:%S")
 logger = logging.getLogger("monitoramento_drift")
 
@@ -171,6 +181,23 @@ def run_monitoring(spark):
     model = mlflow.sklearn.load_model(model_uri)
     logger.info("Modelo (sklearn): %s v%s", mv.name, mv.version)
 
+    # FIX: Patch SimpleImputer._fill_dtype para compatibilidade sklearn >=1.4
+    from sklearn.impute import SimpleImputer as _SI
+
+    def _patch_fill_dtype(obj):
+        if isinstance(obj, _SI) and not hasattr(obj, '_fill_dtype'):
+            if hasattr(obj, 'statistics_'):
+                obj._fill_dtype = obj.statistics_.dtype
+        if hasattr(obj, 'steps'):
+            for _, step in obj.steps:
+                _patch_fill_dtype(step)
+        if hasattr(obj, 'transformers_'):
+            for _, transformer, _ in obj.transformers_:
+                _patch_fill_dtype(transformer)
+
+    _patch_fill_dtype(model)
+    logger.info("SimpleImputer._fill_dtype patched (sklearn compat)")
+
     # Feature names do metadata
     artifacts_path = client.download_artifacts(mv.run_id, "")
     metadata_files = glob.glob(f"{artifacts_path}/*metadata*.json")
@@ -188,6 +215,15 @@ def run_monitoring(spark):
         .filter(F.col("SAFRA").isin(BASELINE_SAFRAS))
     df_current = spark.read.format("delta").load(PATH_FEATURE_STORE) \
         .filter(F.col("SAFRA") == MONITOR_SAFRA)
+
+    # FIX: Filtrar apenas clientes aprovados (mesma populacao do treino v5)
+    if "FLAG_INSTALACAO" in df_baseline.columns:
+        n_bl_total = df_baseline.count()
+        df_baseline = df_baseline.filter(F.col("FLAG_INSTALACAO") == 1)
+        n_cur_total = df_current.count()
+        df_current = df_current.filter(F.col("FLAG_INSTALACAO") == 1)
+        logger.info("FLAG_INSTALACAO filter: baseline %d->%d, atual %d->%d",
+                    n_bl_total, df_baseline.count(), n_cur_total, df_current.count())
 
     n_baseline = df_baseline.count()
     n_current = df_current.count()
@@ -288,16 +324,29 @@ def run_monitoring(spark):
             try:
                 transformed_names = model.named_steps['prep'].get_feature_names_out()
                 if len(importances) == len(transformed_names):
-                    idx = np.argsort(importances)[::-1][:TOP_N_FEATURES]
-                    # Converter nomes transformados (num__X, cat__X) de volta para originais
+                    # Construir mapa: nome transformado → nome original
+                    # Handles both formats: "num__SCORE_RISCO" and "num__0" (index-based)
+                    prep = model.named_steps['prep']
+                    orig_map = {}
+                    for trans_name, _, columns in prep.transformers_:
+                        if trans_name == 'remainder':
+                            continue
+                        for j, col in enumerate(columns):
+                            orig_map[f"{trans_name}__{j}"] = col
+                            orig_map[f"{trans_name}__{col}"] = col
+
+                    idx = np.argsort(importances)[::-1]
                     top_features = []
                     for i in idx:
                         name = transformed_names[i]
-                        raw_name = name.split('__', 1)[-1] if '__' in name else name
-                        if raw_name in feature_names:
-                            top_features.append(raw_name)
-                        else:
-                            top_features.append(name)
+                        orig = orig_map.get(name)
+                        if orig is None:
+                            raw = name.split('__', 1)[-1] if '__' in name else name
+                            orig = raw if raw in feature_names else None
+                        if orig and orig in feature_names and orig not in top_features:
+                            top_features.append(orig)
+                        if len(top_features) >= TOP_N_FEATURES:
+                            break
                     logger.info("Top %d features por importancia LGBM", len(top_features))
                 else:
                     logger.warning(

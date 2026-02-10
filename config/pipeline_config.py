@@ -69,13 +69,17 @@ SAFRAS = [202410, 202411, 202412, 202501, 202502, 202503]
 # =============================================================================
 # SILVER PROCESSING — tables to cast + deduplicate
 # =============================================================================
-SILVER_TABLES = ["score_bureau_movel_full", "dados_cadastrais", "telco"]
+SILVER_TABLES = ["ass_recarga_cmv_nova", "canal_aquisicao_credito", "dados_faturamento",
+                 "forma_pagamento", "instituicao", "pagamento", "plano_preco", "plataforma",
+                 "promocao_credito", "status_plataforma", "tecnologia", "tipo_credito",
+                 "tipo_faturamento", "tipo_insercao", "tipo_recarga",
+                 "score_bureau_movel_full", "dados_cadastrais", "telco"]
 
 # =============================================================================
 # MLFLOW
 # =============================================================================
-EXPERIMENT_NAME = "credit-risk-ds"
-REGISTERED_MODEL_NAME = "credit-risk-fpd-lgbm_baseline"
+EXPERIMENT_NAME = "credit-risk-ds-base"
+REGISTERED_MODEL_NAME = "credit-risk-fpd-lgbm_baseline_v6"
 
 # =============================================================================
 # SPARK PERFORMANCE TUNING
