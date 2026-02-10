@@ -1,9 +1,0 @@
-mlflow==2.12.2
-category-encoders==2.6.3
-cloudpickle==2.2.1
-configparser==5.0.2
-lz4==4.3.2
-psutil==5.9.0
-scikit-learn==1.2.2
-statsmodels==0.14.0
-typing-extensions==4.9.0
