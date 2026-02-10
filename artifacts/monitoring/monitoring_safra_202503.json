@@ -1,0 +1,132 @@
+{
+  "timestamp": "2026-02-10T18:26:29.660338",
+  "model_name": "credit-risk-fpd-lgbm_baseline_v6",
+  "model_version": "1",
+  "baseline_safras": [
+    202410,
+    202411,
+    202412
+  ],
+  "monitor_safra": 202503,
+  "overall_status": "YELLOW",
+  "recommendation": "ATENCAO \u2014 monitorar proxima SAFRA antes de agir",
+  "score_psi": 0.0028,
+  "score_status": "GREEN",
+  "feature_drift_summary": {
+    "total_monitored": 20,
+    "green": 19,
+    "yellow": 0,
+    "red": 1
+  },
+  "feature_drift_detail": {
+    "TARGET_SCORE_02": {
+      "psi": 0.0033,
+      "status": "GREEN"
+    },
+    "REC_SCORE_RISCO": {
+      "psi": 0.0021,
+      "status": "GREEN"
+    },
+    "REC_DIAS_ENTRE_RECARGAS": {
+      "psi": 1.3505,
+      "status": "RED"
+    },
+    "TARGET_SCORE_01": {
+      "psi": 0.0062,
+      "status": "GREEN"
+    },
+    "var_34": {
+      "psi": 0.0018,
+      "status": "GREEN"
+    },
+    "REC_VLR_REAL_STDDEV": {
+      "psi": 0.0518,
+      "status": "GREEN"
+    },
+    "REC_TAXA_CARTAO_ONLINE": {
+      "psi": 0.001,
+      "status": "GREEN"
+    },
+    "REC_DIAS_DESDE_ULTIMA_RECARGA": {
+      "psi": 0.014,
+      "status": "GREEN"
+    },
+    "REC_QTD_PLAT_AUTOC": {
+      "psi": 0.0668,
+      "status": "GREEN"
+    },
+    "FAT_DIAS_MEDIO_CRIACAO_VENCIMENTO": {
+      "psi": 0.0098,
+      "status": "GREEN"
+    },
+    "PAG_DIAS_DESDE_ULTIMA_FATURA": {
+      "psi": 0.0016,
+      "status": "GREEN"
+    },
+    "REC_COEF_VARIACAO_REAL": {
+      "psi": 0.031,
+      "status": "GREEN"
+    },
+    "REC_VLR_CREDITO_STDDEV": {
+      "psi": 0.0012,
+      "status": "GREEN"
+    },
+    "REC_QTD_CARTAO_ONLINE": {
+      "psi": 0.0378,
+      "status": "GREEN"
+    },
+    "REC_FREQ_RECARGA_DIARIA": {
+      "psi": 0.0057,
+      "status": "GREEN"
+    },
+    "PAG_VLR_PAGAMENTO_FATURA_STDDEV": {
+      "psi": 0.0085,
+      "status": "GREEN"
+    },
+    "PAG_TAXA_FORMA_PA": {
+      "psi": 0.0,
+      "status": "GREEN"
+    },
+    "REC_TAXA_PLAT_PREPG": {
+      "psi": 0.0052,
+      "status": "GREEN"
+    },
+    "REC_TAXA_STATUS_A": {
+      "psi": 0.0204,
+      "status": "GREEN"
+    },
+    "REC_QTD_INST_DIST_REG": {
+      "psi": 0.0012,
+      "status": "GREEN"
+    }
+  },
+  "performance_metrics": {
+    "ks": 33.23,
+    "auc": 0.7206,
+    "gini": 44.12
+  },
+  "performance_drift": {
+    "ks_drift_pp": -1.88,
+    "auc_drift": -0.0119,
+    "gini_drift_pp": -2.38,
+    "ks_status": "GREEN",
+    "auc_status": "GREEN",
+    "gini_status": "GREEN"
+  },
+  "thresholds": {
+    "psi_score_green": 0.1,
+    "psi_score_yellow": 0.25,
+    "psi_feature_green": 0.1,
+    "psi_feature_yellow": 0.2,
+    "ks_drift_max_pp": 5.0,
+    "gini_drift_max_pp": 5.0,
+    "auc_drift_max": 0.03
+  },
+  "alerts": [
+    "1 features com drift RED: ['REC_DIAS_ENTRE_RECARGAS']"
+  ],
+  "records": {
+    "baseline": 1358578,
+    "current": 444306
+  }
+}

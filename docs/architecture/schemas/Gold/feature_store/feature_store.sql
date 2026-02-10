@@ -1,0 +1,1 @@
+CREATE SCHEMA feature_store;

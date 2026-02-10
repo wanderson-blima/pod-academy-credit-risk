@@ -1,54 +1,76 @@
 
-
-# Environment & Secrets (AIOS)
+# ==========================================
+# Environment & Secrets
+# ==========================================
 .env
 .env.local
 .env.*.local
+.env.example
 *.key
 *.pem
 
-# Dependencies (AIOS)
-node_modules/
-node_modules
-
-# Build & Logs (AIOS)
-dist/
-build/
-*.log
-logs/
-
-# IDE & OS (AIOS)
-.DS_Store
-Thumbs.db
-.idea/
-*.swp
-
-# AIOS Local (AIOS)
-.aios-core/local/
-.claude/settings.local.json
-.aios/install-log.txt
-
-# AIOS Framework & Agent Infrastructure (não é código do projeto)
+# ==========================================
+# AIOS Framework (development infrastructure)
+# ==========================================
 .agent/
 .aios/
 .aios-core/
 .antigravity/
 .claude/
-.env.example
 squads/
-docs/
+node_modules/
 
-# Documentos internos do hackathon (PDFs originais — apenas contexto local)
-0-docs/Parceria com a Oracle.pdf
-0-docs/prévia- Apresentação Hackthon 2025.pdf
-0-docs/Super Hackathon 2025 - PoD Academy \[Squads\].pdf
+# ==========================================
+# Development Artifacts (stories, PRDs, reviews)
+# ==========================================
+.dev/
 
-# Handoffs de sessao AIOS (não fazem parte da entrega)
-0-docs/sessions/
+# ==========================================
+# Old/Legacy Directories (migrated to src/ and docs/)
+# ==========================================
+0-docs/
+1-ingestao-dados/
+2-metadados/
+3-edas/
+4-construcao-books/
+5-treinamento-modelos/
 
-# Python bytecode
+# ==========================================
+# Python
+# ==========================================
 __pycache__/
 *.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.eggs/
 
-# Windows artifacts
+# ==========================================
+# IDE & OS
+# ==========================================
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
 nul
+
+# ==========================================
+# Logs
+# ==========================================
+*.log
+logs/
+
+# ==========================================
+# Reference Materials (PDFs, Excel — local only)
+# ==========================================
+references/
+
+# ==========================================
+# Temporary & Build
+# ==========================================
+*.tmp
+*.bak
+.ipynb_checkpoints/
