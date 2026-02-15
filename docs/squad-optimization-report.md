@@ -9,7 +9,7 @@
 
 ## 1. Executive Summary
 
-A squad `oci-data-platform` foi criada para migrar o pipeline de risco de crédito (FPD) do Microsoft Fabric para Oracle Cloud Infrastructure. Após a criação inicial, aplicamos um fluxo completo de otimização em 2 sessões que elevou a qualidade de **8.4/10 (B+)** para **9.5/10 (A+)** e reduziu o custo de execução por tokens em **79.7%**.
+A squad `oci-data-platform` foi criada para migrar o pipeline de risco de crédito (FPD) do Microsoft Fabric para Oracle Cloud Infrastructure. Após a criação inicial, aplicamos um fluxo completo de otimização em 2 sessões que elevou a qualidade de **8.4/10 (B+)** para **9.5/10 (A+)**. O model routing final é **All Opus** para máxima qualidade na primeira execução, com potencial de economia de 79.7% após validação empírica no OCI.
 
 ### Resultado em Números
 
@@ -45,11 +45,11 @@ A squad `oci-data-platform` foi criada para migrar o pipeline de risco de crédi
 | Agent | Tier | Model | Minds Clonadas |
 |-------|------|-------|----------------|
 | oci-chief | Orchestrator | **Opus** | Rohit Rahi (OCI Well-Architected) |
-| infra-architect | 0 | Haiku | Andre Correa Neto, Ali Mukadam, Yevgeniy Brikman |
-| data-engineer | 1 | Haiku | Matei Zaharia (Spark), Holden Karau (PySpark) |
-| ml-engineer | 1 | Haiku | Chip Huyen (ML Systems), Goku Mohandas (MLOps) |
-| cloud-ops | 1 | Haiku | J.R. Storment (FinOps), Rohit Rahi |
-| security-engineer | 2 | Haiku | Andre Correa Neto (CIS Benchmarks) |
+| infra-architect | 0 | **Opus** | Andre Correa Neto, Ali Mukadam, Yevgeniy Brikman |
+| data-engineer | 1 | **Opus** | Matei Zaharia (Spark), Holden Karau (PySpark) |
+| ml-engineer | 1 | **Opus** | Chip Huyen (ML Systems), Goku Mohandas (MLOps) |
+| cloud-ops | 1 | **Opus** | J.R. Storment (FinOps), Rohit Rahi |
+| security-engineer | 2 | **Opus** | Andre Correa Neto (CIS Benchmarks) |
 
 ### 2.3 Workflows
 
@@ -136,20 +136,20 @@ Aplicação do **Executor Decision Tree** (Q1-Q6) em cada uma das **153 ações 
 
 | Task | Ações | Det% | Classificação | Model |
 |------|-------|------|---------------|-------|
-| deploy-network | 10 | 100% | SHOULD_BE_WORKER | Haiku |
-| deploy-storage | 9 | 100% | SHOULD_BE_WORKER | Haiku |
-| deploy-database | 9 | 100% | SHOULD_BE_WORKER | Haiku |
-| deploy-dataflow | 9 | 100% | SHOULD_BE_WORKER | Haiku |
-| deploy-datascience | 10 | 100% | SHOULD_BE_WORKER | Haiku |
-| ingest-bronze | 8 | 100% | SHOULD_BE_WORKER | Haiku |
-| transform-silver | 10 | 100% | SHOULD_BE_WORKER | Haiku |
-| engineer-gold | 13 | 100% | SHOULD_BE_WORKER | Haiku |
-| manage-costs | 13 | 100% | SHOULD_BE_WORKER | Haiku |
+| deploy-network | 10 | 100% | SHOULD_BE_WORKER | **Opus** |
+| deploy-storage | 9 | 100% | SHOULD_BE_WORKER | **Opus** |
+| deploy-database | 9 | 100% | SHOULD_BE_WORKER | **Opus** |
+| deploy-dataflow | 9 | 100% | SHOULD_BE_WORKER | **Opus** |
+| deploy-datascience | 10 | 100% | SHOULD_BE_WORKER | **Opus** |
+| ingest-bronze | 8 | 100% | SHOULD_BE_WORKER | **Opus** |
+| transform-silver | 10 | 100% | SHOULD_BE_WORKER | **Opus** |
+| engineer-gold | 13 | 100% | SHOULD_BE_WORKER | **Opus** |
+| manage-costs | 13 | 100% | SHOULD_BE_WORKER | **Opus** |
 | train-model | 14 | 100% | SHOULD_BE_WORKER | **Opus** |
-| deploy-model | 10 | 90% | COULD_BE_WORKER | Haiku |
-| setup-oci-cli | 8 | 75% | COULD_BE_WORKER | Haiku |
+| deploy-model | 10 | 90% | COULD_BE_WORKER | **Opus** |
+| setup-oci-cli | 8 | 75% | COULD_BE_WORKER | **Opus** |
 | destroy-infra | 10 | 80% | COULD_BE_WORKER | **Opus** |
-| **TOTAL** | **153** | **93.5%** | — | **11H + 2O** |
+| **TOTAL** | **153** | **93.5%** | — | **All Opus (13O)** |
 
 ### 4.3 Model Routing Policy
 
@@ -263,9 +263,7 @@ FUTURE (after first successful OCI run):
 |---|---------|-----------|
 | 16 | config.yaml | +model_routing section, quality 95.0 A+ |
 | 17 | data/oci-knowledge-base.md | +Model Routing + Token Economy |
-| 18-28 | 11 task files | +Model: Haiku line |
-| 29 | tasks/train-model.md | +Model: Opus |
-| 30 | tasks/destroy-infra.md | +Model: Opus |
+| 18-30 | 13 task files | +Model: Opus line (All Opus policy) |
 
 **Total: 30 edições em 15 arquivos únicos (2 sessões)**
 
@@ -278,8 +276,8 @@ A squad `oci-data-platform` representa um sistema multi-agente completo para mig
 - **9 elite minds** clonadas de referências reais (Zaharia, Brikman, Huyen, etc.)
 - **13 tasks** com 153 ações atômicas, 93.5% determinísticas
 - **~150 veto conditions** que impedem erros antes de acontecerem
-- **Model routing** otimizado: Opus para decisões críticas, Haiku para execução
-- **79.7% de economia** em custo de tokens vs all-Opus
+- **Model routing** All Opus: máxima qualidade para primeira execução no OCI
+- **79.7% de economia futura** em tokens após validação empírica (Haiku deferred)
 - **Quality A+** (9.5/10) validada por auditoria independente
 
 A squad está pronta para execução. O próximo passo é ativar o orchestrator (`/oci-data-platform:oci-chief`) com uma conta OCI ativa e rodar o workflow `wf-full-deploy`.
