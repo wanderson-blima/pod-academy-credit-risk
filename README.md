@@ -26,11 +26,11 @@ Desenvolvido em parceria com **Claro** e **Oracle** na plataforma **Microsoft Fa
 
 ## Resultados do Modelo
 
-| Modelo | KS (OOT) | AUC (OOT) | Gini (OOT) | KS (OOS) | AUC (OOS) |
-|--------|----------|-----------|------------|----------|-----------|
-| **LightGBM (baseline)** | **33.97%** | **0.7303** | **46.06 pp** | 35.89% | 0.7437 |
-| Logistic Regression L1 | 32.77% | 0.7207 | 44.15 pp | 34.79% | 0.7347 |
-| *Benchmark (Score Bureau)* | *33.10%* | *—* | *—* | *—* | *—* |
+| Modelo                        | KS (OOT)         | AUC (OOT)        | Gini (OOT)         | KS (OOS) | AUC (OOS) |
+| ----------------------------- | ---------------- | ---------------- | ------------------ | -------- | --------- |
+| **LightGBM (baseline)** | **33.97%** | **0.7303** | **46.06 pp** | 35.89%   | 0.7437    |
+| Logistic Regression L1        | 32.77%           | 0.7207           | 44.15 pp           | 34.79%   | 0.7347    |
+| *Benchmark (Score Bureau)*  | *33.10%*       | *—*           | *—*             | *—*   | *—*    |
 
 > O modelo LightGBM **supera o benchmark do Score Bureau** em 0.87 pp de KS, com estabilidade temporal validada (PSI < 0.002).
 
@@ -43,13 +43,13 @@ Desenvolvido em parceria com **Claro** e **Oracle** na plataforma **Microsoft Fa
 
 ### Performance por Decil (Out-of-Time)
 
-| Decil | Taxa Default | Score Medio | Lift | Acumulado Bad |
-|-------|-------------|-------------|------|---------------|
-| 1 (maior risco) | 52.73% | 0.525 | 2.47x | 24.7% |
-| 2 | 36.98% | 0.367 | 1.73x | 42.1% |
-| 3 | 29.31% | 0.286 | 1.37x | 55.8% |
-| ... | ... | ... | ... | ... |
-| 10 (menor risco) | 5.07% | 0.049 | 0.24x | 100% |
+| Decil            | Taxa Default | Score Medio | Lift  | Acumulado Bad |
+| ---------------- | ------------ | ----------- | ----- | ------------- |
+| 1 (maior risco)  | 52.73%       | 0.525       | 2.47x | 24.7%         |
+| 2                | 36.98%       | 0.367       | 1.73x | 42.1%         |
+| 3                | 29.31%       | 0.286       | 1.37x | 55.8%         |
+| ...              | ...          | ...         | ...   | ...           |
+| 10 (menor risco) | 5.07%        | 0.049       | 0.24x | 100%          |
 
 ---
 
@@ -71,13 +71,13 @@ graph LR
 
 **Tabela**: `Gold.feature_store.clientes_consolidado`
 
-| Atributo | Valor |
-|----------|-------|
-| Granularidade | `NUM_CPF` + `SAFRA` (YYYYMM) |
-| Registros | ~3.9 milhoes |
-| Colunas | 402 (90 REC_ + 94 PAG_ + 114 FAT_ + 103 base + 1 audit) |
-| SAFRAs | 202410 a 202503 (6 periodos) |
-| Target | FPD (First Payment Default) — binario {0, 1} |
+| Atributo      | Valor                                                   |
+| ------------- | ------------------------------------------------------- |
+| Granularidade | `NUM_CPF` + `SAFRA` (YYYYMM)                        |
+| Registros     | ~3.9 milhoes                                            |
+| Colunas       | 402 (90 REC_ + 94 PAG_ + 114 FAT_ + 103 base + 1 audit) |
+| SAFRAs        | 202410 a 202503 (6 periodos)                            |
+| Target        | FPD (First Payment Default) — binario {0, 1}           |
 
 ### Composicao de Features
 
@@ -153,19 +153,19 @@ projeto-final/
 
 ## Pipeline de Execucao
 
-| # | Etapa | Script | Descricao |
-|---|-------|--------|-----------|
-| 1 | Ingestao | [`src/ingestion/ingestao-arquivos.py`](src/ingestion/ingestao-arquivos.py) | CSV/Excel/Parquet → Bronze (staging) |
-| 2 | Tipagem | [`src/metadata/ajustes-tipagem-deduplicacao.py`](src/metadata/ajustes-tipagem-deduplicacao.py) | Tipagem + deduplicacao → Silver (rawdata) |
-| 3 | Dimensoes | [`src/ingestion/criacao-dimensoes.py`](src/ingestion/criacao-dimensoes.py) | Tabelas dimensionais (calendario, CPF) |
-| 4a | Book Recarga | [`src/feature-engineering/book_recarga_cmv.py`](src/feature-engineering/book_recarga_cmv.py) | 90 features (REC_*) |
-| 4b | Book Pagamento | [`src/feature-engineering/book_pagamento.py`](src/feature-engineering/book_pagamento.py) | 94 features (PAG_*) |
-| 4c | Book Faturamento | [`src/feature-engineering/book_faturamento.py`](src/feature-engineering/book_faturamento.py) | 114 features (FAT_*) |
-| 4d | Consolidacao | [`src/feature-engineering/book_consolidado.py`](src/feature-engineering/book_consolidado.py) | 402 colunas consolidadas → Gold |
-| 5 | Modelo | [`src/modeling/modelo_baseline.ipynb`](src/modeling/modelo_baseline.ipynb) | Treinamento LR L1 + LightGBM |
-| 6 | Scoring | [`src/modeling/scoring-batch.ipynb`](src/modeling/scoring-batch.ipynb) | Scoring batch (score 0-1000) |
-| 7 | Validacao | [`src/modeling/validacao-deploy.ipynb`](src/modeling/validacao-deploy.ipynb) | Validacao de deploy (KS/AUC/Gini) |
-| 8 | Monitoramento | [`src/modeling/monitoramento-drift.ipynb`](src/modeling/monitoramento-drift.ipynb) | PSI drift + performance tracking |
+| #  | Etapa            | Script                                                                                        | Descricao                                  |
+| -- | ---------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| 1  | Ingestao         | [`src/ingestion/ingestao-arquivos.py`](src/ingestion/ingestao-arquivos.py)                     | CSV/Excel/Parquet → Bronze (staging)      |
+| 2  | Tipagem          | [`src/metadata/ajustes-tipagem-deduplicacao.py`](src/metadata/ajustes-tipagem-deduplicacao.py) | Tipagem + deduplicacao → Silver (rawdata) |
+| 3  | Dimensoes        | [`src/ingestion/criacao-dimensoes.py`](src/ingestion/criacao-dimensoes.py)                     | Tabelas dimensionais (calendario, CPF)     |
+| 4a | Book Recarga     | [`src/feature-engineering/book_recarga_cmv.py`](src/feature-engineering/book_recarga_cmv.py)   | 90 features (REC_*)                        |
+| 4b | Book Pagamento   | [`src/feature-engineering/book_pagamento.py`](src/feature-engineering/book_pagamento.py)       | 94 features (PAG_*)                        |
+| 4c | Book Faturamento | [`src/feature-engineering/book_faturamento.py`](src/feature-engineering/book_faturamento.py)   | 114 features (FAT_*)                       |
+| 4d | Consolidacao     | [`src/feature-engineering/book_consolidado.py`](src/feature-engineering/book_consolidado.py)   | 402 colunas consolidadas → Gold           |
+| 5  | Modelo           | [`src/modeling/modelo_baseline.ipynb`](src/modeling/modelo_baseline.ipynb)                     | Treinamento LR L1 + LightGBM               |
+| 6  | Scoring          | [`src/modeling/scoring-batch.ipynb`](src/modeling/scoring-batch.ipynb)                         | Scoring batch (score 0-1000)               |
+| 7  | Validacao        | [`src/modeling/validacao-deploy.ipynb`](src/modeling/validacao-deploy.ipynb)                   | Validacao de deploy (KS/AUC/Gini)          |
+| 8  | Monitoramento    | [`src/modeling/monitoramento-drift.ipynb`](src/modeling/monitoramento-drift.ipynb)             | PSI drift + performance tracking           |
 
 ## Modelagem
 
@@ -175,18 +175,18 @@ projeto-final/
 
 ### Algoritmos
 
-| Modelo | Tipo | Configuracao |
-|--------|------|-------------|
+| Modelo                             | Tipo                   | Configuracao                                                                     |
+| ---------------------------------- | ---------------------- | -------------------------------------------------------------------------------- |
 | **Logistic Regression (L1)** | Baseline interpretavel | `penalty="l1"`, `solver="liblinear"`, `C=0.5`, `class_weight="balanced"` |
-| **LightGBM (GBDT)** | Ensemble tree-based | `n_estimators=250`, `max_depth=4`, `learning_rate=0.05` |
+| **LightGBM (GBDT)**          | Ensemble tree-based    | `n_estimators=250`, `max_depth=4`, `learning_rate=0.05`                    |
 
 ### Split Temporal
 
-| Conjunto | SAFRAs | Registros | Uso |
-|----------|--------|-----------|-----|
-| Treino | 202410, 202411, 202412 | ~1.35M | Treinamento do modelo |
-| Validacao (OOS) | 202501 | ~450K | Validacao in-sample |
-| Teste (OOT) | 202502, 202503 | ~870K | Teste temporal out-of-time |
+| Conjunto        | SAFRAs                 | Registros | Uso                        |
+| --------------- | ---------------------- | --------- | -------------------------- |
+| Treino          | 202410, 202411, 202412 | ~1.35M    | Treinamento do modelo      |
+| Validacao (OOS) | 202501                 | ~450K     | Validacao in-sample        |
+| Teste (OOT)     | 202502, 202503         | ~870K     | Teste temporal out-of-time |
 
 ### Selecao de Features (4 Etapas)
 
@@ -196,18 +196,18 @@ projeto-final/
 
 ### Top 10 Features (SHAP Importance)
 
-| # | Feature | Importancia SHAP | % Acumulado |
-|---|---------|-----------------|-------------|
-| 1 | TARGET_SCORE_02 | 0.5247 | 29.2% |
-| 2 | TARGET_SCORE_01 | 0.1220 | 36.0% |
-| 3 | REC_SCORE_RISCO | 0.0842 | 40.7% |
-| 4 | REC_TAXA_STATUS_A | 0.0448 | 43.2% |
-| 5 | REC_QTD_LINHAS | 0.0408 | 45.5% |
-| 6 | REC_DIAS_ENTRE_RECARGAS | 0.0344 | 47.4% |
-| 7 | REC_QTD_INST_DIST_REG | 0.0320 | 49.2% |
-| 8 | REC_DIAS_DESDE_ULTIMA_RECARGA | 0.0310 | 50.9% |
-| 9 | REC_TAXA_CARTAO_ONLINE | 0.0295 | 52.6% |
-| 10 | REC_VLR_REAL_STDDEV | 0.0285 | 54.1% |
+| #  | Feature                       | Importancia SHAP | % Acumulado |
+| -- | ----------------------------- | ---------------- | ----------- |
+| 1  | TARGET_SCORE_02               | 0.5247           | 29.2%       |
+| 2  | TARGET_SCORE_01               | 0.1220           | 36.0%       |
+| 3  | REC_SCORE_RISCO               | 0.0842           | 40.7%       |
+| 4  | REC_TAXA_STATUS_A             | 0.0448           | 43.2%       |
+| 5  | REC_QTD_LINHAS                | 0.0408           | 45.5%       |
+| 6  | REC_DIAS_ENTRE_RECARGAS       | 0.0344           | 47.4%       |
+| 7  | REC_QTD_INST_DIST_REG         | 0.0320           | 49.2%       |
+| 8  | REC_DIAS_DESDE_ULTIMA_RECARGA | 0.0310           | 50.9%       |
+| 9  | REC_TAXA_CARTAO_ONLINE        | 0.0295           | 52.6%       |
+| 10 | REC_VLR_REAL_STDDEV           | 0.0285           | 54.1%       |
 
 > As Top 40 features representam ~81% da importancia total do modelo.
 
@@ -224,12 +224,12 @@ projeto-final/
 
 Framework de monitoramento mensal com alertas automaticos:
 
-| Metrica | Threshold Verde | Threshold Amarelo | Threshold Vermelho |
-|---------|----------------|-------------------|-------------------|
-| PSI Score | < 0.10 | 0.10 - 0.25 | > 0.25 |
-| PSI Features | < 0.10 | 0.10 - 0.20 | > 0.20 |
-| KS Drift | < 5.0 pp | — | > 5.0 pp |
-| AUC Drift | < 0.03 | — | > 0.03 |
+| Metrica      | Threshold Verde | Threshold Amarelo | Threshold Vermelho |
+| ------------ | --------------- | ----------------- | ------------------ |
+| PSI Score    | < 0.10          | 0.10 - 0.25       | > 0.25             |
+| PSI Features | < 0.10          | 0.10 - 0.20       | > 0.20             |
+| KS Drift     | < 5.0 pp        | —                | > 5.0 pp           |
+| AUC Drift    | < 0.03          | —                | > 0.03             |
 
 **Ultimo monitoramento (SAFRA 202503)**: Status **AMARELO** — Score PSI estavel (0.0028), porem 1 feature com drift critico (`REC_DIAS_ENTRE_RECARGAS`, PSI=1.35).
 
@@ -237,42 +237,42 @@ Framework de monitoramento mensal com alertas automaticos:
 
 ## Documentacao Completa
 
-| Documento | Link | Descricao |
-|-----------|------|-----------|
-| Arquitetura de Dados | [`docs/architecture/data-architecture.md`](docs/architecture/data-architecture.md) | Pipeline Medallion com 5 diagramas Mermaid |
-| Guia de Execucao Fabric | [`docs/architecture/guia-execucao-fabric.md`](docs/architecture/guia-execucao-fabric.md) | Configuracao e troubleshooting no Fabric |
-| Book Recarga (90 vars) | [`docs/feature-engineering/book-recarga-cmv.md`](docs/feature-engineering/book-recarga-cmv.md) | Documentacao das variaveis REC_* |
-| Book Pagamento (94 vars) | [`docs/feature-engineering/book-pagamento.md`](docs/feature-engineering/book-pagamento.md) | Documentacao das variaveis PAG_* |
-| Book Faturamento (114 vars) | [`docs/feature-engineering/book-faturamento.md`](docs/feature-engineering/book-faturamento.md) | Documentacao das variaveis FAT_* |
-| Preprocessamento | [`docs/modeling/preprocessing.md`](docs/modeling/preprocessing.md) | Pipeline de limpeza e transformacao |
-| Selecao de Features | [`docs/modeling/feature-selection.md`](docs/modeling/feature-selection.md) | Estrategia de selecao em 4 etapas |
-| Resultados do Modelo | [`docs/modeling/model-results.md`](docs/modeling/model-results.md) | Metricas, graficos e interpretacao |
-| Analise de Swap | [`docs/modeling/swap-analysis.md`](docs/modeling/swap-analysis.md) | Estabilidade de ranking entre SAFRAs |
-| Monitoramento e Drift | [`docs/modeling/monitoring.md`](docs/modeling/monitoring.md) | Framework de monitoramento e alertas |
-| Decisoes Tecnicas | [`docs/technical-decisions.md`](docs/technical-decisions.md) | Registro de decisoes arquiteturais |
-| Estudo Publico-Alvo | [`docs/analytics/estudo-publico-alvo.md`](docs/analytics/estudo-publico-alvo.md) | EDA com perfil do publico |
+| Documento                   | Link                                                                                          | Descricao                                  |
+| --------------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| Arquitetura de Dados        | [`docs/architecture/data-architecture.md`](docs/architecture/data-architecture.md)             | Pipeline Medallion com 5 diagramas Mermaid |
+| Guia de Execucao Fabric     | [`docs/architecture/guia-execucao-fabric.md`](docs/architecture/guia-execucao-fabric.md)       | Configuracao e troubleshooting no Fabric   |
+| Book Recarga (90 vars)      | [`docs/feature-engineering/book-recarga-cmv.md`](docs/feature-engineering/book-recarga-cmv.md) | Documentacao das variaveis REC_*           |
+| Book Pagamento (94 vars)    | [`docs/feature-engineering/book-pagamento.md`](docs/feature-engineering/book-pagamento.md)     | Documentacao das variaveis PAG_*           |
+| Book Faturamento (114 vars) | [`docs/feature-engineering/book-faturamento.md`](docs/feature-engineering/book-faturamento.md) | Documentacao das variaveis FAT_*           |
+| Preprocessamento            | [`docs/modeling/preprocessing.md`](docs/modeling/preprocessing.md)                             | Pipeline de limpeza e transformacao        |
+| Selecao de Features         | [`docs/modeling/feature-selection.md`](docs/modeling/feature-selection.md)                     | Estrategia de selecao em 4 etapas          |
+| Resultados do Modelo        | [`docs/modeling/model-results.md`](docs/modeling/model-results.md)                             | Metricas, graficos e interpretacao         |
+| Analise de Swap             | [`docs/modeling/swap-analysis.md`](docs/modeling/swap-analysis.md)                             | Estabilidade de ranking entre SAFRAs       |
+| Monitoramento e Drift       | [`docs/modeling/monitoring.md`](docs/modeling/monitoring.md)                                   | Framework de monitoramento e alertas       |
+| Decisoes Tecnicas           | [`docs/technical-decisions.md`](docs/technical-decisions.md)                                   | Registro de decisoes arquiteturais         |
+| Estudo Publico-Alvo         | [`docs/analytics/estudo-publico-alvo.md`](docs/analytics/estudo-publico-alvo.md)               | EDA com perfil do publico                  |
 
 ---
 
 ## Tecnologias
 
-| Componente | Tecnologia |
-|-----------|-----------|
-| Plataforma | Microsoft Fabric |
-| Storage | Delta Lake (OneLake) |
-| Processamento | PySpark 3.x |
-| ML Framework | scikit-learn 1.3.2, LightGBM |
-| Experiment Tracking | MLflow 2.12.2 |
-| Linguagem | Python 3.x |
-| Formato de Dados | Delta, Parquet, CSV, Excel |
+| Componente          | Tecnologia                   |
+| ------------------- | ---------------------------- |
+| Plataforma          | Microsoft Fabric             |
+| Storage             | Delta Lake (OneLake)         |
+| Processamento       | PySpark 3.x                  |
+| ML Framework        | scikit-learn 1.3.2, LightGBM |
+| Experiment Tracking | MLflow 2.12.2                |
+| Linguagem           | Python 3.x                   |
+| Formato de Dados    | Delta, Parquet, CSV, Excel   |
 
 ## Volumes de Dados
 
-| Fonte | Registros Brutos |
-|-------|-----------------|
-| Recarga | 99.9M transacoes |
-| Pagamento | 27.9M transacoes |
-| Faturamento | 32.7M registros |
+| Fonte                | Registros Brutos       |
+| -------------------- | ---------------------- |
+| Recarga              | 99.9M transacoes       |
+| Pagamento            | 27.9M transacoes       |
+| Faturamento          | 32.7M registros        |
 | Feature Store (Gold) | 3.9M (NUM_CPF x SAFRA) |
 
 ---
