@@ -20,9 +20,9 @@ A squad `oci-data-platform` foi criada para migrar o pipeline de risco de crédi
 | Workflows com handoffs | 0/4 (0%) | 3/4 (75%) | +75pp |
 | Ferramentas integradas | 0 | 33 descobertas, 16 integradas | +16 |
 | Veto conditions | ~50 | ~150 | +100 |
-| Model routing | All Opus | 11 Haiku + 2 Opus | -79.7% custo |
-| Custo token mensal (20 exec) | $35.62 | $7.24 | -$28.38 |
-| Custo token anual | $427.44 | $86.88 | -$340.56 |
+| Model routing | — | All Opus (Haiku deferred) | Max quality |
+| Determinism analysis | — | 93.5% (143/153 actions) | Haiku-ready after validation |
+| Future Haiku savings | — | Deferred post-validation | -$340/year potential |
 
 ---
 
@@ -154,27 +154,29 @@ Aplicação do **Executor Decision Tree** (Q1-Q6) em cada uma das **153 ações 
 ### 4.3 Model Routing Policy
 
 ```
-POLICY: "Opus for planning, Haiku for execution. No Sonnet."
+POLICY: "All Opus — maximum quality for first OCI execution."
 
-OPUS (3 componentes):
-  ├─ oci-chief (orchestrator) — Planning requires deep reasoning
-  ├─ train-model — ML training is critical for quality assurance
-  └─ destroy-infra — Destructive operation requires safety review
+OPUS (14 componentes):
+  ├─ oci-chief (orchestrator)
+  ├─ All 13 tasks (first execution — zero margin for error)
 
-HAIKU (11 tasks):
-  ├─ Infrastructure: setup-oci-cli, deploy-{network,storage,database,dataflow,datascience}
-  ├─ Data Pipeline:  ingest-bronze, transform-silver, engineer-gold
-  ├─ ML Deploy:      deploy-model
-  └─ Operations:     manage-costs
+FUTURE (after first successful OCI run):
+  ├─ Downgrade 10 SHOULD_BE_WORKER tasks to Haiku
+  ├─ Keep 3 on Opus (orchestrator, train-model, destroy-infra)
+  └─ Potential savings: $340/year (79.7% reduction)
 ```
 
 ### 4.4 Token Economy
 
-| Período | Antes (All Opus) | Depois (11H + 2O) | Economia |
-|---------|------------------|--------------------|----------|
-| Por execução | $0.137 avg | $0.028 avg | -79.7% |
+**Current:** All Opus — maximiza qualidade na primeira execução no OCI.
+
+| Período | All Opus (current) | After Validation (future) | Potential Savings |
+|---------|--------------------|--------------------------|--------------------|
+| Por execução | $0.137 avg | $0.028 avg (11H+2O) | -79.7% |
 | Mensal (20 exec) | $35.62 | $7.24 | -$28.38 |
 | Anual | $427.44 | $86.88 | **-$340.56** |
+
+**Decision:** Haiku optimization deferred until tasks empirically validated on OCI. First-time execution requires Opus for error handling, OCI quirks, and cascading failure prevention.
 
 **Por que 93.5% das ações são determinísticas:**
 - Infrastructure tasks (7): Terraform HCL com parâmetros pré-definidos
