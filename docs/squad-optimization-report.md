@@ -1,9 +1,9 @@
 # Squad Optimization Report: OCI Data Platform
 
 **Data:** 2026-02-15
-**Squad:** `oci-data-platform` v2.0.0
+**Squad:** `oci-data-platform` v2.1.0
 **Framework:** Synkra AIOS + Squad Creator v3.0.0
-**Método:** 5-Step Optimization Flow + *optimize (Determinism Analysis)
+**Método:** 5-Step Optimization Flow + *optimize --hybrid (Full 8-Phase Pipeline)
 
 ---
 
@@ -36,9 +36,10 @@ A squad `oci-data-platform` foi criada para migrar o pipeline de risco de crédi
 | Tasks (runbooks) | 13 | 2,253 |
 | Workflows | 4 | 725 |
 | Checklists | 4 | 223 |
-| Config | 1 | 295 |
+| Worker Scripts | 20 | ~850 |
+| Config | 1 | 305 |
 | Knowledge Base | 1 | 280 |
-| **Total** | **31 arquivos** | **~13,263 linhas** |
+| **Total** | **52 arquivos** | **~14,123 linhas** |
 
 ### 2.2 Agentes (9 Elite Minds Clonadas)
 
@@ -186,6 +187,53 @@ FUTURE (after first successful OCI run):
 
 ---
 
+## 4B. *optimize --hybrid — Script Extraction + GAP ZERO (Phases 5-7)
+
+### Phase 5: Script Extraction
+
+Extração de **20 worker scripts** (~850 linhas) a partir do código embeddado nos 13 task files. Classificação via Script-First Priority Rule.
+
+| Dir | Scripts | LOC | Tasks Covered |
+|-----|---------|-----|---------------|
+| `scripts/infra/modules/` | 8 (6 .tf + 2 .sql) | ~365 | OCI-T-002 a OCI-T-006, OCI-T-012 |
+| `scripts/pipeline/` | 3 (.py) | ~150 | OCI-T-007 a OCI-T-009 |
+| `scripts/model/` | 3 (.py) | ~155 | OCI-T-010, OCI-T-011 |
+| `scripts/ops/` | 6 (.sh + .template) | ~135 | OCI-T-001, OCI-T-006, OCI-T-012, OCI-T-013 |
+| `scripts/README.md` | 1 | ~117 | Documentação + task mapping |
+| **Total** | **21 files** | **~850** | **13/13 tasks** |
+
+**Executor Classification:**
+
+| Classificação | Tasks | Critério |
+|---------------|-------|----------|
+| SCRIPT-ONLY | 11 | Det >= 90% — execução completa via script, zero LLM tokens |
+| HYBRID | 2 | Det 60-89% — script para partes determinísticas, Agent interpreta |
+
+### Phase 6: GAP ZERO Enforcement
+
+MANDATORY PREFLIGHT blocks inseridos em **todos os 13 task files** com:
+- **Comando de execução** obrigatório (terraform plan, oci data-flow run, python, bash)
+- **VETO condition** que bloqueia o agente se tentar criar código do zero
+- **Script path** apontando para os worker scripts extraídos
+
+```
+✅ 13/13 tasks com MANDATORY PREFLIGHT
+✅ 13/13 tasks com VETO condition
+✅ Todos os script paths validados contra disco
+```
+
+### Phase 7: Empirical Validation
+
+| Check | Result | Detail |
+|-------|--------|--------|
+| Script inventory | PASS | 21 files on disk = 21 in README |
+| PREFLIGHT blocks | PASS | 13/13 tasks have MANDATORY PREFLIGHT |
+| VETO conditions | PASS | 13/13 tasks have VETO |
+| Script path refs | PASS | All paths in preflights reference existing files |
+| Directory structure | PASS | infra/ + pipeline/ + model/ + ops/ organized |
+
+---
+
 ## 5. Qualidade Final
 
 ### 5.1 Métricas de Proteção
@@ -197,6 +245,8 @@ FUTURE (after first successful OCI run):
 | Elicitation Points | 13/13 tasks | Garantem inputs do usuário antes de agir |
 | Handoff Protocols | 10 blocos | Transferem contexto entre agentes |
 | Checkpoints | 18 | Validam estado em cada fase |
+| Worker Scripts | 20 files (~850 LOC) | Execução determinística sem LLM tokens |
+| GAP ZERO Preflights | 13/13 tasks | Forçam script-first antes de qualquer ação manual |
 
 ### 5.2 Cobertura de Segurança
 
@@ -265,22 +315,33 @@ FUTURE (after first successful OCI run):
 | 17 | data/oci-knowledge-base.md | +Model Routing + Token Economy |
 | 18-30 | 13 task files | +Model: Opus line (All Opus policy) |
 
-**Total: 30 edições em 15 arquivos únicos (2 sessões)**
+### Sessão 3 — *optimize --hybrid Implementation (2026-02-15)
+
+| # | Arquivo | Alteração |
+|---|---------|-----------|
+| 31 | config.yaml | +hybrid_optimization section, version 2.1.0 |
+| 32-51 | 20 scripts in scripts/ | NEW — worker scripts extracted from tasks |
+| 52 | scripts/README.md | NEW — task-to-script mapping + usage docs |
+| 53-65 | 13 task files | +MANDATORY PREFLIGHT + VETO blocks (GAP ZERO) |
+
+**Total: 65 edições em 36 arquivos únicos (3 sessões)**
 
 ---
 
 ## 9. Conclusão
 
-A squad `oci-data-platform` representa um sistema multi-agente completo para migração de plataformas de dados, com:
+A squad `oci-data-platform` v2.1.0 representa um sistema multi-agente **completamente otimizado** para migração de plataformas de dados, com:
 
 - **9 elite minds** clonadas de referências reais (Zaharia, Brikman, Huyen, etc.)
 - **13 tasks** com 153 ações atômicas, 93.5% determinísticas
+- **20 worker scripts** (~850 LOC) extraídos e prontos para execução
+- **GAP ZERO enforced** em 13/13 tasks (MANDATORY PREFLIGHT + VETO)
 - **~150 veto conditions** que impedem erros antes de acontecerem
 - **Model routing** All Opus: máxima qualidade para primeira execução no OCI
 - **79.7% de economia futura** em tokens após validação empírica (Haiku deferred)
 - **Quality A+** (9.5/10) validada por auditoria independente
 
-A squad está pronta para execução. O próximo passo é ativar o orchestrator (`/oci-data-platform:oci-chief`) com uma conta OCI ativa e rodar o workflow `wf-full-deploy`.
+**Optimization pipeline 100% complete** (8/8 phases). A squad está pronta para execução. O próximo passo é ativar o orchestrator (`/oci-data-platform:oci-chief`) com uma conta OCI ativa e rodar o workflow `wf-full-deploy`.
 
 ---
 
