@@ -9,17 +9,19 @@
 
 ## 1. Executive Summary
 
-A squad `oci-data-platform` foi criada para migrar o pipeline de risco de crédito (FPD) do Microsoft Fabric para Oracle Cloud Infrastructure. Após a criação inicial, aplicamos um fluxo completo de otimização em 2 sessões que elevou a qualidade de **8.4/10 (B+)** para **9.5/10 (A+)**. O model routing final é **All Opus** para máxima qualidade na primeira execução, com potencial de economia de 79.7% após validação empírica no OCI.
+A squad `oci-data-platform` foi criada para migrar o pipeline de risco de crédito (FPD) do Microsoft Fabric para Oracle Cloud Infrastructure. Após a criação inicial, aplicamos o **ciclo completo de otimização em 3 sessões** (CRIAR → VALIDAR → DESCOBRIR → OTIMIZAR → VALIDAR DE NOVO) que elevou a qualidade de **8.4/10 (B+)** para **9.46/10 (A+)** validado. O model routing final é **All Opus** para máxima qualidade na primeira execução, com potencial de economia de 79.7% após validação empírica no OCI.
 
 ### Resultado em Números
 
 | Métrica | Antes | Depois | Delta |
 |---------|-------|--------|-------|
-| Quality Score | 8.4/10 (B+) | 9.5/10 (A+) | +1.1 |
+| Quality Score | 8.4/10 (B+) | 9.46/10 (A+) validated | +1.06 |
 | Tasks com elicitation | 3/13 (23%) | 13/13 (100%) | +77pp |
 | Workflows com handoffs | 0/4 (0%) | 3/4 (75%) | +75pp |
 | Ferramentas integradas | 0 | 33 descobertas, 16 integradas | +16 |
 | Veto conditions | ~50 | ~150 | +100 |
+| Worker scripts | 0 | 20 files (~850 LOC) | +20 |
+| GAP ZERO enforcement | 0/13 | 13/13 tasks | +13 |
 | Model routing | — | All Opus (Haiku deferred) | Max quality |
 | Determinism analysis | — | 93.5% (143/153 actions) | Haiku-ready after validation |
 | Future Haiku savings | — | Deferred post-validation | -$340/year potential |
@@ -248,7 +250,62 @@ MANDATORY PREFLIGHT blocks inseridos em **todos os 13 task files** com:
 | Worker Scripts | 20 files (~850 LOC) | Execução determinística sem LLM tokens |
 | GAP ZERO Preflights | 13/13 tasks | Forçam script-first antes de qualquer ação manual |
 
-### 5.2 Cobertura de Segurança
+### 5.2 Quality Dashboard Final (*validate-squad)
+
+**Ciclo:** CRIAR → VALIDAR → DESCOBRIR → OTIMIZAR → **VALIDAR DE NOVO**
+**Método:** 6-Phase Validation (Structure → Coverage → Quality → Contextual → Veto → Score)
+
+```
+Score: 9.46/10 (Grade A+ — EXCELLENT)
+
+Phase 1 (Structure):   PASS    (27/27 files, 0 security issues)
+Phase 2 (Coverage):    PASS    (30.8% checklists, 0 orphans, 10 tools)
+Phase 3 (Quality):     9.5/10
+Phase 4 (Contextual):  9.3/10
+Phase 5 (Veto):        PASS    (12/12 conditions clear)
+Phase 6 (Final):       9.46/10
+
+Formula: (Tier3 × 0.80) + (Tier4 × 0.20) = (9.5 × 0.80) + (9.3 × 0.20) = 9.46
+```
+
+**Tier 3 — Quality Scoring:**
+
+```
+Prompt Quality:      █████████▌  9.5/10  (examples, anti-patterns, step-by-step, vetos)
+Pipeline Coherence:  █████████▌  9.5/10  (output→input chains, checkpoints, dependencies)
+Checklist Action.:   █████████░  9.0/10  (measurable items, thresholds, edge cases)
+Documentation:       █████████▌  9.5/10  (README, activation, commands, architecture)
+Optimization Bonus:  █████████░  9.0/10  (executor types, scripts, GAP ZERO)
+```
+
+**Tier 4 — Contextual (Hybrid):**
+
+```
+Expert (voice_dna):  █████████▌  9.5/10  (6 agents, elite minds, tiered)
+Pipeline (workflows): █████████▌  9.5/10  (4 workflows, 18 checkpoints, handoffs)
+Hybrid (executors):  █████████░  9.0/10  (20 scripts, 93.5% det, GAP ZERO)
+```
+
+**Issues Found:** 6 LOW severity (no MEDIUM/HIGH/CRITICAL)
+
+| # | Severity | Description |
+|---|----------|-------------|
+| 1 | LOW | Checklists lack formal scoring rubric |
+| 2 | LOW | No CHANGELOG.md file |
+| 3 | LOW | `objection_algorithms` absent in 2 agents |
+| 4 | LOW | wf-full-deploy missing explicit `error_handling` |
+| 5 | LOW | No formal `executor_decision_tree` key in config |
+| 6 | LOW | HYBRID task fallback is implicit |
+
+**Score Evolution:**
+
+```
+Baseline:      8.4/10 (B+) — Post-creation, pre-optimization
+Step 5 (mid):  9.5/10 (A+) — Post structural optimization + tools
+Final (now):   9.46/10 (A+) — Post *optimize --hybrid + final validation
+```
+
+### 5.3 Cobertura de Segurança
 
 - IAM policies least-privilege com veto se `manage all-resources`
 - Data subnets private-only com veto se public IP habilitado
@@ -315,7 +372,7 @@ MANDATORY PREFLIGHT blocks inseridos em **todos os 13 task files** com:
 | 17 | data/oci-knowledge-base.md | +Model Routing + Token Economy |
 | 18-30 | 13 task files | +Model: Opus line (All Opus policy) |
 
-### Sessão 3 — *optimize --hybrid Implementation (2026-02-15)
+### Sessão 3 — *optimize --hybrid + *validate-squad Final (2026-02-15)
 
 | # | Arquivo | Alteração |
 |---|---------|-----------|
@@ -323,8 +380,10 @@ MANDATORY PREFLIGHT blocks inseridos em **todos os 13 task files** com:
 | 32-51 | 20 scripts in scripts/ | NEW — worker scripts extracted from tasks |
 | 52 | scripts/README.md | NEW — task-to-script mapping + usage docs |
 | 53-65 | 13 task files | +MANDATORY PREFLIGHT + VETO blocks (GAP ZERO) |
+| 66 | docs/squad-optimization-report.md | +Section 5.2 Quality Dashboard Final (9.46/10 validated) |
 
-**Total: 65 edições em 36 arquivos únicos (3 sessões)**
+**Total: 66 edições em 36 arquivos únicos (3 sessões)**
+**Ciclo completo: CRIAR → VALIDAR → DESCOBRIR → OTIMIZAR → VALIDAR DE NOVO**
 
 ---
 
@@ -339,7 +398,7 @@ A squad `oci-data-platform` v2.1.0 representa um sistema multi-agente **completa
 - **~150 veto conditions** que impedem erros antes de acontecerem
 - **Model routing** All Opus: máxima qualidade para primeira execução no OCI
 - **79.7% de economia futura** em tokens após validação empírica (Haiku deferred)
-- **Quality A+** (9.5/10) validada por auditoria independente
+- **Quality A+** (9.46/10) validada por *validate-squad (6-phase audit)
 
 **Optimization pipeline 100% complete** (8/8 phases). A squad está pronta para execução. O próximo passo é ativar o orchestrator (`/oci-data-platform:oci-chief`) com uma conta OCI ativa e rodar o workflow `wf-full-deploy`.
 
