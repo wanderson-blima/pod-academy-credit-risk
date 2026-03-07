@@ -36,6 +36,14 @@ node_modules/
 5-treinamento-modelos/
 
 # ==========================================
+# Terraform
+# ==========================================
+*.tfvars
+*.tfstate
+*.tfstate.backup
+.terraform/
+
+# ==========================================
 # Python
 # ==========================================
 __pycache__/
@@ -74,3 +82,4 @@ references/
 *.tmp
 *.bak
 .ipynb_checkpoints/
+oci-env/
