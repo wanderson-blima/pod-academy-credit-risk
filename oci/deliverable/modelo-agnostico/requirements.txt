@@ -1,0 +1,10 @@
+# Dependencias para escoragem do modelo Credit Risk FPD
+# Compativel com sklearn 1.2.x a 1.6.x (patch automatico incluso)
+# Testado com Python 3.9, 3.10, 3.11
+numpy>=1.23.0,<2.0.0
+scikit-learn>=1.2.2
+lightgbm>=4.0.0,<5.0.0
+category-encoders>=2.6.0,<3.0.0
+pandas>=1.5.0
+scipy>=1.9.0
+pyarrow>=10.0.0

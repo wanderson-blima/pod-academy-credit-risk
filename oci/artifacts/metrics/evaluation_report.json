@@ -1,0 +1,13 @@
+{
+  "scored_records": 230177,
+  "score_mean": 817.1701560103746,
+  "score_median": 849.0,
+  "lr_oot_monotonic": true,
+  "lgbm_oot_monotonic": true,
+  "bands": {
+    "CRITICO": 39,
+    "ALTO": 4142,
+    "MEDIO": 35336,
+    "BAIXO": 190660
+  }
+}

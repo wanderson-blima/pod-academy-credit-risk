@@ -1,0 +1,45 @@
+# OCI Provider Credentials (REQUIRED — replace with your values)
+tenancy_ocid    = "ocid1.tenancy.oc1..aaaaaaaaXXXXXXXXXXXXXX"
+user_ocid       = "ocid1.user.oc1..aaaaaaaaXXXXXXXXXXXXXX"
+fingerprint     = "aa:bb:cc:dd:ee:ff:00:11:22:33:44:55:66:77:88:99"
+private_key_path = "~/.oci/oci_api_key.pem"
+
+# Project (REQUIRED)
+compartment_ocid = "ocid1.compartment.oc1..aaaaaaaaXXXXXXXXXXXXXX"
+namespace        = "your-object-storage-namespace"
+
+# Region (default: sa-saopaulo-1)
+region = "sa-saopaulo-1"
+
+# Project settings
+prefix      = "pod-academy"
+environment = "dev"
+
+# Network
+vcn_cidr = "10.0.0.0/16"
+
+# Database (ADW)
+adw_ecpu_count = 2
+use_free_tier  = false
+
+# Data Flow
+driver_shape       = "VM.Standard.E4.Flex"
+executor_shape     = "VM.Standard.E4.Flex"
+executor_ocpus     = 1
+executor_memory_gb = 16
+max_executors      = 4
+num_executors      = 1
+num_executors_heavy = 2
+
+# Data Science Notebook
+notebook_shape     = "VM.Standard.E4.Flex"
+notebook_ocpus     = 10
+notebook_memory_gb = 160
+
+# Cost Management
+monthly_budget   = 500
+alert_recipients = "your-email@example.com"
+
+# Security
+ssh_allowed_cidr = "10.0.0.0/16"
+enable_vault     = true
