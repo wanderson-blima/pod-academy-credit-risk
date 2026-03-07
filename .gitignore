@@ -26,22 +26,14 @@ node_modules/
 .dev/
 
 # ==========================================
-# Old/Legacy Directories (migrated to src/ and docs/)
-# ==========================================
-0-docs/
-1-ingestao-dados/
-2-metadados/
-3-edas/
-4-construcao-books/
-5-treinamento-modelos/
-
-# ==========================================
 # Terraform
 # ==========================================
-*.tfvars
 *.tfstate
 *.tfstate.backup
 .terraform/
+*.tfvars
+!*.tfvars.example
+!*.tfvars.template
 
 # ==========================================
 # Python
@@ -55,6 +47,13 @@ build/
 .eggs/
 
 # ==========================================
+# Virtual environments
+# ==========================================
+oci-env/
+.venv/
+venv/
+
+# ==========================================
 # IDE & OS
 # ==========================================
 .DS_Store
@@ -66,10 +65,11 @@ Thumbs.db
 nul
 
 # ==========================================
-# Logs
+# Logs & Debug artifacts
 # ==========================================
 *.log
 logs/
+*.gz
 
 # ==========================================
 # Reference Materials (PDFs, Excel — local only)
@@ -82,4 +82,3 @@ references/
 *.tmp
 *.bak
 .ipynb_checkpoints/
-oci-env/

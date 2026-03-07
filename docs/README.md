@@ -1,58 +1,42 @@
 # Documentacao — Credit Risk FPD Pipeline
 
-Indice completo da documentacao tecnica do projeto.
+Indice da documentacao tecnica do projeto, organizada por arquitetura.
 
 ---
 
-## Arquitetura
+## Fabric (Microsoft Fabric)
+
+Documentacao completa do pipeline Fabric em [`../fabric/docs/`](../fabric/docs/):
 
 | Documento | Descricao |
 |-----------|-----------|
-| [Data Architecture](architecture/data-architecture.md) | Pipeline Medallion com 5 diagramas Mermaid (ingestao, ER, features, treinamento, deploy) |
-| [Guia de Execucao Fabric](architecture/guia-execucao-fabric.md) | Configuracao de Lakehouses, parametros e troubleshooting no Microsoft Fabric |
-| [Schemas (DDLs)](architecture/schemas/) | DDLs completos das 3 camadas (Bronze, Silver, Gold) |
+| [Data Architecture](../fabric/docs/architecture/data-architecture.md) | Pipeline Medallion com diagramas Mermaid |
+| [Guia de Execucao Fabric](../fabric/docs/architecture/guia-execucao-fabric.md) | Configuracao de Lakehouses e troubleshooting |
+| [Schemas DDL](../fabric/schemas/ddl/) | DDLs completos (Bronze, Silver, Gold) |
+| [Book Recarga (90 vars)](../fabric/docs/feature-engineering/book-recarga-cmv.md) | Variaveis REC_* |
+| [Book Pagamento (94 vars)](../fabric/docs/feature-engineering/book-pagamento.md) | Variaveis PAG_* |
+| [Book Faturamento (114 vars)](../fabric/docs/feature-engineering/book-faturamento.md) | Variaveis FAT_* |
+| [Preprocessamento](../fabric/docs/modeling/preprocessing.md) | Pipeline de limpeza e transformacao |
+| [Selecao de Features](../fabric/docs/modeling/feature-selection.md) | Estrategia de selecao em 4 etapas |
+| [Resultados do Modelo](../fabric/docs/modeling/model-results.md) | Metricas, SHAP, comparacao LR vs LGBM |
+| [Monitoramento e Drift](../fabric/docs/modeling/monitoring.md) | Framework PSI e alertas |
+| [Decisoes Tecnicas](../fabric/docs/technical-decisions.md) | 11 ADRs arquiteturais |
 
-## Feature Engineering
+## OCI (Oracle Cloud Infrastructure)
 
-| Documento | Features | Descricao |
-|-----------|----------|-----------|
-| [Visao Geral](feature-engineering/README.md) | 402 | Indice dos books e logica de consolidacao |
-| [Book Recarga](feature-engineering/book-recarga-cmv.md) | 90 | Variaveis REC_* — comportamento de recarga |
-| [Book Pagamento](feature-engineering/book-pagamento.md) | 94 | Variaveis PAG_* — comportamento de pagamento |
-| [Book Faturamento](feature-engineering/book-faturamento.md) | 114 | Variaveis FAT_* — dados de faturamento |
-
-## Modelagem
-
-| Documento | Descricao |
-|-----------|-----------|
-| [Preprocessamento](modeling/preprocessing.md) | Pipeline de limpeza: missing values, cardinality, encoding, split |
-| [Selecao de Features](modeling/feature-selection.md) | Estrategia de selecao em 4 etapas (IV, L1, correlacao, LGBM) |
-| [Modelo Baseline](modeling/model-baseline.md) | Configuracao: LR L1 + LightGBM, 398→59 features, temporal split |
-| [Resultados do Modelo](modeling/model-results.md) | Metricas consolidadas, decil analysis, SHAP, comparacao LR vs LGBM |
-| [Analise de Swap](modeling/swap-analysis.md) | Estabilidade de ranking entre SAFRAs, capture rate por threshold |
-| [Monitoramento e Drift](modeling/monitoring.md) | Framework PSI, thresholds, resultado SAFRA 202503, alertas |
-
-## Analytics
+Documentacao do pipeline OCI em [`../oci/docs/`](../oci/docs/):
 
 | Documento | Descricao |
 |-----------|-----------|
-| [Estudo Publico-Alvo](analytics/estudo-publico-alvo.md) | EDA completa: demografico, comportamental, segmentacao de risco |
+| [PRD — OCI Pipeline Parity](../oci/docs/prd-oci-pipeline-parity.md) | Requisitos de paridade Fabric → OCI |
+| [OCI Pipeline Execution Report](../oci/docs/oci-pipeline-execution-report.md) | Relatorio de execucao do pipeline |
+| [OCI E2E Validation Report](../oci/docs/oci-e2e-validation-report.md) | Validacao end-to-end |
+| [Quality Dashboard](../oci/docs/QUALITY-DASHBOARD.md) | Dashboard de qualidade |
+| [OCI Knowledge Base](../oci/docs/oci-knowledge-base.md) | Base de conhecimento OCI |
 
-## Decisoes Tecnicas
+## Compartilhado
 
 | Documento | Descricao |
 |-----------|-----------|
-| [Technical Decisions](technical-decisions.md) | 11 ADRs — Medallion, Delta Lake, leakage, split temporal, metricas, scoring |
-
-## Visualizacoes
-
-Todos os graficos de performance do modelo estao em [`images/`](images/):
-
-| Imagem | Descricao |
-|--------|-----------|
-| [panel1_performance.png](images/panel1_performance.png) | 8 graficos de performance (KS, ROC, PR, Score Distribution) |
-| [panel2_stability.png](images/panel2_stability.png) | 8 graficos de estabilidade (Decile, Lift, PSI, Swap, Calibration) |
-| [panel3_business.png](images/panel3_business.png) | 8 graficos de negocio (Comparison, Coefficients, Risk Bands) |
-| [shap_beeswarm.png](images/shap_beeswarm.png) | SHAP Beeswarm — Top 40 features por importancia |
-| [shap_pareto.png](images/shap_pareto.png) | SHAP Pareto — Importancia cumulativa |
-| [ks_incremental.png](images/ks_incremental.png) | KS Incremental — Contribuicao por fonte de dados |
+| [Apresentacao](presentation/) | Slides e roteiro da apresentacao do hackathon |
+| [Report](report.html) | Relatorio HTML consolidado |
