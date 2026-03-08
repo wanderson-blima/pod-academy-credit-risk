@@ -33,7 +33,7 @@ O projeto implementa o pipeline de credit risk em duas plataformas cloud, demons
 | **Pipeline** | Medallion (Bronze/Silver/Gold) via PySpark + Delta Lake | Medallion via Data Flow (Spark) + Object Storage + ADW |
 | **Feature Store** | `Gold.feature_store.clientes_consolidado` | Autonomous Data Warehouse |
 | **Modelos** | LR L1 + LightGBM (MLflow) | LR L1 + LightGBM (local + OCI Data Science) |
-| **Infra** | Workspace Fabric (PaaS) | Terraform IaC — 6 modulos (IaaS/PaaS) |
+| **Infra** | Workspace Fabric (PaaS) | Terraform IaC — 7 modulos, 43 recursos (IaaS/PaaS) |
 | **Deploy** | Scoring batch via notebook | Container Docker-ready + endpoint REST |
 | **Detalhes** | [`fabric/README.md`](fabric/README.md) | [`oci/README.md`](oci/README.md) |
 
@@ -67,7 +67,7 @@ graph LR
 - **Lift 2.47x** no top decil — 52.7% de taxa de default vs 21.3% media
 - **59 features** selecionadas de 398 por pipeline de 4 etapas (IV + L1 + Correlacao + LGBM)
 - **PSI < 0.002** entre periodos de treino e teste (distribuicao estavel)
-- **Paridade OCI** — pipeline portado com resultados equivalentes
+- **Paridade OCI 100%** — 10/10 metricas PASS, pipeline portado com Terraform IaC (R$ 171 acumulado / US$ 500 trial credit)
 
 ### Visualizacoes do Modelo
 
@@ -96,12 +96,13 @@ projeto-final/
 │   └── docs/                  #   Arquitetura, features, modelagem
 │
 ├── oci/                       # Oracle Cloud Infrastructure (evolucao cloud-native)
-│   ├── infrastructure/        #   Terraform IaC (6 modulos) + ops scripts
+│   ├── infrastructure/        #   Terraform IaC (7 modulos) + ops scripts
 │   ├── pipeline/              #   ETL: ingest_bronze, transform_silver, engineer_gold
-│   ├── model/                 #   train, evaluate, scoring, deploy
-│   ├── artifacts/             #   Modelos OCI (.pkl) + metricas
+│   ├── model/                 #   train, evaluate, scoring, deploy, monitor, OCI metrics
+│   ├── infrastructure/apex/   #   Dashboard ORDS ao vivo (Chart.js, dark theme, 3 paginas)
+│   ├── artifacts/             #   Modelos OCI (.pkl) + metricas + monitoring
 │   ├── deliverable/           #   Entregavel: scoring Docker-ready
-│   └── docs/                  #   PRD, reports, quality dashboards
+│   └── docs/                  #   PRD, reports, runbook, cost dashboard
 │
 ├── docs/                      # Documentacao compartilhada
 │   ├── presentation/          #   Apresentacao do hackathon
@@ -129,12 +130,14 @@ projeto-final/
 
 | # | Etapa | Script | Descricao |
 |---|-------|--------|-----------|
-| 0 | Infra | [`oci/infrastructure/terraform/`](oci/infrastructure/terraform/) | `terraform apply` — provisiona toda a infra |
+| 0 | Infra | [`oci/infrastructure/terraform/`](oci/infrastructure/terraform/) | `terraform apply` — provisiona toda a infra (7 modulos, 43 recursos) |
 | 1 | Bronze | [`oci/pipeline/ingest_bronze.py`](oci/pipeline/ingest_bronze.py) | Ingestao → Object Storage |
 | 2 | Silver | [`oci/pipeline/transform_silver.py`](oci/pipeline/transform_silver.py) | Transformacao via Data Flow |
 | 3 | Gold | [`oci/pipeline/engineer_gold.py`](oci/pipeline/engineer_gold.py) | Feature engineering → ADW |
 | 4 | Modelo | [`oci/model/train_credit_risk.py`](oci/model/train_credit_risk.py) | Treinamento LR + LGBM |
 | 5 | Deploy | [`oci/model/deploy_endpoint.py`](oci/model/deploy_endpoint.py) | Endpoint REST |
+| 6 | Monitor | [`oci/model/monitor_model.py`](oci/model/monitor_model.py) | PSI + feature drift monitoring |
+| 7 | Dashboard | [`oci/infrastructure/apex/`](oci/infrastructure/apex/) | [Dashboard ORDS ao vivo](https://G95D3985BD0D2FD-PODACADEMY.adb.sa-saopaulo-1.oraclecloudapps.com/ords/mlmonitor/dashboard/) — KPIs, charts, custos |
 
 ---
 
@@ -147,7 +150,7 @@ projeto-final/
 | Processamento | PySpark 3.x | OCI Data Flow (Spark) |
 | ML | scikit-learn, LightGBM | scikit-learn, LightGBM |
 | Tracking | MLflow 2.12.2 | Local artifacts |
-| IaC | N/A (PaaS) | Terraform (6 modulos) |
+| IaC | N/A (PaaS) | Terraform (7 modulos, 43 recursos) |
 | Deploy | Notebook batch | Docker container |
 
 ## Volumes de Dados
@@ -172,6 +175,9 @@ projeto-final/
 | Resultados do Modelo | [`fabric/docs/modeling/model-results.md`](fabric/docs/modeling/model-results.md) |
 | Decisoes Tecnicas | [`fabric/docs/technical-decisions.md`](fabric/docs/technical-decisions.md) |
 | OCI Validation Report | [`oci/docs/oci-e2e-validation-report.md`](oci/docs/oci-e2e-validation-report.md) |
+| OCI Operations Runbook | [`oci/docs/operations-runbook.md`](oci/docs/operations-runbook.md) |
+| OCI Cost Dashboard | [`oci/docs/cost-dashboard.md`](oci/docs/cost-dashboard.md) |
+| OCI Documentation Package | [`oci/docs/final-documentation-package.md`](oci/docs/final-documentation-package.md) |
 | Apresentacao | [`docs/presentation/`](docs/presentation/) |
 
 ---

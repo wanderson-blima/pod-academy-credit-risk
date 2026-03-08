@@ -140,6 +140,16 @@ module "cost" {
   alert_recipients = var.alert_recipients
 }
 
+# ─── Module: Monitoring ────────────────────────────────────────────────────
+
+module "monitoring" {
+  source = "./modules/monitoring"
+
+  compartment_ocid = var.compartment_ocid
+  project_prefix   = var.prefix
+  alert_email      = var.alert_recipients
+}
+
 # ─── IAM: Dynamic Groups ──────────────────────────────────────────────────
 
 resource "oci_identity_dynamic_group" "dataflow" {

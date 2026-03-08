@@ -12,7 +12,7 @@ O pipeline de risco de credito roda no Microsoft Fabric com arquitetura medalhao
 
 **Objetivo**: Executar o pipeline completo com paridade exata ao Fabric — mesmas tabelas, mesmas linhas, mesmas colunas, mesma logica de transformacao.
 
-**Budget**: $500 total para arquitetura completa. Custo real do Data Flow: **$0.025/OCPU-hora** + $0.0015/GB-hora (muito mais barato que estimado anteriormente).
+**Trial Credit**: US$ 500 (creditos Oracle hackathon). Custo real do Data Flow: **$0.025/OCPU-hora** + $0.0015/GB-hora. Custos reportados em BRL na regiao sa-saopaulo-1.
 
 ---
 
@@ -96,7 +96,7 @@ spark_config = {
 | Gold (books + consolidacao) | 14 OCPUs, 112 GB | ~43 min | ~$0.37 |
 | **Total por run** | | **~108 min** | **~$0.48** |
 
-**Budget: $500 permite ~1.000 runs completos.** Extremamente confortavel para desenvolvimento, teste e producao.
+**Trial credit: US$ 500 permite ~1.000 runs completos.** Extremamente confortavel para desenvolvimento, teste e producao. Na pratica, o Data Flow consumiu R$ 42.29 em 23 runs.
 
 ### Pool Config Recomendado
 

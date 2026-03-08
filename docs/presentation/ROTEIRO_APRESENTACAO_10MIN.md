@@ -303,31 +303,44 @@
 
 ---
 
-## SLIDE 10 — PRONTO PARA PRODUCAO (45s)
+## SLIDE 10 — DUAL ARCHITECTURE + PRONTO PARA PRODUCAO (45s)
 
 **Fala sugerida:**
 
-> "Para finalizar: o que entregamos e o que vem depois."
+> "Para finalizar: alem do Fabric, portamos TUDO para Oracle Cloud."
 
-### Entregue (apontar para o lado esquerdo):
+### Dual Architecture — Diferencial competitivo:
+
+> "Nao entregamos apenas um pipeline — entregamos DOIS:
+>
+> **Microsoft Fabric** — Pipeline original, PySpark + Delta Lake
+> **Oracle Cloud (OCI)** — Migracao completa com Infrastructure as Code
+>
+> Na OCI, provisionamos tudo com Terraform: 7 modulos, 43 recursos.
+> O pipeline inteiro roda com um `terraform apply`.
+>
+> Os resultados sao IDENTICOS: 10/10 metricas de paridade PASS.
+> KS, AUC, Gini — todos dentro da tolerancia (< 0.5%).
+>
+> E o custo? R$ 171 reais de creditos consumidos, dentro de US$ 500 de
+> credito trial Oracle. Isso incluindo toda a construcao do pipeline,
+> 23 runs de Data Flow, ADW, e 6 buckets de Object Storage."
+
+### Production-Ready (apontar para checklist):
 
 > "Entregamos o pipeline completo — da ingestao ao score:
-> - Pipeline Bronze/Silver/Gold no Microsoft Fabric
-> - Feature Store com 402 colunas, pronta para consumo
+> - Pipeline Bronze/Silver/Gold em DUAS plataformas
+> - Feature Store com 402 colunas
 > - Modelo LightGBM com KS 33.97%
-> - Monitoramento de drift e PSI configurado"
-
-### Proximos Passos (lado direito):
-
-> "Para producao, faltam 3 passos:
-> 1. **Deploy do Scoring Batch** — rodar o modelo em Fabric periodicamente
-> 2. **Integracao com Motor de Decisao** — plugar o score na esteira de aprovacao
-> 3. **Retreino Trimestral** — re-treinar com dados novos a cada 3 meses"
+> - Monitoramento de drift e PSI (script + alarmes Terraform)
+> - Runbook operacional completo
+> - Health check automatizado
+> - 5 quality gates validados (124/144 checks PASS)"
 
 ### Frase de fechamento:
 
-> "Modelo robusto. Estavel. Interpretavel. Pronto para reduzir a inadimplencia
-> da Claro. Obrigado!"
+> "Modelo robusto. Estavel. Interpretavel. Multi-cloud. Pronto para reduzir
+> a inadimplencia da Claro. Obrigado!"
 
 ---
 

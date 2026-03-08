@@ -82,3 +82,17 @@ references/
 *.tmp
 *.bak
 .ipynb_checkpoints/
+/docs/stories/
+/docs/sessions/
+/docs/prd/
+/docs/architecture/
+/docs/guides/
+.aios-sync.yaml
+0-docs/
+1-ingestao-dados/
+2-metadados/
+3-edas/
+4-construcao-books/
+5-treinamento-modelos/
+
+

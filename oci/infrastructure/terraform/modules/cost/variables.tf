@@ -17,7 +17,7 @@ variable "project_prefix" {
 }
 
 variable "monthly_budget" {
-  description = "Monthly budget amount in BRL"
+  description = "Monthly budget alert amount in BRL (monitoring alert, not trial limit). Trial credit: US$ 500."
   type        = number
   default     = 500
 }

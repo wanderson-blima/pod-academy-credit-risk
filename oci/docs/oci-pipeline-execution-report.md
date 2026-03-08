@@ -282,13 +282,13 @@ Hourly rate: 6 x $0.025 + 96 x $0.0015 = **$0.294/hr**
 | Category | Cost |
 |----------|------|
 | Phase 1 Data Flow | $0.098 |
-| Phase 2 Data Flow | $3.117 |
-| Object Storage (month) | $0.91 |
-| ADW (Free tier) | $0.00 |
-| VCN/Networking | $0.00 |
-| **Total Compute** | **$3.215** |
-| **Total with 1 month storage** | **$4.13** |
-| **Budget remaining** | **$495.87 / $500** |
+| Database (ADW) — storage + compute | R$ 121.92 |
+| Data Flow (23 runs, 2,495 OCPU-hours) | R$ 42.29 |
+| Object Storage (6 buckets) | R$ 7.50 |
+| VCN/Networking | R$ 0.00 |
+| **Total acumulado (fev + mar parcial)** | **R$ 171.71** |
+| **Budget (mensal, BRL)** | **R$ 500.00** |
+| **Utilizacao** | **34.3%** |
 
 ---
 
@@ -500,4 +500,4 @@ Column breakdown:
 *Report generated: 2026-02-17T13:45:00Z*
 *Pipeline executed by: Atlas (OCI Platform Chief) + Flux (Data Engineer)*
 *Infrastructure: Terraform-managed, 43 resources across 6 modules*
-*Budget: $4.13 / $500.00 used (0.83%)*
+*Budget: R$ 171.71 acumulado / R$ 500.00 budget (34.3%). Credito trial OCI: US$ 500.*
