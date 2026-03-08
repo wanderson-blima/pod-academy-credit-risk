@@ -181,7 +181,7 @@
       <div class="chart-container"><canvas id="giniChart"></canvas></div>
     </div>
     <div class="chart-card full-width">
-      <h3><span class="dot" style="background:var(--accent-blue)"></span>LightGBM vs LR L1 -- Performance Comparison</h3>
+      <h3><span class="dot" style="background:var(--accent-blue)"></span>Ensemble v1 vs LightGBM vs LR L1 -- Performance Comparison</h3>
       <div id="comparisonTable"><div class="loading"><span class="spinner"></span>Loading...</div></div>
     </div>
     <div class="chart-card full-width">
@@ -334,26 +334,34 @@ function formatVolume(n) {
 // ========================= RENDERERS =========================
 
 function renderOverviewKPIs(perf, stability, status, distribution) {
-  const lgbm = status.find(s => s.model_name === 'LightGBM');
+  // Prefer Ensemble, fallback to LightGBM
+  const ensStatus = status.find(s => s.model_name === 'Ensemble v1');
+  const lgbmStatus = status.find(s => s.model_name === 'LightGBM');
+  const primaryStatus = ensStatus || lgbmStatus;
+  const ensOOT = perf.filter(p => p.model_name === 'Ensemble v1' && p.dataset_type === 'OOT')
+    .sort((a, b) => b.safra.localeCompare(a.safra))[0];
   const lgbmOOT = perf.filter(p => p.model_name === 'LightGBM' && p.dataset_type === 'OOT')
     .sort((a, b) => b.safra.localeCompare(a.safra))[0];
-  const latestPSI = stability.filter(s => s.model_name === 'LightGBM')
+  const primaryOOT = ensOOT || lgbmOOT;
+  const primaryLabel = ensOOT ? 'Ensemble v1' : 'LightGBM GBDT';
+  const ensPSI = stability.filter(s => s.model_name === 'Ensemble v1')
     .sort((a, b) => b.safra.localeCompare(a.safra))[0];
-  const latestDist = distribution.filter(d => d.model_name === 'LightGBM')
+  const lgbmPSI = stability.filter(s => s.model_name === 'LightGBM')
     .sort((a, b) => b.safra.localeCompare(a.safra))[0];
-  const totalScored = distribution.filter(d => d.model_name === 'LightGBM')
+  const latestPSI = ensPSI || lgbmPSI;
+  const totalScored = distribution.filter(d => d.model_name === (ensOOT ? 'Ensemble v1' : 'LightGBM'))
     .reduce((sum, d) => sum + (d.total_scored || 0), 0);
   const safraCount = uniqueSorted(perf, 'safra').length;
 
   document.getElementById('kpiOverview').innerHTML = [
-    kpiCard(lgbm && lgbm.status === 'STABLE' ? 'kpi-green' : 'kpi-orange',
-      'Model Status', lgbm ? lgbm.status : '-', lgbm ? `Quality Gate: ${lgbm.quality_gate}` : ''),
+    kpiCard(primaryStatus && primaryStatus.status === 'STABLE' ? 'kpi-green' : 'kpi-orange',
+      'Model Status', primaryStatus ? primaryStatus.status : '-', primaryStatus ? `Quality Gate: ${primaryStatus.quality_gate}` : ''),
     kpiCard('kpi-blue', 'KS Statistic (OOT)',
-      lgbmOOT ? formatNum(lgbmOOT.ks_statistic * 100) + '%' : '-', 'LightGBM GBDT'),
+      primaryOOT ? formatNum(primaryOOT.ks_statistic * 100) + '%' : '-', primaryLabel),
     kpiCard('kpi-blue', 'AUC-ROC',
-      lgbmOOT ? formatNum(lgbmOOT.auc_roc, 4) : '-', 'LightGBM GBDT'),
+      primaryOOT ? formatNum(primaryOOT.auc_roc, 4) : '-', primaryLabel),
     kpiCard('kpi-blue', 'Gini',
-      lgbmOOT ? formatNum(lgbmOOT.gini) + '%' : '-', 'LightGBM GBDT'),
+      primaryOOT ? formatNum(primaryOOT.gini) + '%' : '-', primaryLabel),
     kpiCard(latestPSI && latestPSI.score_psi < 0.1 ? 'kpi-green' : 'kpi-orange',
       'Score PSI', latestPSI ? formatNum(latestPSI.score_psi, 4) : '-',
       latestPSI ? (latestPSI.psi_status === 'OK' ? 'Estavel - Sem Drift' : latestPSI.psi_status) : ''),
@@ -372,10 +380,16 @@ function renderKSChart(perf) {
     const r = perf.find(p => p.model_name === 'LR L1' && p.safra === s);
     return r ? r.ks_statistic * 100 : null;
   });
+  const ensKS = safras.map(s => {
+    const r = perf.find(p => p.model_name === 'Ensemble v1' && p.safra === s);
+    return r ? r.ks_statistic * 100 : null;
+  });
 
   createOrUpdateChart('ksChart', {
     type: 'line',
     data: { labels: safras, datasets: [
+      { label: 'Ensemble v1', data: ensKS, borderColor: '#2ea043', backgroundColor: 'rgba(46,160,67,0.1)',
+        fill: true, tension: 0.3, pointRadius: 6, pointHoverRadius: 9, borderWidth: 4 },
       { label: 'LightGBM', data: lgbmKS, borderColor: '#1f6feb', backgroundColor: 'rgba(31,111,235,0.1)',
         fill: true, tension: 0.3, pointRadius: 5, pointHoverRadius: 8, borderWidth: 3 },
       { label: 'LR L1', data: lrKS, borderColor: '#f97316', backgroundColor: 'rgba(249,115,22,0.1)',
@@ -403,10 +417,16 @@ function renderPSIChart(stability) {
     const r = stability.find(st => st.model_name === 'LR L1' && st.safra === s);
     return r ? r.score_psi : null;
   });
+  const ensPSI = safras.map(s => {
+    const r = stability.find(st => st.model_name === 'Ensemble v1' && st.safra === s);
+    return r ? r.score_psi : null;
+  });
 
   createOrUpdateChart('psiChart', {
     type: 'line',
     data: { labels: safras, datasets: [
+      { label: 'Ensemble v1 PSI', data: ensPSI, borderColor: '#8957e5', backgroundColor: 'rgba(137,87,229,0.15)',
+        fill: true, tension: 0.3, pointRadius: 6, borderWidth: 4, spanGaps: false },
       { label: 'LightGBM PSI', data: lgbmPSI, borderColor: '#2ea043', backgroundColor: 'rgba(46,160,67,0.15)',
         fill: true, tension: 0.3, pointRadius: 5, borderWidth: 3 },
       { label: 'LR L1 PSI', data: lrPSI, borderColor: '#f97316',
@@ -492,10 +512,13 @@ function renderAUCChart(perf) {
   const safras = uniqueSorted(perf, 'safra');
   const lgbm = safras.map(s => { const r = perf.find(p => p.model_name === 'LightGBM' && p.safra === s); return r ? r.auc_roc : null; });
   const lr = safras.map(s => { const r = perf.find(p => p.model_name === 'LR L1' && p.safra === s); return r ? r.auc_roc : null; });
+  const ens = safras.map(s => { const r = perf.find(p => p.model_name === 'Ensemble v1' && p.safra === s); return r ? r.auc_roc : null; });
 
   createOrUpdateChart('aucChart', {
     type: 'line',
     data: { labels: safras, datasets: [
+      { label: 'Ensemble v1', data: ens, borderColor: '#2ea043', backgroundColor: 'rgba(46,160,67,0.1)',
+        fill: true, tension: 0.3, pointRadius: 6, borderWidth: 4 },
       { label: 'LightGBM', data: lgbm, borderColor: '#1f6feb', backgroundColor: 'rgba(31,111,235,0.1)',
         fill: true, tension: 0.3, pointRadius: 5, borderWidth: 3 },
       { label: 'LR L1', data: lr, borderColor: '#f97316', backgroundColor: 'rgba(249,115,22,0.1)',
@@ -517,10 +540,13 @@ function renderGiniChart(perf) {
   const safras = uniqueSorted(perf, 'safra');
   const lgbm = safras.map(s => { const r = perf.find(p => p.model_name === 'LightGBM' && p.safra === s); return r ? r.gini : null; });
   const lr = safras.map(s => { const r = perf.find(p => p.model_name === 'LR L1' && p.safra === s); return r ? r.gini : null; });
+  const ens = safras.map(s => { const r = perf.find(p => p.model_name === 'Ensemble v1' && p.safra === s); return r ? r.gini : null; });
 
   createOrUpdateChart('giniChart', {
     type: 'line',
     data: { labels: safras, datasets: [
+      { label: 'Ensemble v1', data: ens, borderColor: '#2ea043', backgroundColor: 'rgba(46,160,67,0.1)',
+        fill: true, tension: 0.3, pointRadius: 6, borderWidth: 4 },
       { label: 'LightGBM', data: lgbm, borderColor: '#8957e5', backgroundColor: 'rgba(137,87,229,0.1)',
         fill: true, tension: 0.3, pointRadius: 5, borderWidth: 3 },
       { label: 'LR L1', data: lr, borderColor: '#f97316', backgroundColor: 'rgba(249,115,22,0.1)',
@@ -542,17 +568,19 @@ function renderComparisonTable(perf) {
   const safras = uniqueSorted(perf, 'safra');
   let rows = '';
   for (const s of safras) {
+    const ens = perf.find(p => p.model_name === 'Ensemble v1' && p.safra === s);
     const lgbm = perf.find(p => p.model_name === 'LightGBM' && p.safra === s);
     const lr = perf.find(p => p.model_name === 'LR L1' && p.safra === s);
-    if (!lgbm || !lr) continue;
+    const dsType = (ens || lgbm || lr || {}).dataset_type || '-';
     rows += `<tr>
-      <td>${s}</td><td>${lgbm.dataset_type}</td>
-      <td><strong>${formatNum(lgbm.ks_statistic * 100)}%</strong></td><td>${formatNum(lgbm.auc_roc, 4)}</td><td>${formatNum(lgbm.gini)}%</td>
-      <td>${formatNum(lr.ks_statistic * 100)}%</td><td>${formatNum(lr.auc_roc, 4)}</td><td>${formatNum(lr.gini)}%</td>
+      <td>${s}</td><td>${dsType}</td>
+      <td style="color:#2ea043;font-weight:700;">${ens ? formatNum(ens.ks_statistic * 100) + '%' : '-'}</td><td style="color:#2ea043;">${ens ? formatNum(ens.auc_roc, 4) : '-'}</td><td style="color:#2ea043;">${ens ? formatNum(ens.gini) + '%' : '-'}</td>
+      <td>${lgbm ? formatNum(lgbm.ks_statistic * 100) + '%' : '-'}</td><td>${lgbm ? formatNum(lgbm.auc_roc, 4) : '-'}</td><td>${lgbm ? formatNum(lgbm.gini) + '%' : '-'}</td>
+      <td>${lr ? formatNum(lr.ks_statistic * 100) + '%' : '-'}</td><td>${lr ? formatNum(lr.auc_roc, 4) : '-'}</td><td>${lr ? formatNum(lr.gini) + '%' : '-'}</td>
     </tr>`;
   }
   document.getElementById('comparisonTable').innerHTML = `<table>
-    <thead><tr><th>SAFRA</th><th>Dataset</th><th>LGBM KS</th><th>LGBM AUC</th><th>LGBM Gini</th><th>LR KS</th><th>LR AUC</th><th>LR Gini</th></tr></thead>
+    <thead><tr><th>SAFRA</th><th>Dataset</th><th style="color:#2ea043;">ENS KS</th><th style="color:#2ea043;">ENS AUC</th><th style="color:#2ea043;">ENS Gini</th><th>LGBM KS</th><th>LGBM AUC</th><th>LGBM Gini</th><th>LR KS</th><th>LR AUC</th><th>LR Gini</th></tr></thead>
     <tbody>${rows}</tbody></table>`;
 }
 

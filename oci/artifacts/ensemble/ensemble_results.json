@@ -1,0 +1,38 @@
+{
+  "champion": "simple_avg",
+  "ks_oot": 0.34417,
+  "auc_oot": 0.73338,
+  "gini_oot": 46.68,
+  "psi": 0.000562,
+  "weights": {
+    "LightGBM_v2": 0.2,
+    "XGBoost": 0.2,
+    "CatBoost": 0.2,
+    "RandomForest": 0.2,
+    "LR_L1_v2": 0.2
+  },
+  "all_results": {
+    "simple_avg": {
+      "ks": 0.34417,
+      "auc": 0.73338
+    },
+    "blend": {
+      "ks": 0.34417,
+      "auc": 0.73338,
+      "psi": 0.00056,
+      "weights": {
+        "LightGBM_v2": 0.2,
+        "XGBoost": 0.2,
+        "CatBoost": 0.2,
+        "RandomForest": 0.2,
+        "LR_L1_v2": 0.2
+      }
+    },
+    "stack": {
+      "ks": 0.32763,
+      "auc": 0.71731
+    }
+  },
+  "baseline_ks_oot": 0.34027,
+  "improvement_pp": 0.39
+}

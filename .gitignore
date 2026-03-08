@@ -93,6 +93,18 @@ references/
 2-metadados/
 3-edas/
 4-construcao-books/
-5-treinamento-modelos/
 
+# ==========================================
+# 5-treinamento-modelos (keep scripts, exclude heavy artifacts)
+# ==========================================
+5-treinamento-modelos/artifacts/
+5-treinamento-modelos/__pycache__/
+5-treinamento-modelos/06_production/__pycache__/
+
+# ==========================================
+# Large binary files (PKL > 50MB, Parquet)
+# ==========================================
+oci/artifacts/ensemble/ensemble_model.pkl
+oci/artifacts/ensemble/models_v2/RandomForest.pkl
+*.parquet
 

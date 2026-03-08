@@ -45,7 +45,14 @@ from train_credit_risk import (
 # ═══════════════════════════════════════════════════════════════════════════
 
 SCORES_OUTPUT_PATH = f"oci://{GOLD_BUCKET}@{NAMESPACE}/clientes_scores/"
-MODEL_VERSION = "lgbm-oci-v1"
+MODEL_VERSION = "ensemble-v1"
+
+# Ensemble model path (if available, preferred over single LGBM)
+ENSEMBLE_MODEL_PATH = os.path.join(
+    os.path.dirname(__file__), "..", "artifacts", "ensemble", "ensemble_model.pkl"
+)
+# Fallback: single LGBM if ensemble not available
+FALLBACK_MODEL_VERSION = "lgbm-oci-v1"
 
 
 def risk_band(score):
@@ -132,15 +139,23 @@ if __name__ == "__main__":
     print("BATCH SCORING — OCI Data Science")
     print("=" * 70)
 
-    # Load latest trained LightGBM pipeline
-    lgbm_files = sorted(glob.glob(f"{ARTIFACT_DIR}/models/lgbm_oci_*.pkl"))
-    if not lgbm_files:
-        print("[ERROR] No trained LGBM .pkl found. Run train_credit_risk.py first.")
-        exit(1)
-
-    print(f"[LOAD] Model: {lgbm_files[-1]}")
-    with open(lgbm_files[-1], "rb") as f:
-        lgbm_pipeline = pickle.load(f)
+    # Try loading ensemble model first, fallback to single LGBM
+    model_version = MODEL_VERSION
+    if os.path.exists(ENSEMBLE_MODEL_PATH):
+        print(f"[LOAD] Ensemble model: {ENSEMBLE_MODEL_PATH}")
+        with open(ENSEMBLE_MODEL_PATH, "rb") as f:
+            lgbm_pipeline = pickle.load(f)
+        model_version = MODEL_VERSION
+        print(f"[LOAD] Ensemble loaded (mode={getattr(lgbm_pipeline, 'mode', 'pipeline')})")
+    else:
+        lgbm_files = sorted(glob.glob(f"{ARTIFACT_DIR}/models/lgbm_oci_*.pkl"))
+        if not lgbm_files:
+            print("[ERROR] No trained model .pkl found. Run train_credit_risk.py first.")
+            exit(1)
+        print(f"[LOAD] Fallback to single LGBM: {lgbm_files[-1]}")
+        with open(lgbm_files[-1], "rb") as f:
+            lgbm_pipeline = pickle.load(f)
+        model_version = FALLBACK_MODEL_VERSION
 
     # Load all data
     columns_to_load = SELECTED_FEATURES + [TARGET, "SAFRA", "NUM_CPF"]
@@ -151,6 +166,10 @@ if __name__ == "__main__":
         df = pd.read_parquet(GOLD_PATH, columns=columns_to_load)
 
     print(f"[DATA] Loaded {len(df):,} records, {len(df['SAFRA'].unique())} SAFRAs")
+
+    # Override MODEL_VERSION based on what was loaded
+    global MODEL_VERSION
+    MODEL_VERSION = model_version
 
     # Score all records
     scores_df = score_batch(lgbm_pipeline, df)

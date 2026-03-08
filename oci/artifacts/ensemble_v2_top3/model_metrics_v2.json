@@ -1,0 +1,38 @@
+{
+  "LightGBM_v2": {
+    "ks_train": 0.342908,
+    "auc_train": 0.727857,
+    "gini_train": 45.57,
+    "ks_oos": 0.334147,
+    "auc_oos": 0.722031,
+    "gini_oos": 44.41,
+    "ks_oot": 0.310495,
+    "auc_oot": 0.707068,
+    "gini_oot": 41.41,
+    "psi": 0.002112
+  },
+  "XGBoost": {
+    "ks_train": 0.32573,
+    "auc_train": 0.714665,
+    "gini_train": 42.93,
+    "ks_oos": 0.31961,
+    "auc_oos": 0.711452,
+    "gini_oos": 42.29,
+    "ks_oot": 0.296988,
+    "auc_oot": 0.697122,
+    "gini_oot": 39.42,
+    "psi": 0.001463
+  },
+  "CatBoost": {
+    "ks_train": 0.306459,
+    "auc_train": 0.709762,
+    "gini_train": 41.95,
+    "ks_oos": 0.295872,
+    "auc_oos": 0.70304,
+    "gini_oos": 40.61,
+    "ks_oot": 0.282172,
+    "auc_oot": 0.693682,
+    "gini_oot": 38.74,
+    "psi": 0.000515
+  }
+}

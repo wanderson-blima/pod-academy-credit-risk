@@ -180,7 +180,93 @@ def monitor_feature_drift(df):
     return results
 
 
-def generate_report(score_psi, feature_drift, training_metrics, output_dir):
+def monitor_ensemble_base_models(df, ensemble_model_path=None):
+    """Monitor PSI for individual base models within the ensemble.
+
+    Early warning: if any base model shows PSI > 0.15, flag it.
+    Also checks model agreement rate between ensemble members.
+    """
+    import pickle
+
+    if ensemble_model_path is None:
+        ensemble_model_path = os.path.join(
+            os.path.dirname(__file__), "..", "artifacts", "ensemble", "ensemble_model.pkl"
+        )
+
+    if not os.path.exists(ensemble_model_path):
+        print("[ENSEMBLE MONITOR] No ensemble model found — skipping base model monitoring")
+        return {}
+
+    with open(ensemble_model_path, "rb") as f:
+        ensemble = pickle.load(f)
+
+    if not hasattr(ensemble, "base_models"):
+        print("[ENSEMBLE MONITOR] Model is not an EnsembleModel — skipping")
+        return {}
+
+    results = {"base_model_psi": {}, "agreement_rate": None}
+
+    if "SAFRA" not in df.columns:
+        return results
+
+    train_df = df[df["SAFRA"].isin(TRAIN_SAFRAS)]
+    oot_df = df[df["SAFRA"].isin(OOT_SAFRAS)]
+
+    if len(train_df) < 100 or len(oot_df) < 100:
+        return results
+
+    # Check available features — use features from first base model
+    first_model = list(ensemble.base_models.values())[0]
+    try:
+        prep = first_model.named_steps["prep"]
+        num_feats = list(prep.transformers[0][2])
+        cat_feats = list(prep.transformers[1][2]) if len(prep.transformers) > 1 else []
+        features = num_feats + cat_feats
+    except Exception:
+        features = [f for f in TOP_FEATURES if f in df.columns]
+
+    # Per base model PSI
+    predictions_train = {}
+    predictions_oot = {}
+
+    for name, model in ensemble.base_models.items():
+        try:
+            train_probs = model.predict_proba(train_df[features])[:, 1]
+            oot_probs = model.predict_proba(oot_df[features])[:, 1]
+            psi = compute_psi(train_probs, oot_probs)
+            status = classify_psi(psi)
+
+            # Early warning at lower threshold (0.15)
+            if psi > 0.15:
+                print(f"  [EARLY WARNING] Base model '{name}' PSI={psi:.6f} > 0.15")
+
+            results["base_model_psi"][name] = {"psi": psi, "status": status}
+            predictions_train[name] = train_probs
+            predictions_oot[name] = oot_probs
+        except Exception as e:
+            results["base_model_psi"][name] = {"psi": None, "status": "ERROR", "error": str(e)}
+
+    # Model agreement rate (OOT) — % of cases where all models agree on decile
+    if len(predictions_oot) >= 2:
+        import pandas as pd
+        decile_dfs = {}
+        for name, probs in predictions_oot.items():
+            decile_dfs[name] = pd.qcut(probs, q=10, labels=False, duplicates="drop")
+
+        decile_matrix = pd.DataFrame(decile_dfs)
+        agreement = (decile_matrix.nunique(axis=1) == 1).mean()
+        results["agreement_rate"] = round(float(agreement), 4)
+        print(f"  Model agreement rate (exact decile match): {agreement:.2%}")
+
+    # Weight stability — check if weights are still appropriate
+    if hasattr(ensemble, "weights") and ensemble.weights:
+        results["current_weights"] = ensemble.weights
+
+    return results
+
+
+def generate_report(score_psi, feature_drift, training_metrics, output_dir,
+                    ensemble_monitoring=None):
     """Generate monitoring report JSON."""
     os.makedirs(output_dir, exist_ok=True)
 
@@ -197,6 +283,14 @@ def generate_report(score_psi, feature_drift, training_metrics, output_dir):
     else:
         overall = "STABLE"
 
+    # Check ensemble base models for early warning
+    if ensemble_monitoring:
+        base_psi = ensemble_monitoring.get("base_model_psi", {})
+        for name, info in base_psi.items():
+            if info.get("psi") and info["psi"] > 0.15:
+                if overall == "STABLE":
+                    overall = "WARNING"
+
     report = {
         "report_date": datetime.now().isoformat(),
         "run_id": training_metrics.get("run_id", "unknown"),
@@ -207,6 +301,7 @@ def generate_report(score_psi, feature_drift, training_metrics, output_dir):
         },
         "score_psi": score_psi,
         "feature_drift": feature_drift,
+        "ensemble_monitoring": ensemble_monitoring or {},
         "reference_metrics": {
             "lgbm": training_metrics.get("lgbm_metrics", {}),
             "lr": training_metrics.get("lr_metrics", {}),
@@ -287,8 +382,13 @@ def main():
     print("\n--- Feature Drift Analysis ---")
     feature_drift = monitor_feature_drift(df)
 
+    # Ensemble base model monitoring
+    print("\n--- Ensemble Base Model Monitoring ---")
+    ensemble_monitoring = monitor_ensemble_base_models(df)
+
     # Generate report
-    report_path = generate_report(score_psi, feature_drift, training_metrics, args.output_dir)
+    report_path = generate_report(score_psi, feature_drift, training_metrics, args.output_dir,
+                                  ensemble_monitoring=ensemble_monitoring)
 
     # Publish to OCI Monitoring dashboard
     if args.publish_metrics:

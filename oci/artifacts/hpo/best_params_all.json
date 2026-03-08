@@ -1,0 +1,34 @@
+{
+  "LightGBM": {
+    "n_estimators": 800,
+    "learning_rate": 0.03879044720333805,
+    "max_depth": 8,
+    "num_leaves": 99,
+    "min_child_samples": 139,
+    "colsample_bytree": 0.8316757666111936,
+    "subsample": 0.7337270931497855,
+    "reg_alpha": 1.1036737386930074e-06,
+    "reg_lambda": 9.831785747656788,
+    "scale_pos_weight": 2.3568228131159876
+  },
+  "XGBoost": {
+    "n_estimators": 793,
+    "learning_rate": 0.03117542510696273,
+    "max_depth": 8,
+    "min_child_weight": 12,
+    "colsample_bytree": 0.5560174797254318,
+    "subsample": 0.882719774623786,
+    "gamma": 0.001058692075207878,
+    "reg_alpha": 2.3375799563792108e-07,
+    "reg_lambda": 1.4564712797817117e-06,
+    "scale_pos_weight": 1.0276395013218125
+  },
+  "CatBoost": {
+    "iterations": 685,
+    "learning_rate": 0.06820927158578396,
+    "depth": 6,
+    "l2_leaf_reg": 0.17919611165839208,
+    "border_count": 172,
+    "bagging_temperature": 1.1067898296835665
+  }
+}

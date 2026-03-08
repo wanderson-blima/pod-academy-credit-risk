@@ -79,6 +79,20 @@ MODELS = [
         "framework": "lightgbm",
         "framework_version": "4.1.0",
     },
+    {
+        "name": "credit-risk-ensemble",
+        "display_name": "Credit Risk Ensemble v1",
+        "description": (
+            "Multi-model ensemble for FPD prediction. "
+            "Combines LightGBM v2, XGBoost, CatBoost, Random Forest, LR L1 v2. "
+            "Supports blend (weighted average) and stack (meta-learner) modes. "
+            f"Run ID: {RUN_ID}"
+        ),
+        "artifact_file": "ensemble/ensemble_model.pkl",
+        "algorithm": "Ensemble",
+        "framework": "scikit-learn+lightgbm+xgboost+catboost",
+        "framework_version": "multi",
+    },
 ]
 
 
