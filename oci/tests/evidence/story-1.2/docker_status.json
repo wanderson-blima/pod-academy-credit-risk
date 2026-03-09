@@ -1,0 +1,57 @@
+{
+  "story": "1.2",
+  "title": "Install Apache Airflow with Docker",
+  "status": "COMPLETED",
+  "timestamp": "2026-03-08T23:17:00Z",
+  "instance": {
+    "public_ip": "146.235.27.18",
+    "shape": "VM.Standard.E3.Flex",
+    "ocpus": 2,
+    "memory_gb": 16
+  },
+  "docker": {
+    "version": "26.1.3",
+    "compose_version": "v2.27.0"
+  },
+  "airflow": {
+    "version": "2.8.1",
+    "executor": "LocalExecutor",
+    "timezone": "America/Sao_Paulo",
+    "url": "http://146.235.27.18:8080",
+    "credentials": "admin / admin",
+    "parallelism": 4,
+    "max_active_tasks_per_dag": 4,
+    "max_active_runs_per_dag": 2
+  },
+  "containers": [
+    {
+      "name": "orchestrator-airflow-webserver-1",
+      "image": "apache/airflow:2.8.1",
+      "status": "healthy",
+      "ports": "0.0.0.0:8080->8080/tcp"
+    },
+    {
+      "name": "orchestrator-airflow-scheduler-1",
+      "image": "apache/airflow:2.8.1",
+      "status": "running"
+    },
+    {
+      "name": "orchestrator-postgres-1",
+      "image": "postgres:15-alpine",
+      "status": "healthy",
+      "ports": "5432/tcp"
+    }
+  ],
+  "health_check": {
+    "metadatabase": "healthy",
+    "scheduler": "healthy"
+  },
+  "oci_cli_version": "3.75.0",
+  "acceptance_criteria": {
+    "AC1_docker_installed": true,
+    "AC2_airflow_running_docker": true,
+    "AC3_web_ui_accessible": true,
+    "AC4_oci_cli_configured": true,
+    "AC5_compose_versioned": true
+  }
+}

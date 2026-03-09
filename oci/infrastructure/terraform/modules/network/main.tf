@@ -121,6 +121,24 @@ resource "oci_core_security_list" "public" {
       max = 22
     }
   }
+  ingress_security_rules {
+    source      = "0.0.0.0/0"
+    protocol    = "6" # TCP
+    description = "SSH from internet (orchestrator)"
+    tcp_options {
+      min = 22
+      max = 22
+    }
+  }
+  ingress_security_rules {
+    source      = "0.0.0.0/0"
+    protocol    = "6" # TCP
+    description = "Airflow UI"
+    tcp_options {
+      min = 8080
+      max = 8080
+    }
+  }
 }
 
 resource "oci_core_security_list" "data" {

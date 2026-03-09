@@ -150,6 +150,36 @@ module "monitoring" {
   alert_email      = var.alert_recipients
 }
 
+# ─── Module: Orchestrator (ARM A1 Always-Free) ──────────────────────────
+
+module "orchestrator" {
+  source = "./modules/orchestrator"
+
+  compartment_ocid     = var.compartment_ocid
+  project_prefix       = var.prefix
+  environment          = var.environment
+  compute_subnet_id    = module.network.public_subnet_id
+  assign_public_ip     = true
+  availability_domain  = var.availability_domain
+  ssh_public_key       = var.ssh_public_key
+  orchestrator_shape   = var.orchestrator_shape
+  orchestrator_ocpus   = var.orchestrator_ocpus
+  orchestrator_memory_gb = var.orchestrator_memory_gb
+  create_orchestrator  = var.create_orchestrator
+
+  depends_on = [module.network]
+}
+
+# ─── Module: Data Catalog ─────────────────────────────────────────────────
+
+module "data_catalog" {
+  source = "./modules/data-catalog"
+
+  compartment_ocid = var.compartment_ocid
+  project_prefix   = var.prefix
+  environment      = var.environment
+}
+
 # ─── IAM: Dynamic Groups ──────────────────────────────────────────────────
 
 resource "oci_identity_dynamic_group" "dataflow" {
@@ -195,6 +225,29 @@ resource "oci_identity_policy" "datascience_policy" {
   ]
 }
 
+resource "oci_identity_dynamic_group" "orchestrator" {
+  count          = var.create_orchestrator ? 1 : 0
+  compartment_id = var.tenancy_ocid
+  name           = "${var.prefix}-orchestrator-dg"
+  description    = "Dynamic group for the ARM orchestrator instance"
+  matching_rule  = "ALL {instance.id='${module.orchestrator.instance_id}'}"
+}
+
+resource "oci_identity_policy" "orchestrator_policy" {
+  count          = var.create_orchestrator ? 1 : 0
+  compartment_id = var.compartment_ocid
+  name           = "${var.prefix}-orchestrator-policy"
+  description    = "Policy for ARM orchestrator to manage pipeline resources"
+  statements = [
+    "Allow dynamic-group ${oci_identity_dynamic_group.orchestrator[0].name} to manage objects in compartment id ${var.compartment_ocid}",
+    "Allow dynamic-group ${oci_identity_dynamic_group.orchestrator[0].name} to read buckets in compartment id ${var.compartment_ocid}",
+    "Allow dynamic-group ${oci_identity_dynamic_group.orchestrator[0].name} to use dataflow-family in compartment id ${var.compartment_ocid}",
+    "Allow dynamic-group ${oci_identity_dynamic_group.orchestrator[0].name} to use data-science-family in compartment id ${var.compartment_ocid}",
+    "Allow dynamic-group ${oci_identity_dynamic_group.orchestrator[0].name} to use ons-topics in compartment id ${var.compartment_ocid}",
+    "Allow dynamic-group ${oci_identity_dynamic_group.orchestrator[0].name} to use virtual-network-family in compartment id ${var.compartment_ocid}",
+  ]
+}
+
 resource "oci_identity_policy" "service_policy" {
   compartment_id = var.tenancy_ocid
   name           = "${var.prefix}-service-policy"
@@ -203,5 +256,15 @@ resource "oci_identity_policy" "service_policy" {
     "Allow service dataflow to read objects in compartment id ${var.compartment_ocid}",
     "Allow service datascience to use virtual-network-family in compartment id ${var.compartment_ocid}",
     "Allow service objectstorage-${var.region} to use keys in compartment id ${var.compartment_ocid}",
+  ]
+}
+
+resource "oci_identity_policy" "datacatalog_policy" {
+  compartment_id = var.compartment_ocid
+  name           = "${var.prefix}-datacatalog-policy"
+  description    = "Policy for Data Catalog to harvest Object Storage metadata"
+  statements = [
+    "Allow service datacatalog to read object-family in compartment id ${var.compartment_ocid}",
+    "Allow service datacatalog to manage data-catalog-family in compartment id ${var.compartment_ocid}",
   ]
 }

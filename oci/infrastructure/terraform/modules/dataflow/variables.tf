@@ -83,3 +83,21 @@ variable "bronze_bucket" {
   description = "Name of the bronze bucket (target for ingestion)"
   type        = string
 }
+
+variable "use_unified_pipeline" {
+  description = "Deploy unified pipeline application (single Spark job for all phases)"
+  type        = bool
+  default     = true
+}
+
+variable "silver_bucket" {
+  description = "Name of the silver bucket"
+  type        = string
+  default     = ""
+}
+
+variable "gold_bucket" {
+  description = "Name of the gold bucket"
+  type        = string
+  default     = ""
+}

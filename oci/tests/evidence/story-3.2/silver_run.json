@@ -1,0 +1,44 @@
+{
+  "story": "3.2",
+  "phase": "Silver Transformation (19 tables)",
+  "execution_method": "Airflow DAG -> OCI Data Flow (unified pipeline)",
+  "dataflow_run_id": "ocid1.dataflowrun.oc1.sa-saopaulo-1.antxeljr6dlb45iamysmsxlknrhapqzytjs7nux4wva4sszm25ts7axrlibq",
+  "dataflow_app_id": "ocid1.dataflowapplication.oc1.sa-saopaulo-1.antxeljr6dlb45iaa32izabmteouupegmgkt6b6x47iya2uv3euqzesyeu2a",
+  "status": "SUCCEEDED",
+  "duration_seconds": 1532,
+  "duration_minutes": 25.5,
+  "storage_format": "Delta Lake 3.1.0",
+  "timestamp": "2026-03-09T01:56:18Z",
+  "orchestration": {
+    "airflow_dag": "credit_risk_pipeline",
+    "airflow_task": "run_silver",
+    "args": ["--start-phase", "silver", "--end-phase", "silver"]
+  },
+  "tables": {
+    "main": [
+      {"name": "dados_cadastrais", "rows_in": 3900378, "rows_out": 3900378, "dupes_removed": 0, "cols": 35},
+      {"name": "telco", "rows_in": 1367104, "rows_out": 1367104, "dupes_removed": 0, "cols": 76},
+      {"name": "score_bureau_movel", "rows_in": 3795310, "rows_out": 3795310, "dupes_removed": 0, "cols": 10},
+      {"name": "recarga", "rows_in": 100213651, "rows_out": 99938358, "dupes_removed": 275293, "cols": 26},
+      {"name": "pagamento", "rows_in": 21829628, "rows_out": 21829628, "dupes_removed": 0, "cols": 75},
+      {"name": "faturamento", "rows_in": 31611316, "rows_out": 31611316, "dupes_removed": 0, "cols": 52},
+      {"name": "dim_calendario", "rows_in": 9496, "rows_out": 9496, "dupes_removed": 0, "cols": 23}
+    ],
+    "dimensions": [
+      {"name": "dim_canal_aquisicao_credito", "rows": 5899},
+      {"name": "dim_forma_pagamento", "rows": 9},
+      {"name": "dim_instituicao", "rows": 550},
+      {"name": "dim_plano_preco", "rows": 293743},
+      {"name": "dim_plataforma", "rows": 28},
+      {"name": "dim_promocao_credito", "rows": 15},
+      {"name": "dim_status_plataforma", "rows": 25},
+      {"name": "dim_tecnologia", "rows": 10},
+      {"name": "dim_tipo_credito", "rows": 12},
+      {"name": "dim_tipo_insercao", "rows": 22},
+      {"name": "dim_tipo_recarga", "rows": 5},
+      {"name": "dim_tipo_faturamento", "rows": 72}
+    ],
+    "total_tables": 19,
+    "total_duplicates_removed": 275293
+  }
+}

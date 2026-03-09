@@ -1,0 +1,34 @@
+{
+  "timestamp": "2026-03-09T01:00:00Z",
+  "scripts_uploaded": [
+    "unified_pipeline.py",
+    "ingest_bronze.py",
+    "transform_silver.py",
+    "engineer_gold.py",
+    "pipeline_modules.zip"
+  ],
+  "scripts_bucket": "pod-academy-scripts",
+  "bucket_namespace": "grlxi07jz1mo",
+  "unified_pipeline_app": {
+    "display_name": "pod-academy-unified-pipeline",
+    "id": "ocid1.dataflowapplication.oc1.sa-saopaulo-1.antxeljr6dlb45iaa32izabmteouupegmgkt6b6x47iya2uv3euqzesyeu2a",
+    "pool_id": "ocid1.dataflowpool.oc1.sa-saopaulo-1.antxeljr6dlb45iaysv5lutgtnhc66kgvsp72uimhkt7aqcxj3arrls6y37a",
+    "pool_name": "pod-academy-optimized-pool",
+    "driver_shape": {"ocpus": 2, "memory_gb": 32},
+    "executor_shape": {"ocpus": 2, "memory_gb": 32},
+    "num_executors": 2,
+    "total_ocpus": 6,
+    "total_memory_gb": 96,
+    "spark_version": "3.5.0",
+    "file_uri": "oci://pod-academy-scripts@grlxi07jz1mo/unified_pipeline.py",
+    "py_files": "ingest_bronze.py,transform_silver.py,engineer_gold.py"
+  },
+  "airflow_config": {
+    "dag_id": "credit_risk_pipeline",
+    "variable_COMPARTMENT_OCID": "ocid1.compartment.oc1..aaaaaaaa7uh2lfpsc6qf73g7zalgbr262a2v6veb4lreykqn57gtjvoojeuq",
+    "variable_UNIFIED_APP_OCID": "ocid1.dataflowapplication.oc1.sa-saopaulo-1.antxeljr6dlb45iaa32izabmteouupegmgkt6b6x47iya2uv3euqzesyeu2a",
+    "instance_principal_auth": true,
+    "oci_cli_installed_in_containers": true
+  },
+  "iam_policy_created": "pod-academy-compute-dataflow (Allow compute-dg to manage dataflow-family)"
+}

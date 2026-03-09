@@ -126,3 +126,38 @@ resource "oci_dataflow_application" "engineer_gold" {
     "stage"   = "gold"
   }
 }
+
+# Unified Pipeline Application (Bronze -> Silver -> Gold in single SparkSession)
+resource "oci_dataflow_application" "unified_pipeline" {
+  count                = var.use_unified_pipeline ? 1 : 0
+  compartment_id       = var.compartment_ocid
+  display_name         = "${var.project_prefix}-unified-pipeline"
+  language             = "PYTHON"
+  spark_version        = "3.5.0"
+  driver_shape         = var.driver_shape
+  executor_shape       = var.executor_shape
+  num_executors        = var.num_executors_heavy
+
+  driver_shape_config {
+    ocpus         = 2
+    memory_in_gbs = 16
+  }
+  executor_shape_config {
+    ocpus         = var.executor_ocpus
+    memory_in_gbs = var.executor_memory_gb
+  }
+
+  file_uri             = "oci://${var.scripts_bucket}@${var.namespace}/unified_pipeline.py"
+  archive_uri          = "oci://${var.scripts_bucket}@${var.namespace}/pipeline_deps.zip"
+  warehouse_bucket_uri = "oci://${var.logs_bucket}@${var.namespace}/"
+  logs_bucket_uri      = "oci://${var.logs_bucket}@${var.namespace}/"
+  pool_id              = oci_dataflow_pool.dev.id
+  max_duration_in_minutes = 360
+
+  arguments = ["--start-phase", "bronze"]
+
+  freeform_tags = {
+    "project" = var.project_prefix
+    "stage"   = "unified"
+  }
+}

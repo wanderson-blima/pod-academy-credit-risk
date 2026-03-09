@@ -93,3 +93,27 @@ output "budget_id" {
   description = "OCID of the budget"
   value       = module.cost.budget_id
 }
+
+# ─── Orchestrator ─────────────────────────────────────────────────────────
+
+output "orchestrator_instance_id" {
+  description = "OCID of the orchestrator instance"
+  value       = module.orchestrator.instance_id
+}
+
+output "orchestrator_private_ip" {
+  description = "Private IP of the orchestrator"
+  value       = module.orchestrator.private_ip
+}
+
+output "orchestrator_public_ip" {
+  description = "Public IP of the orchestrator (Airflow UI: http://<ip>:8080)"
+  value       = module.orchestrator.public_ip
+}
+
+# ─── Data Catalog ──────────────────────────────────────────────────────────
+
+output "data_catalog_id" {
+  description = "OCID of the Data Catalog"
+  value       = module.data_catalog.catalog_id
+}

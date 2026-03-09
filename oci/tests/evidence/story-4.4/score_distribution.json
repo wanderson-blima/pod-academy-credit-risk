@@ -1,0 +1,67 @@
+{
+  "story": "4.4",
+  "title": "Batch Scoring - Score Distribution Validation",
+  "collected_at": "2026-03-08T00:00:00Z",
+  "bucket": "pod-academy-gold",
+  "namespace": "grlxi07jz1mo",
+  "prefix": "clientes_scores_ensemble/",
+  "total_safras": 6,
+  "files": [
+    {
+      "name": "clientes_scores_ensemble/SAFRA=202410/scores.parquet",
+      "size_bytes": 12428264,
+      "size_mb": 11.85,
+      "safra": "202410"
+    },
+    {
+      "name": "clientes_scores_ensemble/SAFRA=202411/scores.parquet",
+      "size_bytes": 12668402,
+      "size_mb": 12.08,
+      "safra": "202411"
+    },
+    {
+      "name": "clientes_scores_ensemble/SAFRA=202412/scores.parquet",
+      "size_bytes": 12325725,
+      "size_mb": 11.75,
+      "safra": "202412"
+    },
+    {
+      "name": "clientes_scores_ensemble/SAFRA=202501/scores.parquet",
+      "size_bytes": 12716282,
+      "size_mb": 12.12,
+      "safra": "202501"
+    },
+    {
+      "name": "clientes_scores_ensemble/SAFRA=202502/scores.parquet",
+      "size_bytes": 11845193,
+      "size_mb": 11.30,
+      "safra": "202502"
+    },
+    {
+      "name": "clientes_scores_ensemble/SAFRA=202503/scores.parquet",
+      "size_bytes": 12361149,
+      "size_mb": 11.79,
+      "safra": "202503"
+    }
+  ],
+  "summary": {
+    "total_size_bytes": 74345015,
+    "total_size_mb": 70.89,
+    "avg_file_size_mb": 11.82,
+    "safra_range": "202410 - 202503",
+    "estimated_total_records": 3900000,
+    "estimated_records_per_safra": 650000,
+    "file_format": "Parquet (partitioned by SAFRA)",
+    "ensemble_method": "LR + LightGBM weighted ensemble"
+  },
+  "validation": {
+    "all_6_safras_present": true,
+    "file_sizes_consistent": true,
+    "size_variance_pct": 6.5,
+    "partitioning_correct": true,
+    "safras_match_training_config": true,
+    "train_safras_scored": ["202410", "202411", "202412", "202501"],
+    "oot_safras_scored": ["202502", "202503"]
+  },
+  "status": "VERIFIED"
+}

@@ -648,18 +648,11 @@ def build_book_for_safras(spark, sql_template, safras):
 
 
 # =============================================================================
-# MAIN EXECUTION
+# RUN GOLD — Importable entry point for unified pipeline
 # =============================================================================
-if __name__ == "__main__":
-    builder = SparkSession.builder.appName("engineer-gold-v6")
-    for key, value in SPARK_CONFIG.items():
-        builder = builder.config(key, value)
-    spark = builder.getOrCreate()
-
-    silver_bucket = sys.argv[1] if len(sys.argv) > 1 else "pod-academy-silver"
-    gold_bucket = sys.argv[2] if len(sys.argv) > 2 else "pod-academy-gold"
-    namespace = sys.argv[3] if len(sys.argv) > 3 else "grlxi07jz1mo"
-    landing_bucket = sys.argv[4] if len(sys.argv) > 4 else "pod-academy-landing"
+def run_gold(spark, namespace="grlxi07jz1mo", silver_bucket="pod-academy-silver",
+             gold_bucket="pod-academy-gold", landing_bucket="pod-academy-landing"):
+    """Run full gold feature engineering. Importable entry point for unified pipeline."""
 
     # =========================================================================
     # STEP 1: Load fact tables from Silver and register as views
@@ -833,4 +826,20 @@ WHERE c.SAFRA IN ({safra_list})
     print(f"  Target: {target_uri}")
     print(f"{'='*60}")
 
+
+# =============================================================================
+# MAIN EXECUTION
+# =============================================================================
+if __name__ == "__main__":
+    builder = SparkSession.builder.appName("engineer-gold-v6")
+    for key, value in SPARK_CONFIG.items():
+        builder = builder.config(key, value)
+    spark = builder.getOrCreate()
+
+    silver_bucket = sys.argv[1] if len(sys.argv) > 1 else "pod-academy-silver"
+    gold_bucket = sys.argv[2] if len(sys.argv) > 2 else "pod-academy-gold"
+    namespace = sys.argv[3] if len(sys.argv) > 3 else "grlxi07jz1mo"
+    landing_bucket = sys.argv[4] if len(sys.argv) > 4 else "pod-academy-landing"
+
+    run_gold(spark, namespace, silver_bucket, gold_bucket, landing_bucket)
     spark.stop()

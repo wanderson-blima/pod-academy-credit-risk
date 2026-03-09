@@ -36,3 +36,44 @@ resource "oci_datascience_notebook_session" "training" {
     "stoppable" = "true"
   }
 }
+
+# Batch Scoring Job — triggered by orchestrator after Gold pipeline
+resource "oci_datascience_job" "batch_scoring" {
+  compartment_id = var.compartment_ocid
+  project_id     = oci_datascience_project.ml.id
+  display_name   = "${var.project_prefix}-batch-scoring-job"
+
+  job_configuration_details {
+    job_type                   = "DEFAULT"
+    maximum_runtime_in_minutes = 120
+    command_line_arguments     = ""
+    environment_variables = {
+      "OCI_NAMESPACE" = "grlxi07jz1mo"
+      "GOLD_BUCKET"   = "pod-academy-gold"
+      "JOB_OCPUS"     = tostring(var.job_ocpus)
+    }
+  }
+
+  job_infrastructure_configuration_details {
+    job_infrastructure_type = "ME_STANDALONE"
+    shape_name              = var.notebook_shape
+    block_storage_size_in_gbs = 100
+    subnet_id               = var.compute_subnet_id
+
+    job_shape_config_details {
+      ocpus         = var.job_ocpus
+      memory_in_gbs = var.job_memory_gb
+    }
+  }
+
+  job_log_configuration_details {
+    enable_logging             = true
+    enable_auto_log_creation   = true
+  }
+
+  freeform_tags = {
+    "project"   = var.project_prefix
+    "stoppable" = "true"
+    "role"      = "batch-scoring"
+  }
+}

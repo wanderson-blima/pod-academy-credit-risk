@@ -1,16 +1,20 @@
 """
 Credit Risk Model Training — OCI Data Science
-Phase 5: Model Migration (Fabric → OCI)
+Phase 5: Model Training with Dynamic Feature Selection
 
 Trains dual models (LR L1 Scorecard + LightGBM GBDT) for FPD prediction.
-Replicates exact Fabric pipeline with performance parity (±0.5%).
+Supports both hardcoded features (legacy mode) and dynamic multi-stage
+feature selection from Gold consolidated data (402 columns).
 
-Architecture: VM.Standard.E4.Flex — 10 OCPUs, 160 GB RAM (trial limit)
-Threading: OMP_NUM_THREADS=10, LightGBM num_threads=10
+Architecture: VM.Standard.E4.Flex — 4-10 OCPUs, 64-160 GB RAM
+Threading: OMP_NUM_THREADS=N, LightGBM num_threads=N
 
 Usage:
-    Run in OCI Data Science notebook session (10 OCPUs, 160 GB).
-    Requires: scikit-learn==1.3.2, lightgbm, category-encoders==2.6.3, pyarrow
+    Run as OCI Data Science Job or in notebook session.
+    Requires: scikit-learn, lightgbm, category-encoders, pyarrow
+
+    Dynamic mode: set FEATURE_SELECTION_MODE=dynamic (default)
+    Legacy mode: set FEATURE_SELECTION_MODE=legacy (uses 59 hardcoded features)
 """
 import os
 import json
@@ -18,7 +22,7 @@ import time
 from datetime import datetime
 
 # ── Threading config (BEFORE any numpy/sklearn import) ─────────────────────
-NCPUS = int(os.environ.get("NOTEBOOK_OCPUS", "10"))
+NCPUS = int(os.environ.get("JOB_OCPUS", os.environ.get("NOTEBOOK_OCPUS", str(os.cpu_count() or 4))))
 os.environ["OMP_NUM_THREADS"] = str(NCPUS)
 os.environ["OPENBLAS_NUM_THREADS"] = str(NCPUS)
 os.environ["MKL_NUM_THREADS"] = "1"  # Disable MKL to avoid OpenMP conflicts
@@ -68,16 +72,19 @@ except Exception:
 # CONFIGURATION
 # ═══════════════════════════════════════════════════════════════════════════
 
-# Object Storage paths (update namespace before running)
-NAMESPACE = os.environ.get("OCI_NAMESPACE", "SET_YOUR_NAMESPACE")
+# Object Storage paths
+NAMESPACE = os.environ.get("OCI_NAMESPACE", "grlxi07jz1mo")
 GOLD_BUCKET = os.environ.get("GOLD_BUCKET", "pod-academy-gold")
-GOLD_PATH = f"oci://{GOLD_BUCKET}@{NAMESPACE}/clientes_consolidado/"
+GOLD_PATH = f"oci://{GOLD_BUCKET}@{NAMESPACE}/feature_store/clientes_consolidado/"
 
 # Local path (if pre-copied to block volume for faster I/O)
-LOCAL_DATA_PATH = "/home/datascience/data/clientes_consolidado/"
+LOCAL_DATA_PATH = os.environ.get("DATA_PATH", "/home/datascience/data/clientes_consolidado/")
 
 # Artifact output directory
-ARTIFACT_DIR = "/home/datascience/artifacts"
+ARTIFACT_DIR = os.environ.get("ARTIFACT_DIR", "/home/datascience/artifacts")
+
+# Feature selection mode: "dynamic" (run selection on new data) or "legacy" (use 59 hardcoded)
+FEATURE_SELECTION_MODE = os.environ.get("FEATURE_SELECTION_MODE", "dynamic")
 
 # Target variable
 TARGET = "FPD"
@@ -173,32 +180,304 @@ def compute_psi(expected, actual, bins=10):
     return round(psi, 6)
 
 # ═══════════════════════════════════════════════════════════════════════════
+# DYNAMIC FEATURE SELECTION (multi-stage funnel)
+# ═══════════════════════════════════════════════════════════════════════════
+
+def compute_iv(df, feature, target, bins=10):
+    """Information Value for a single feature."""
+    try:
+        x = pd.to_numeric(df[feature], errors="coerce")
+        y = df[target].astype(int)
+        mask = x.notna() & y.notna()
+        x, y = x[mask], y[mask]
+        if len(x) < 100 or y.nunique() < 2:
+            return 0.0
+        try:
+            x_binned = pd.qcut(x, q=bins, duplicates="drop")
+        except ValueError:
+            x_binned = pd.cut(x, bins=min(bins, x.nunique()), duplicates="drop")
+        grouped = pd.DataFrame({"x": x_binned, "y": y})
+        ct = grouped.groupby("x")["y"].agg(["sum", "count"])
+        ct["good"] = ct["count"] - ct["sum"]
+        ct["bad"] = ct["sum"]
+        total_good = ct["good"].sum()
+        total_bad = ct["bad"].sum()
+        if total_good == 0 or total_bad == 0:
+            return 0.0
+        ct["pct_good"] = (ct["good"] + 0.5) / (total_good + 0.5 * len(ct))
+        ct["pct_bad"] = (ct["bad"] + 0.5) / (total_bad + 0.5 * len(ct))
+        ct["woe"] = np.log(ct["pct_good"] / ct["pct_bad"])
+        ct["iv"] = (ct["pct_good"] - ct["pct_bad"]) * ct["woe"]
+        return ct["iv"].sum()
+    except Exception:
+        return 0.0
+
+
+def run_feature_selection(data_path, target_col):
+    """Memory-efficient multi-stage feature selection funnel.
+
+    Reads parquet column-by-column for IV computation (Stage 1),
+    then loads only IV-passing features for L1/Correlation/PSI.
+    Peak memory: ~4 GB instead of ~12 GB.
+    """
+    import pyarrow.parquet as pq
+    import gc
+
+    print("\n" + "=" * 70)
+    print("DYNAMIC FEATURE SELECTION (memory-efficient)")
+    print("=" * 70)
+
+    # Get schema without loading data
+    ds = pq.ParquetDataset(data_path)
+    all_columns = ds.schema.names
+
+    exclude = {"NUM_CPF", "SAFRA", "FPD", "FLAG_INSTALACAO", "DT_PROCESSAMENTO",
+               "_execution_id", "_data_inclusao", "_data_alteracao_silver",
+               "DATADENASCIMENTO", "PROD", "flag_mig2", "STATUSRF"}
+    candidates = sorted([c for c in all_columns if c not in exclude])
+    print(f"  Total columns: {len(all_columns)} → Candidates: {len(candidates)}")
+
+    # Load only target + SAFRA for reference (tiny: 2 cols × 3.9M rows)
+    df_ref = pq.read_table(data_path, columns=[target_col, "SAFRA"]).to_pandas()
+    train_mask = df_ref["SAFRA"].isin(TRAIN_SAFRAS) & df_ref[target_col].notna()
+    y_train = df_ref.loc[train_mask, target_col].astype(int)
+    safra_train = df_ref.loc[train_mask, "SAFRA"]
+    train_idx = train_mask[train_mask].index
+    print(f"  Train rows: {len(train_idx):,}")
+
+    # Stage 1: IV > 0.02 — read ONE column at a time
+    print("  Stage 1: Information Value (IV > 0.02) — column-by-column...")
+    iv_scores = {}
+    numeric_candidates = []
+    for i, feat in enumerate(candidates):
+        if (i + 1) % 50 == 0:
+            print(f"    ... processed {i + 1}/{len(candidates)} columns")
+        try:
+            col_data = pq.read_table(data_path, columns=[feat]).to_pandas()[feat]
+            col_train = col_data.iloc[train_idx]
+            del col_data
+            vals = pd.to_numeric(col_train, errors="coerce")
+            if vals.notna().sum() < 100:
+                del col_train, vals
+                continue
+            numeric_candidates.append(feat)
+            # Compute IV inline
+            x = vals
+            y = y_train
+            mask = x.notna()
+            x_m, y_m = x[mask], y[mask]
+            if len(x_m) < 100:
+                iv_scores[feat] = 0.0
+            else:
+                try:
+                    x_binned = pd.qcut(x_m, q=10, duplicates="drop")
+                except ValueError:
+                    x_binned = pd.cut(x_m, bins=min(10, x_m.nunique()), duplicates="drop")
+                ct = pd.DataFrame({"x": x_binned, "y": y_m}).groupby("x")["y"].agg(["sum", "count"])
+                ct["good"] = ct["count"] - ct["sum"]
+                ct["bad"] = ct["sum"]
+                tg, tb = ct["good"].sum(), ct["bad"].sum()
+                if tg == 0 or tb == 0:
+                    iv_scores[feat] = 0.0
+                else:
+                    ct["pg"] = (ct["good"] + 0.5) / (tg + 0.5 * len(ct))
+                    ct["pb"] = (ct["bad"] + 0.5) / (tb + 0.5 * len(ct))
+                    ct["woe"] = np.log(ct["pg"] / ct["pb"])
+                    iv_scores[feat] = ((ct["pg"] - ct["pb"]) * ct["woe"]).sum()
+            del col_train, vals
+        except Exception:
+            pass
+
+    features_iv = [f for f in numeric_candidates if iv_scores.get(f, 0) > 0.02]
+    features_iv.sort(key=lambda f: iv_scores[f], reverse=True)
+    print(f"  Candidates: {len(candidates)} → Numeric: {len(numeric_candidates)}")
+    print(f"    After IV: {len(features_iv)} features")
+    gc.collect()
+
+    # Stage 2: L1 regularization — memory-efficient: subsample from full dataset
+    L1_SAMPLE = min(300_000, len(train_idx))
+    # Use top-80 IV features to keep matrix small
+    top_iv = features_iv[:min(80, len(features_iv))]
+    print(f"  Stage 2: L1 Regularization (top {len(top_iv)} IV cols, {L1_SAMPLE} sample)...")
+    rng = np.random.RandomState(42)
+    # Read only the columns we need (not all rows are avoidable with parquet)
+    table = pq.read_table(data_path, columns=top_iv + [target_col])
+    df_l1 = table.to_pandas(self_destruct=True)
+    del table; gc.collect()
+    # Take only train rows and drop NaN target
+    df_l1 = df_l1.iloc[train_idx].reset_index(drop=True)
+    mask = df_l1[target_col].notna()
+    df_l1 = df_l1[mask].reset_index(drop=True)
+    print(f"    Train rows (no NaN): {len(df_l1):,}")
+    # Subsample for speed and memory
+    if len(df_l1) > L1_SAMPLE:
+        idx = rng.choice(len(df_l1), size=L1_SAMPLE, replace=False)
+        df_l1 = df_l1.iloc[idx].reset_index(drop=True)
+    y_sample = df_l1[target_col].values.astype(np.float32)
+    X_sel = df_l1[top_iv].apply(pd.to_numeric, errors="coerce")
+    del df_l1; gc.collect()
+    X_sel = X_sel.fillna(X_sel.median()).astype(np.float32)
+    from sklearn.preprocessing import StandardScaler as SS
+    scaler = SS()
+    X_scaled = scaler.fit_transform(X_sel).astype(np.float32)
+    del X_sel; gc.collect()
+    print(f"    Memory before L1 fit: {X_scaled.nbytes / 1e6:.0f} MB")
+    lr_sel = LogisticRegression(C=0.1, penalty="l1", solver="liblinear",
+                                max_iter=300, random_state=42)
+    lr_sel.fit(X_scaled, y_sample)
+    nonzero_mask = np.abs(lr_sel.coef_[0]) > 0
+    # Features that survive L1, plus remaining IV features not tested
+    features_l1 = [f for f, nz in zip(top_iv, nonzero_mask) if nz]
+    # Also keep features ranked 81+ from IV (they weren't tested by L1 but passed IV)
+    features_l1_extra = features_iv[min(80, len(features_iv)):]
+    features_l1 = features_l1 + list(features_l1_extra)
+    del X_scaled, lr_sel, y_sample, scaler; gc.collect()
+    print(f"    After L1: {len(features_l1)} features ({len([f for f, nz in zip(top_iv, nonzero_mask) if nz])} from L1 + {len(features_l1_extra)} untested)")
+
+    # Stage 3: Correlation filter (|r| < 0.90) — column-pair approach for memory
+    CORR_SAMPLE = min(50_000, len(train_idx))
+    print(f"  Stage 3: Correlation (|r| < 0.90, {len(features_l1)} features)...")
+    # Read a small sample to compute correlations (50K rows × N features)
+    # Read in chunks to avoid OOM: 50K × 186 × 4 bytes = ~36 MB
+    sample_rows = sorted(rng.choice(train_idx, size=CORR_SAMPLE, replace=False).tolist())
+    # Build correlation matrix by reading features in batches of 30
+    batch_size = 30
+    all_corr_data = {}
+    for b_start in range(0, len(features_l1), batch_size):
+        batch_feats = features_l1[b_start:b_start + batch_size]
+        tbl = pq.read_table(data_path, columns=batch_feats)
+        batch_df = tbl.to_pandas(self_destruct=True)
+        del tbl
+        batch_df = batch_df.iloc[sample_rows].apply(pd.to_numeric, errors="coerce").fillna(0).astype(np.float32)
+        for f in batch_feats:
+            all_corr_data[f] = batch_df[f].values
+        del batch_df; gc.collect()
+    # Build correlation matrix from vectors
+    corr_df = pd.DataFrame(all_corr_data).astype(np.float32)
+    del all_corr_data; gc.collect()
+    corr = corr_df.corr().abs()
+    del corr_df; gc.collect()
+    upper = corr.where(np.triu(np.ones(corr.shape), k=1).astype(bool))
+    to_drop = set()
+    for col in upper.columns:
+        for row in upper.index:
+            if upper.loc[row, col] > 0.90:
+                to_drop.add(col if iv_scores.get(col, 0) < iv_scores.get(row, 0) else row)
+    features_corr = [f for f in features_l1 if f not in to_drop]
+    del corr, upper; gc.collect()
+    print(f"    After Corr: {len(features_corr)} features (dropped {len(to_drop)})")
+
+    # Stage 4: PSI < 0.25 (train vs OOT stability)
+    print("  Stage 4: PSI stability (< 0.25)...")
+    all_safra = df_ref["SAFRA"]
+    features_psi = []
+    for feat in features_corr:
+        try:
+            col = pq.read_table(data_path, columns=[feat]).to_pandas()[feat]
+            train_vals = pd.to_numeric(col[all_safra.isin([202410, 202411, 202412])],
+                                       errors="coerce").dropna().values
+            oot_vals = pd.to_numeric(col[all_safra.isin([202502, 202503])],
+                                     errors="coerce").dropna().values
+            del col
+            if len(train_vals) > 0 and len(oot_vals) > 0:
+                psi = compute_psi(train_vals, oot_vals)
+                features_psi.append(feat) if psi < 0.25 else None
+            else:
+                features_psi.append(feat)
+        except Exception:
+            features_psi.append(feat)
+    print(f"    After PSI: {len(features_psi)} features")
+
+    # Stage 5: Anti-leakage
+    print("  Stage 5: Anti-leakage...")
+    leakage_patterns = ["VLR_FPD", "TARGET_FPD", "_LEAKAGE"]
+    features_final = []
+    for feat in features_psi:
+        if any(p in feat.upper() for p in leakage_patterns):
+            print(f"    REMOVED (leakage): {feat}")
+            continue
+        features_final.append(feat)
+    print(f"    Final: {len(features_final)} features")
+
+    print(f"\n  FUNNEL: {len(candidates)} → {len(numeric_candidates)} → "
+          f"{len(features_iv)} → {len(features_l1)} → {len(features_corr)} → "
+          f"{len(features_psi)} → {len(features_final)}")
+
+    # Memory-aware feature cap: on low-memory instances (<32 GB), limit features
+    import psutil
+    total_mem_gb = psutil.virtual_memory().total / 1e9
+    if total_mem_gb < 32 and len(features_final) > 60:
+        print(f"  [MEM] Low memory ({total_mem_gb:.0f} GB) — capping features from {len(features_final)} to 60")
+        features_final = features_final[:60]
+
+    # Save selection artifact
+    selection_artifact = {
+        "n_features": len(features_final),
+        "features": features_final,
+        "funnel": {
+            "total_columns": len(candidates),
+            "numeric_candidates": len(numeric_candidates),
+            "after_iv": len(features_iv),
+            "after_l1": len(features_l1),
+            "after_corr": len(features_corr),
+            "after_psi": len(features_psi),
+            "after_leakage": len(features_final),
+        },
+        "top_iv": {f: round(iv_scores[f], 4) for f in features_final[:20]},
+    }
+    os.makedirs(f"{ARTIFACT_DIR}/metrics", exist_ok=True)
+    with open(f"{ARTIFACT_DIR}/metrics/selected_features.json", "w") as f:
+        json.dump(selection_artifact, f, indent=2)
+
+    del df_ref; gc.collect()
+    return features_final
+
+
+# ═══════════════════════════════════════════════════════════════════════════
 # DATA LOADING
 # ═══════════════════════════════════════════════════════════════════════════
 
-def load_data():
-    """Load Gold feature store — local block volume preferred for speed."""
-    import pyarrow.parquet as pq
-
-    columns_to_load = SELECTED_FEATURES + [TARGET, "SAFRA", "NUM_CPF"]
-    t0 = time.time()
-
+def get_data_path():
+    """Return the best data path (local preferred)."""
     if os.path.exists(LOCAL_DATA_PATH):
-        print(f"[DATA] Reading from local block volume: {LOCAL_DATA_PATH}")
-        table = pq.read_table(LOCAL_DATA_PATH, columns=columns_to_load)
-        df = table.to_pandas(self_destruct=True)
-    else:
-        print(f"[DATA] Reading from Object Storage: {GOLD_PATH}")
-        df = pd.read_parquet(GOLD_PATH, columns=columns_to_load)
+        return LOCAL_DATA_PATH
+    return GOLD_PATH
+
+
+def load_data(features_to_load=None):
+    """Load Gold feature store with only the needed columns.
+
+    Args:
+        features_to_load: list of feature columns. If None, uses SELECTED_FEATURES.
+    """
+    import pyarrow.parquet as pq
+    import gc
+
+    t0 = time.time()
+    data_path = get_data_path()
+    cols = features_to_load or SELECTED_FEATURES
+    columns_to_load = list(set(cols + [TARGET, "SAFRA"]))
+
+    print(f"[DATA] Source: {data_path}")
+    print(f"[DATA] Loading {len(columns_to_load)} columns ({len(cols)} features + keys)...")
+
+    table = pq.read_table(data_path, columns=columns_to_load)
+    df = table.to_pandas(self_destruct=True)
+    del table; gc.collect()
+
+    # Downcast float64 to float32 to save memory
+    float_cols = df.select_dtypes(include=["float64"]).columns
+    if len(float_cols) > 0:
+        print(f"[DATA] Downcasting {len(float_cols)} float64 → float32")
+        df[float_cols] = df[float_cols].astype(np.float32)
+    gc.collect()
 
     elapsed = time.time() - t0
     print(f"[DATA] Loaded: {len(df):,} rows, {df.shape[1]} columns in {elapsed:.1f}s")
+    print(f"[DATA] Memory: {df.memory_usage(deep=True).sum() / 1e9:.2f} GB")
     print(f"[DATA] SAFRAs: {sorted(df['SAFRA'].unique())}")
     print(f"[DATA] FPD rate: {df[TARGET].mean():.4f} ({df[TARGET].sum():,} defaults)")
 
-    # Validations
-    assert len(SELECTED_FEATURES) == 59, f"Expected 59 features, got {len(SELECTED_FEATURES)}"
-    # FPD may have NaN for OOT SAFRAs where outcome not yet observed
     non_null_fpd = df[TARGET].dropna()
     assert non_null_fpd.isin([0, 1, 0.0, 1.0]).all(), "FPD must be binary (0/1)"
     print(f"[DATA] FPD null: {df[TARGET].isna().sum():,} | non-null: {len(non_null_fpd):,}")
@@ -209,7 +488,7 @@ def load_data():
 # TEMPORAL SPLIT
 # ═══════════════════════════════════════════════════════════════════════════
 
-def temporal_split(df):
+def temporal_split(df, features):
     """Split by SAFRA — replicates Fabric v6 temporal boundaries."""
     df_train = df[df["SAFRA"].isin(TRAIN_SAFRAS) & df[TARGET].notna()].copy()
     df_oos = df[df["SAFRA"].isin(OOS_SAFRA) & df[TARGET].notna()].copy()
@@ -226,11 +505,11 @@ def temporal_split(df):
     oot_safras_set = set(df_oot["SAFRA"].unique())
     assert train_safras_set.isdisjoint(oot_safras_set), "SAFRA leak: train/OOT overlap!"
 
-    X_train = df_train[SELECTED_FEATURES]
+    X_train = df_train[features]
     y_train = df_train[TARGET].astype(int)
-    X_oos = df_oos[SELECTED_FEATURES]
+    X_oos = df_oos[features]
     y_oos = df_oos[TARGET].astype(int)
-    X_oot = df_oot[SELECTED_FEATURES]
+    X_oot = df_oot[features]
     y_oot = df_oot[TARGET].astype(int)
 
     return X_train, y_train, X_oos, y_oos, X_oot, y_oot
@@ -239,23 +518,27 @@ def temporal_split(df):
 # PREPROCESSING PIPELINES (exact Fabric v6 replication)
 # ═══════════════════════════════════════════════════════════════════════════
 
-def build_lr_pipeline():
-    """LR L1 Scorecard pipeline — matches Fabric ColumnTransformer exactly."""
-    preprocessor = ColumnTransformer(transformers=[
+def build_lr_pipeline(num_features, cat_features):
+    """LR L1 Scorecard pipeline."""
+    transformers = [
         ("num", Pipeline(steps=[
             ("imputer", SimpleImputer(strategy="median")),
             ("scaler", StandardScaler()),
-        ]), NUM_FEATURES),
-        ("cat", Pipeline(steps=[
-            ("imputer", SimpleImputer(strategy="most_frequent")),
-            ("encoder", CountEncoder(
-                combine_min_nan_groups=True,
-                normalize=True,
-                handle_missing=0,
-                handle_unknown=0,
-            )),
-        ]), CAT_FEATURES),
-    ])
+        ]), num_features),
+    ]
+    if cat_features:
+        transformers.append(
+            ("cat", Pipeline(steps=[
+                ("imputer", SimpleImputer(strategy="most_frequent")),
+                ("encoder", CountEncoder(
+                    combine_min_nan_groups=True,
+                    normalize=True,
+                    handle_missing=0,
+                    handle_unknown=0,
+                )),
+            ]), cat_features),
+        )
+    preprocessor = ColumnTransformer(transformers=transformers)
 
     pipeline = Pipeline(steps=[
         ("prep", preprocessor),
@@ -271,22 +554,26 @@ def build_lr_pipeline():
     ])
     return pipeline
 
-def build_lgbm_pipeline():
-    """LightGBM GBDT pipeline — matches Fabric ColumnTransformer exactly."""
-    preprocessor = ColumnTransformer(transformers=[
+def build_lgbm_pipeline(num_features, cat_features):
+    """LightGBM GBDT pipeline."""
+    transformers = [
         ("num", Pipeline(steps=[
             ("imputer", SimpleImputer(strategy="median")),
-        ]), NUM_FEATURES),
-        ("cat", Pipeline(steps=[
-            ("imputer", SimpleImputer(strategy="most_frequent")),
-            ("encoder", CountEncoder(
-                combine_min_nan_groups=True,
-                normalize=True,
-                handle_missing=0,
-                handle_unknown=0,
-            )),
-        ]), CAT_FEATURES),
-    ])
+        ]), num_features),
+    ]
+    if cat_features:
+        transformers.append(
+            ("cat", Pipeline(steps=[
+                ("imputer", SimpleImputer(strategy="most_frequent")),
+                ("encoder", CountEncoder(
+                    combine_min_nan_groups=True,
+                    normalize=True,
+                    handle_missing=0,
+                    handle_unknown=0,
+                )),
+            ]), cat_features),
+        )
+    preprocessor = ColumnTransformer(transformers=transformers)
 
     pipeline = Pipeline(steps=[
         ("prep", preprocessor),
@@ -309,28 +596,45 @@ def build_lgbm_pipeline():
 # ═══════════════════════════════════════════════════════════════════════════
 
 def train_and_evaluate():
-    """Full training pipeline: load → split → train → evaluate → compare."""
+    """Full training pipeline: load → select features → split → train → evaluate."""
+    global SELECTED_FEATURES, CAT_FEATURES, NUM_FEATURES
     run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
 
     # 1. Load data
     print("=" * 70)
     print("PHASE 5 — MODEL TRAINING (OCI Data Science)")
     print(f"Run ID: {run_id} | OCPUs: {NCPUS}")
+    print(f"Feature selection: {FEATURE_SELECTION_MODE}")
     print("=" * 70)
 
-    df = load_data()
+    # 2. Feature selection (if dynamic mode)
+    if FEATURE_SELECTION_MODE == "dynamic":
+        data_path = get_data_path()
+        selected = run_feature_selection(data_path, TARGET)
+        SELECTED_FEATURES = selected
+        # All dynamically selected features are numeric (IV requires numeric)
+        CAT_FEATURES = []
+        NUM_FEATURES = list(SELECTED_FEATURES)
+        print(f"\n[FEATURES] Selected: {len(SELECTED_FEATURES)} "
+              f"({len(NUM_FEATURES)} numeric, {len(CAT_FEATURES)} categorical)")
+    else:
+        print(f"\n[FEATURES] Using {len(SELECTED_FEATURES)} legacy features")
 
-    # 2. Temporal split
-    X_train, y_train, X_oos, y_oos, X_oot, y_oot = temporal_split(df)
+    # 3. Load ONLY selected features (memory efficient)
+    df = load_data(SELECTED_FEATURES)
+
+    # 4. Temporal split
+    X_train, y_train, X_oos, y_oos, X_oot, y_oot = temporal_split(df, SELECTED_FEATURES)
     del df  # Free memory
+    import gc; gc.collect()
 
-    # 3. Train LR L1 Scorecard
+    # 5. Train LR L1 Scorecard
     print("\n" + "-" * 70)
     print("MODEL 1: LR L1 Scorecard")
     print("-" * 70)
     t0 = time.time()
 
-    lr_pipeline = build_lr_pipeline()
+    lr_pipeline = build_lr_pipeline(NUM_FEATURES, CAT_FEATURES)
     lr_pipeline.fit(X_train, y_train)
 
     lr_time = time.time() - t0
@@ -353,7 +657,7 @@ def train_and_evaluate():
     print("-" * 70)
     t0 = time.time()
 
-    lgbm_pipeline = build_lgbm_pipeline()
+    lgbm_pipeline = build_lgbm_pipeline(NUM_FEATURES, CAT_FEATURES)
     lgbm_pipeline.fit(X_train, y_train)
 
     lgbm_time = time.time() - t0
@@ -464,7 +768,8 @@ def train_and_evaluate():
         "platform": "OCI Data Science",
         "shape": f"VM.Standard.E4.Flex ({NCPUS} OCPUs)",
         "training_time_seconds": {"lr": round(lr_time, 1), "lgbm": round(lgbm_time, 1)},
-        "n_features": 59,
+        "n_features": len(SELECTED_FEATURES),
+        "feature_selection_mode": FEATURE_SELECTION_MODE,
         "feature_names": SELECTED_FEATURES,
         "cat_features": CAT_FEATURES,
         "num_features": NUM_FEATURES,

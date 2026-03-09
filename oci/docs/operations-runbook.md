@@ -87,6 +87,67 @@ Expected durations: Bronze ~45 min, Silver ~90 min, Gold ~287 min (trial cluster
 
 ---
 
+## Orchestrated Pipeline (ARM A1)
+
+### Setup Orchestrator
+```bash
+# SSH to orchestrator (via bastion or VPN)
+ssh -i key.pem opc@<orchestrator_private_ip>
+
+# Configure OCI CLI
+oci setup config
+
+# Set environment variables
+cat >> ~/.bashrc << 'EOF'
+export COMPARTMENT_OCID="ocid1.compartment.oc1..xxx"
+export UNIFIED_APP_OCID="ocid1.dataflowapplication.oc1..xxx"
+export SCORING_JOB_OCID="ocid1.datasciencejob.oc1..xxx"
+export ONS_TOPIC_OCID="ocid1.onstopic.oc1..xxx"
+export OCI_NAMESPACE="grlxi07jz1mo"
+EOF
+source ~/.bashrc
+```
+
+### Run Pipeline (Manual)
+```bash
+/home/opc/orchestrator/run_pipeline.sh
+```
+
+### Schedule Pipeline
+```bash
+# Weekly (Monday 2 AM)
+/home/opc/orchestrator/schedule_pipeline.sh weekly
+
+# Daily (2 AM)
+/home/opc/orchestrator/schedule_pipeline.sh daily
+
+# Remove schedule
+/home/opc/orchestrator/schedule_pipeline.sh manual
+```
+
+### Health Check
+```bash
+/home/opc/orchestrator/health_check_cron.sh
+```
+
+### View Orchestrator Logs
+```bash
+ls -la /var/log/orchestrator/
+tail -f /var/log/orchestrator/pipeline_*.log
+```
+
+### Orchestrator Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| OCI CLI auth failure | Re-run `oci setup config`, check API key |
+| Data Flow submit fails | Check dynamic group policies, verify app OCID |
+| Scoring job fails | Check model artifact path, verify job shape |
+| Cron not running | Check `crontab -l`, verify script permissions |
+| Disk full | Clean `/var/log/orchestrator/`, old logs |
+
+---
+
 ## Batch Scoring
 
 ### Run Batch Scoring

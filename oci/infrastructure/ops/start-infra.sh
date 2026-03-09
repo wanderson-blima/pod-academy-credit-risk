@@ -10,19 +10,31 @@ set -euo pipefail
 echo "=== Starting OCI Infrastructure ==="
 
 # Start ADW
-echo "[1/2] Starting Autonomous Data Warehouse..."
+echo "[1/3] Starting Autonomous Data Warehouse..."
 oci db autonomous-database start \
   --autonomous-database-id $ADW_OCID \
   --wait-for-state AVAILABLE
 
 # Activate Notebook Session
-echo "[2/2] Activating Data Science Notebook..."
+echo "[2/3] Activating Data Science Notebook..."
 oci data-science notebook-session activate \
   --notebook-session-id $NOTEBOOK_OCID \
   --wait-for-state ACTIVE
 
+# Start Orchestrator
+echo "[3/3] Starting Orchestrator Instance..."
+if [ -n "${ORCHESTRATOR_OCID:-}" ]; then
+  oci compute instance action --action START \
+    --instance-id $ORCHESTRATOR_OCID \
+    --wait-for-state RUNNING
+  echo "Orchestrator: RUNNING (~\$0.074/hr)"
+else
+  echo "Orchestrator: SKIPPED (ORCHESTRATOR_OCID not set)"
+fi
+
 echo "=== All resources started ==="
 echo "ADW: AVAILABLE"
 echo "Notebook: ACTIVE"
+echo "Orchestrator: RUNNING"
 echo "Data Flow: On-demand (no start needed)"
 echo "Object Storage: Always available"

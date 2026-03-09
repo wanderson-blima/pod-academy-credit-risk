@@ -1,0 +1,80 @@
+{
+  "story": "5.1",
+  "title": "ADW External Tables — Executed & Validated",
+  "collected_at": "2026-03-09T08:10:00Z",
+  "compartment_id": "ocid1.compartment.oc1..aaaaaaaa7uh2lfpsc6qf73g7zalgbr262a2v6veb4lreykqn57gtjvoojeuq",
+  "region": "sa-saopaulo-1",
+  "adw_instance": {
+    "exists": true,
+    "id": "ocid1.autonomousdatabase.oc1.sa-saopaulo-1.antxeljr6dlb45iaangy5wpt4wec6ymecn7gpfzxzkag4xnyevcwn2elxlrq",
+    "display_name": "pod-academy-adw",
+    "db_name": "PODACADEMY",
+    "lifecycle_state": "AVAILABLE",
+    "ecpus": 2,
+    "storage_gb": 1024,
+    "db_version": "19c",
+    "sql_dev_web_url": "https://G95D3985BD0D2FD-PODACADEMY.adb.sa-saopaulo-1.oraclecloudapps.com/ords/sql-developer",
+    "apex_url": "https://G95D3985BD0D2FD-PODACADEMY.adb.sa-saopaulo-1.oraclecloudapps.com/ords/apex",
+    "ords_url": "https://G95D3985BD0D2FD-PODACADEMY.adb.sa-saopaulo-1.oraclecloudapps.com/ords/"
+  },
+  "credential_setup": {
+    "credential_name": "OCI_CRED",
+    "method": "DBMS_CLOUD.CREATE_CREDENTIAL (API Key auth)",
+    "user_ocid": "ocid1.user.oc1..aaaaaaaak76yow3so44jn5jjagvxn5fhqlbgky7fvpoqhdncbpmasaovkcka",
+    "tenancy_ocid": "ocid1.tenancy.oc1..aaaaaaaahse5thvzinsvm7bkyrd3zravzao2i6kpfl4bfxkplbu7ppla5x5a",
+    "status": "CREATED"
+  },
+  "external_tables": {
+    "EXT_GOLD_CLIENTES_CONSOLIDADO": {
+      "status": "CREATED",
+      "source": "https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grlxi07jz1mo/b/pod-academy-gold/o/feature_store/clientes_consolidado/*.parquet",
+      "format": "parquet",
+      "columns": 402,
+      "estimated_rows": 3900378,
+      "verified": true,
+      "verification_query": "SELECT COUNT(*) FROM EXT_GOLD_CLIENTES_CONSOLIDADO WHERE ROWNUM <= 100 → 100 rows"
+    },
+    "EXT_GOLD_CLIENTES_SCORES": {
+      "status": "CREATED",
+      "source": "https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grlxi07jz1mo/b/pod-academy-gold/o/clientes_scores_ensemble/*.parquet",
+      "format": "parquet",
+      "columns": 8,
+      "estimated_rows": 3900000,
+      "verified": true
+    }
+  },
+  "mlmonitor_schema": {
+    "status": "CREATED",
+    "user": "MLMONITOR",
+    "ords_enabled": true,
+    "tables_created": [
+      "model_performance",
+      "score_stability",
+      "score_distribution",
+      "model_status",
+      "pipeline_runs"
+    ],
+    "views_created": [
+      "v_model_comparison",
+      "v_risk_evolution"
+    ],
+    "data_seeded": true,
+    "seed_summary": {
+      "model_performance_rows": 8,
+      "score_stability_rows": 4,
+      "score_distribution_rows": 4,
+      "model_status_rows": 2,
+      "pipeline_runs_rows": 3
+    }
+  },
+  "execution_method": "ORDS REST API (POST /ords/admin/_/sql)",
+  "validation": "PASSED",
+  "notes": [
+    "ADW started via OCI CLI, ORDS REST API used for all SQL execution",
+    "OCI_CRED credential created with API key authentication",
+    "2 External Tables created pointing to Gold bucket Parquet files",
+    "MLMONITOR schema created with 5 monitoring tables + 2 views",
+    "Dashboard data seeded with real pipeline metrics",
+    "APEX workspace MLMONITOR with DASHADMIN user ready"
+  ]
+}

@@ -1,3 +1,8 @@
+-- NOTE: For production, prefer External Tables (see ../adw/02_create_external_tables.sql)
+-- which read directly from Object Storage Parquet without data duplication.
+-- The tables below are for the APEX monitoring dashboard only.
+-- Gold data (clientes_consolidado, scores) should be queried via EXT_GOLD_* tables.
+
 /*
  * Credit Risk ML Dashboard — Tables & Data
  * Run as MLMONITOR user in APEX SQL Workshop

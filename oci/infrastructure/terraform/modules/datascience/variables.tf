@@ -45,3 +45,15 @@ variable "create_notebook" {
   type        = bool
   default     = true
 }
+
+variable "job_ocpus" {
+  description = "OCPUs for batch scoring job"
+  type        = number
+  default     = 4
+}
+
+variable "job_memory_gb" {
+  description = "Memory in GB for batch scoring job"
+  type        = number
+  default     = 64
+}

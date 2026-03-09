@@ -166,3 +166,41 @@ variable "enable_vault" {
   type        = bool
   default     = true
 }
+
+# ─── Orchestrator ─────────────────────────────────────────────────────────
+
+variable "availability_domain" {
+  description = "Availability domain for compute instances"
+  type        = string
+  default     = "TjOZ:SA-SAOPAULO-1-AD-1"
+}
+
+variable "ssh_public_key" {
+  description = "SSH public key for compute instances"
+  type        = string
+  default     = ""
+}
+
+variable "orchestrator_shape" {
+  description = "Shape for the orchestrator instance. VM.Standard.E4.Flex (paid, recommended) or VM.Standard.E2.1.Micro (Always Free, limited)"
+  type        = string
+  default     = "VM.Standard.E4.Flex"
+}
+
+variable "orchestrator_ocpus" {
+  description = "OCPUs for orchestrator flex shapes"
+  type        = number
+  default     = 2
+}
+
+variable "orchestrator_memory_gb" {
+  description = "Memory in GB for orchestrator flex shapes"
+  type        = number
+  default     = 16
+}
+
+variable "create_orchestrator" {
+  description = "Whether to create the orchestrator instance"
+  type        = bool
+  default     = true
+}

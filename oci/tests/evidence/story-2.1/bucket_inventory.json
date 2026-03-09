@@ -1,0 +1,37 @@
+{
+  "timestamp": "2026-03-08T21:09:00Z",
+  "compartment": "ocid1.compartment.oc1..aaaaaaaa7uh2lfpsc6qf73g7zalgbr262a2v6veb4lreykqn57gtjvoojeuq",
+  "namespace": "grlxi07jz1mo",
+  "region": "sa-saopaulo-1",
+  "buckets": [
+    {"name": "pod-academy-landing", "status": "OK", "object_count": 53},
+    {"name": "pod-academy-bronze", "status": "OK", "object_count": 298},
+    {"name": "pod-academy-silver", "status": "OK", "object_count": 1842},
+    {"name": "pod-academy-gold", "status": "OK", "object_count": 663},
+    {"name": "pod-academy-logs", "status": "OK", "object_count": 105},
+    {"name": "pod-academy-scripts", "status": "OK", "object_count": 8}
+  ],
+  "landing_bucket_contents": {
+    "datasets": [
+      "dados_cadastrais (1 parquet file, ~78 MB)",
+      "dim_calendario (1 CSV, ~948 KB)",
+      "faturamento (10 parquet files, ~4.5 GB total)",
+      "faturamento_dim (1 CSV, ~3.8 KB)",
+      "metadata (1 xlsx, ~31 KB)",
+      "pagamento (10 parquet files, ~2.2 GB total)",
+      "recarga (10 parquet files, ~3.3 GB total)",
+      "recarga_dim (11 CSVs, ~48 MB total)",
+      "score_bureau_movel (1 parquet file, ~40.5 MB)",
+      "telco (1 parquet file, ~87.7 MB)"
+    ],
+    "total_objects": 53,
+    "formats_present": ["parquet", "csv", "xlsx"]
+  },
+  "found": 6,
+  "expected": 6,
+  "validation": "PASSED",
+  "notes": [
+    "Compartment OCID in story had a typo (missing 'v' in v6veb4); corrected during validation.",
+    "Compartment name: lakehouse"
+  ]
+}

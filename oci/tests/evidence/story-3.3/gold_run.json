@@ -1,0 +1,78 @@
+{
+  "story": "3.3",
+  "phase": "Gold Feature Engineering (3 books + consolidation)",
+  "execution_method": "Airflow DAG -> OCI Data Flow (unified pipeline)",
+  "dataflow_run_id": "ocid1.dataflowrun.oc1.sa-saopaulo-1.antxeljr6dlb45iacvvirrqjdmpl6ftxsvl3xxddh7i4nk4txws5ajegdiyq",
+  "dataflow_app_id": "ocid1.dataflowapplication.oc1.sa-saopaulo-1.antxeljr6dlb45iaa32izabmteouupegmgkt6b6x47iya2uv3euqzesyeu2a",
+  "status": "SUCCEEDED",
+  "duration_seconds": 17855,
+  "duration_minutes": 297.6,
+  "duration_hours": 4.96,
+  "storage_format": "Delta Lake 3.1.0",
+  "timestamp_start": "2026-03-09T01:58:02Z",
+  "timestamp_end": "2026-03-09T06:55:32Z",
+  "orchestration": {
+    "airflow_dag": "credit_risk_pipeline",
+    "airflow_task": "run_gold",
+    "args": ["--start-phase", "gold", "--end-phase", "gold"]
+  },
+  "books": {
+    "book_recarga_cmv": {
+      "columns": 92,
+      "safras": 6,
+      "location": "oci://pod-academy-silver@grlxi07jz1mo/book/ass_recarga_cmv/",
+      "format": "delta"
+    },
+    "book_pagamento": {
+      "columns": 96,
+      "safras": 6,
+      "location": "oci://pod-academy-silver@grlxi07jz1mo/book/pagamento/",
+      "format": "delta"
+    },
+    "book_faturamento": {
+      "columns": 116,
+      "safras": 6,
+      "location": "oci://pod-academy-silver@grlxi07jz1mo/book/faturamento/",
+      "format": "delta"
+    }
+  },
+  "consolidated": {
+    "table": "clientes_consolidado",
+    "rows": 3900378,
+    "columns": 402,
+    "safras": ["202410", "202411", "202412", "202501", "202502", "202503"],
+    "location": "oci://pod-academy-gold@grlxi07jz1mo/feature_store/clientes_consolidado/",
+    "target_columns_present": ["TARGET_SCORE_01", "TARGET_SCORE_02", "FPD"],
+    "leakage_check": "FAT_VLR_FPD ABSENT — OK"
+  },
+  "column_breakdown": {
+    "cadastral_telco_score": "~103 cols (dados_cadastrais + telco + score_bureau_movel)",
+    "REC_prefix": "92 vars (book_recarga_cmv)",
+    "PAG_prefix": "96 vars (book_pagamento)",
+    "FAT_prefix": "116 vars (book_faturamento)",
+    "audit": "DT_PROCESSAMENTO",
+    "total": 402
+  },
+  "dimension_tables_used": [
+    "dim_canal_aquisicao_credito",
+    "dim_plano_preco",
+    "dim_tipo_recarga",
+    "dim_tipo_insercao",
+    "dim_forma_pagamento",
+    "dim_instituicao",
+    "dim_plataforma",
+    "dim_tipo_faturamento"
+  ],
+  "nfr_compliance": {
+    "NFR2_pipeline_under_5h": true,
+    "actual_duration_hours": 4.96,
+    "note": "Gold alone took 4h58. Full pipeline (Bronze+Silver+Gold) = ~5h45 total"
+  },
+  "validation": "PASSED",
+  "previous_run": {
+    "run_id": "ocid1.dataflowrun.oc1.sa-saopaulo-1.antxeljr6dlb45iax7flf5rye2qe5p5defvsjuelr5u6tz5czezsqq2ec44q",
+    "display_name": "gold-delta-v7",
+    "duration_min": 286.9,
+    "note": "Previous run used parquet format; this run uses Delta Lake"
+  }
+}

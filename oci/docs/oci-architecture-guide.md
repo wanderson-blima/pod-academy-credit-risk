@@ -20,6 +20,66 @@
 
 ---
 
+## Architecture Evolution (v2)
+
+### New Components
+| Component | Service | Cost | Purpose |
+|-----------|---------|------|---------|
+| Unified Pipeline | Data Flow | Same as before | Single SparkSession for B->S->G (saves 6-12 min bootstrap) |
+| ARM Orchestrator | Compute A1.Flex | $0 (Always Free) | Cron + OCI CLI orchestration |
+| External Tables | ADW DBMS_CLOUD | $0 | Query Gold Parquet directly (no data duplication) |
+| Data Catalog | Data Catalog | $0 (Free tier) | Schema harvesting, metadata, lineage |
+| Batch Scoring Job | Data Science Jobs | ~$2/run | Automated scoring triggered by orchestrator |
+| Model Catalog | Data Science | $0 | Model versioning, champion/challenger |
+
+### Architecture Diagram (v2)
+```
+Landing Bucket (CSV/Parquet)
+    |
+    v
+[OCI Data Flow — Unified Pipeline]
+    |── Bronze (Delta Lake, 9 tables)
+    |── Silver (Delta Lake, 19 tables)
+    └── Gold (Delta Lake, 3 books + consolidado)
+            |
+            ├─> ADW External Tables ──> APEX Dashboard
+            |
+            └─> Data Science Job (Batch Scoring)
+                    |
+                    ├─> Gold/clientes_scores (Parquet)
+                    └─> Model Catalog (versioned .pkl)
+
+[ARM Orchestrator (A1 Always-Free)]
+    |── Cron Schedule (weekly/daily)
+    |── Submit Data Flow runs
+    |── Trigger Data Science Jobs
+    |── ONS notifications (success/failure)
+    └── Health checks (6-hourly)
+
+[Data Catalog]
+    |── Harvest Bronze/Silver/Gold schemas
+    └── Lineage: Landing -> Bronze -> Silver -> Gold -> Scores
+
+[Monitoring]
+    |── 6 alarms (pipeline, PSI, KS, cost)
+    |── Budget alerts (50%, 80%, 100%)
+    └── VCN Flow Logs
+```
+
+### Updated Cost Estimate
+| Component | Monthly Cost | Notes |
+|-----------|-------------|-------|
+| ARM Orchestrator | $0 | Always Free (4 OCPU, 24 GB) |
+| ADW (2 ECPU) | $0 | Always Free tier |
+| Object Storage (~20 GB) | ~$0.50 | Standard tier |
+| Data Flow (4 runs/month) | ~$8-12 | 14 OCPUs, ~30 min/run |
+| Data Science notebook (20h) | ~$15-25 | E4.Flex 10 OCPU |
+| Data Catalog | $0 | Free tier |
+| KMS Vault | ~$5 | Per key version |
+| **Total** | **~$30-45** | **Well within $500 trial** |
+
+---
+
 ## 1. Resumo Executivo
 
 Este documento descreve a arquitetura completa da plataforma de dados OCI construida para o Hackathon PoD Academy (Claro + Oracle). O objetivo e a predicao de **First Payment Default (FPD)** para clientes de telecomunicacoes, utilizando modelos de credit risk scoring.

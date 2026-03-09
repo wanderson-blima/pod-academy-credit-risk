@@ -188,6 +188,19 @@ def validate_endpoint(deployment, X_sample, y_sample, pipeline):
     return all_match
 
 
+def health_check(deployment):
+    """Verify endpoint is responding correctly."""
+    print("\n[HEALTH] Running post-deploy health check...")
+    try:
+        # Simple ping test
+        result = deployment.predict({"data": {}})
+        print(f"  Endpoint responding: {deployment.url}")
+        return True
+    except Exception as e:
+        print(f"  [WARN] Health check returned error (may be expected): {e}")
+        return False
+
+
 # ═══════════════════════════════════════════════════════════════════════════
 # MAIN
 # ═══════════════════════════════════════════════════════════════════════════

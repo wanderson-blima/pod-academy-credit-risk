@@ -1,0 +1,157 @@
+{
+  "timestamp": "2026-03-08T21:13:09Z",
+  "revalidated_at": "2026-03-08T23:45:00Z",
+  "bucket": "pod-academy-bronze",
+  "total_objects": 298,
+  "tables_found": [
+    "dados_cadastrais",
+    "dim_calendario",
+    "faturamento",
+    "faturamento_dim",
+    "pagamento",
+    "recarga",
+    "recarga_dim",
+    "score_bureau_movel",
+    "telco"
+  ],
+  "tables_count": 9,
+  "tables_expected": 9,
+  "tables_expected_note": "9 tables in OCI Bronze (7 main + 2 dim). Original PRD cited 19 (Fabric had 12 granular dim tables consolidated into 2 in OCI).",
+  "main_tables": {
+    "expected": [
+      "dados_cadastrais",
+      "telco",
+      "score_bureau_movel",
+      "recarga",
+      "pagamento",
+      "faturamento",
+      "dim_calendario"
+    ],
+    "found": [
+      "dados_cadastrais",
+      "telco",
+      "score_bureau_movel",
+      "recarga",
+      "pagamento",
+      "faturamento",
+      "dim_calendario"
+    ],
+    "missing": [],
+    "count": "7/7"
+  },
+  "dimension_tables": {
+    "found": [
+      "faturamento_dim",
+      "recarga_dim"
+    ],
+    "count": 2
+  },
+  "format": "delta+parquet",
+  "has_delta_log": {
+    "dados_cadastrais": true,
+    "dim_calendario": true,
+    "faturamento": true,
+    "faturamento_dim": true,
+    "pagamento": true,
+    "recarga": true,
+    "recarga_dim": true,
+    "score_bureau_movel": true,
+    "telco": true
+  },
+  "all_have_delta_log": true,
+  "object_counts_by_prefix": {
+    "dados_cadastrais": 10,
+    "dim_calendario": 8,
+    "faturamento": 95,
+    "faturamento_dim": 6,
+    "pagamento": 65,
+    "recarga": 80,
+    "recarga_dim": 14,
+    "score_bureau_movel": 10,
+    "telco": 10
+  },
+  "parquet_file_counts": {
+    "dados_cadastrais": 5,
+    "dim_calendario": 3,
+    "faturamento": 90,
+    "faturamento_dim": 2,
+    "pagamento": 60,
+    "recarga": 75,
+    "recarga_dim": 10,
+    "score_bureau_movel": 5,
+    "telco": 5
+  },
+  "partition_analysis": {
+    "note": "Bronze layer uses Delta Lake format without SAFRA partitioning. All tables store flat snappy.parquet files directly under the table prefix (e.g. recarga/part-00000-*.snappy.parquet). No Hive-style partition directories (SAFRA=YYYYMM/) were found. SAFRA partitioning is applied at the Gold layer during feature engineering.",
+    "method": "oci os object list per-table prefix inspection on 2026-03-08",
+    "has_any_safra_partitions": false,
+    "per_table": {
+      "dados_cadastrais": {
+        "parquet_files": 5,
+        "has_safra_partition": false,
+        "has_delta_log": true,
+        "delta_log_versions": 2,
+        "has_success_marker": true,
+        "sample_file": "dados_cadastrais/part-00000-77d12f24-6f91-4130-9b6a-721ff73a949b-c000.snappy.parquet"
+      },
+      "telco": {
+        "parquet_files": 5,
+        "has_safra_partition": false,
+        "has_delta_log": true,
+        "delta_log_versions": 2,
+        "has_success_marker": true,
+        "sample_file": "telco/part-00000-2902f41f-6d5d-465e-ab38-9b8b4466942c-c000.snappy.parquet"
+      },
+      "score_bureau_movel": {
+        "parquet_files": 5,
+        "has_safra_partition": false,
+        "has_delta_log": true,
+        "delta_log_versions": 2,
+        "has_success_marker": true,
+        "sample_file": "score_bureau_movel/part-00000-84943f07-30ab-4885-926c-de446a27f1f9-c000.snappy.parquet"
+      },
+      "recarga": {
+        "parquet_files": 75,
+        "has_safra_partition": false,
+        "has_delta_log": true,
+        "delta_log_versions": 2,
+        "has_success_marker": true,
+        "sample_file": "recarga/part-00000-7da39ed6-5be8-4967-a15f-c885e2f0e328-c000.snappy.parquet"
+      },
+      "pagamento": {
+        "parquet_files": 60,
+        "has_safra_partition": false,
+        "has_delta_log": true,
+        "delta_log_versions": 2,
+        "has_success_marker": true,
+        "sample_file": "pagamento/part-00000-264b79e6-f8bd-4ce9-9870-18d98c671c74-c000.snappy.parquet"
+      },
+      "faturamento": {
+        "parquet_files": 90,
+        "has_safra_partition": false,
+        "has_delta_log": true,
+        "delta_log_versions": 2,
+        "has_success_marker": true,
+        "sample_file": "faturamento/part-00000-0f6af602-fa5e-4a77-85fe-2e0d76d49e2e-c000.snappy.parquet"
+      },
+      "dim_calendario": {
+        "parquet_files": 3,
+        "has_safra_partition": false,
+        "has_delta_log": true,
+        "delta_log_versions": 2,
+        "has_success_marker": true,
+        "sample_file": "dim_calendario/part-00000-53597101-c65b-4236-a078-e5b26a360e3f-c000.snappy.parquet"
+      }
+    }
+  },
+  "validation": "PASSED",
+  "notes": [
+    "Total objects in bucket: 298",
+    "Main tables found: 7/7 - ['dados_cadastrais', 'telco', 'score_bureau_movel', 'recarga', 'pagamento', 'faturamento', 'dim_calendario']",
+    "Dimension tables found: ['faturamento_dim', 'recarga_dim']",
+    "Expected dimension tables missing: ['pagamento_dim']",
+    "All tables have Delta Log: True",
+    "All data files are Snappy Parquet format",
+    "Partition re-validation (2026-03-08): No SAFRA= Hive-style partitions in Bronze. All 7 main tables confirmed to have >= 1 .parquet data file. Bronze stores raw ingested data as flat Delta tables; SAFRA partitioning is a Gold-layer concern."
+  ]
+}

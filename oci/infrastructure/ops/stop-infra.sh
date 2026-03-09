@@ -10,19 +10,30 @@ set -euo pipefail
 echo "=== Stopping OCI Infrastructure ==="
 
 # Stop ADW (zero CPU cost, storage only)
-echo "[1/3] Stopping Autonomous Data Warehouse..."
+echo "[1/4] Stopping Autonomous Data Warehouse..."
 oci db autonomous-database stop \
   --autonomous-database-id $ADW_OCID \
   --wait-for-state STOPPED
 
 # Deactivate Notebook Session
-echo "[2/3] Deactivating Data Science Notebook..."
+echo "[2/4] Deactivating Data Science Notebook..."
 oci data-science notebook-session deactivate \
   --notebook-session-id $NOTEBOOK_OCID \
   --wait-for-state INACTIVE
 
+# Stop Orchestrator Instance
+echo "[3/4] Stopping Orchestrator Instance..."
+if [ -n "${ORCHESTRATOR_OCID:-}" ]; then
+  oci compute instance action --action SOFTSTOP \
+    --instance-id $ORCHESTRATOR_OCID \
+    --wait-for-state STOPPED
+  echo "Orchestrator: STOPPED (\$0 while stopped)"
+else
+  echo "Orchestrator: SKIPPED (ORCHESTRATOR_OCID not set)"
+fi
+
 # Terminate Model Deployment (if active)
-echo "[3/3] Checking Model Deployments..."
+echo "[4/4] Checking Model Deployments..."
 DEPLOYMENTS=$(oci data-science model-deployment list \
   --compartment-id $COMPARTMENT_OCID \
   --lifecycle-state ACTIVE \

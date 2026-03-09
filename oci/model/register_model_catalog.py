@@ -51,11 +51,13 @@ METRICS_FILE = os.path.join(
 
 RUN_ID = "20260217_214614"
 
+VERSION_DATE = datetime.now().strftime("%Y%m%d")
+
 # Model definitions
 MODELS = [
     {
-        "name": "credit-risk-lr-l1",
-        "display_name": "Credit Risk LR L1 Scorecard",
+        "name": f"credit-risk-lr-l1-v{VERSION_DATE}",
+        "display_name": f"Credit Risk LR L1 Scorecard v{VERSION_DATE}",
         "description": (
             "L1 Logistic Regression scorecard for FPD prediction. "
             "59 features, C=0.5, solver=liblinear, class_weight=balanced. "
@@ -65,12 +67,13 @@ MODELS = [
         "algorithm": "LogisticRegression",
         "framework": "scikit-learn",
         "framework_version": "1.3.2",
+        "champion": False,
     },
     {
-        "name": "credit-risk-lgbm",
-        "display_name": "Credit Risk LightGBM GBDT",
+        "name": f"credit-risk-lgbm-v{VERSION_DATE}",
+        "display_name": f"Credit Risk LightGBM GBDT v{VERSION_DATE}",
         "description": (
-            "LightGBM GBDT for FPD prediction (champion model). "
+            "LightGBM GBDT for FPD prediction. "
             "59 features, 250 estimators, lr=0.05, max_depth=4. "
             f"Run ID: {RUN_ID}"
         ),
@@ -78,10 +81,11 @@ MODELS = [
         "algorithm": "LightGBM",
         "framework": "lightgbm",
         "framework_version": "4.1.0",
+        "champion": False,
     },
     {
-        "name": "credit-risk-ensemble",
-        "display_name": "Credit Risk Ensemble v1",
+        "name": f"credit-risk-ensemble-v{VERSION_DATE}",
+        "display_name": f"Credit Risk Ensemble v{VERSION_DATE}",
         "description": (
             "Multi-model ensemble for FPD prediction. "
             "Combines LightGBM v2, XGBoost, CatBoost, Random Forest, LR L1 v2. "
@@ -92,6 +96,7 @@ MODELS = [
         "algorithm": "Ensemble",
         "framework": "scikit-learn+lightgbm+xgboost+catboost",
         "framework_version": "multi",
+        "champion": True,
     },
 ]
 
@@ -153,6 +158,11 @@ def register_model(client, project_id, model_def, metrics):
         Metadata(key="train_safras", value="202410,202411,202412,202501", category="Data"),
         Metadata(key="oot_safras", value="202502,202503", category="Data"),
         Metadata(key="target", value="FPD", category="Data"),
+        Metadata(key="champion", value=str(model_def.get("champion", False)), category="Deployment"),
+        Metadata(key="feature_list", value=",".join([
+            "TARGET_SCORE_02", "TARGET_SCORE_01", "REC_SCORE_RISCO",
+            "REC_TAXA_STATUS_A", "REC_QTD_LINHAS", "REC_DIAS_ENTRE_RECARGAS",
+        ][:6]) + "...(59 total)", category="Data"),
     ]
 
     # Create model details
@@ -198,6 +208,17 @@ def register_model(client, project_id, model_def, metrics):
     print(f"  Provenance set (run_id={RUN_ID})")
 
     return model_id
+
+
+def tag_champion(client, model_id, is_champion):
+    """Tag a model as champion or challenger."""
+    if not is_champion:
+        return
+    update_details = UpdateModelDetails(
+        freeform_tags={"champion": "true", "promoted_at": datetime.now().isoformat()}
+    )
+    client.update_model(model_id=model_id, update_model_details=update_details)
+    print(f"  [CHAMPION] Model tagged as champion: {model_id}")
 
 
 def document_trial_limitation(metrics):
@@ -271,6 +292,8 @@ def main():
         registered = []
         for model_def in MODELS:
             model_id = register_model(client, project_id, model_def, metrics)
+            if model_def.get("champion"):
+                tag_champion(client, model_id, True)
             registered.append({"name": model_def["display_name"], "ocid": model_id})
 
         print("\n" + "=" * 70)

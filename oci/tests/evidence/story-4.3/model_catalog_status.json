@@ -1,0 +1,49 @@
+{
+  "story": "4.3",
+  "title": "Model Catalog Registration",
+  "collected_at": "2026-03-08T23:15:00Z",
+  "compartment_id": "ocid1.compartment.oc1..aaaaaaaa7uh2lfpsc6qf73g7zalgbr262a2v6veb4lreykqn57gtjvoojeuq",
+  "project_id": "ocid1.datascienceproject.oc1.sa-saopaulo-1.amaaaaaa6dlb45ianhnl57twi33fx3adel7oajvniacgrc24eynqoq5d4fza",
+  "project_name": "pod-academy-ml-project",
+  "models_registered": [
+    {
+      "display_name": "credit-risk-lgbm-v20260217",
+      "id": "ocid1.datasciencemodel.oc1.sa-saopaulo-1.amaaaaaa6dlb45iazo3viqu2m2f6242zcdgnoparisaox275cavmotf3tk6a",
+      "state": "ACTIVE",
+      "algorithm": "lightgbm",
+      "champion": true,
+      "artifact_uploaded": true,
+      "metrics": {
+        "ks_oot": 0.3403,
+        "auc_oot": 0.7305,
+        "gini_oot": 46.11,
+        "psi": 0.0012
+      }
+    },
+    {
+      "display_name": "credit-risk-lr-l1-v20260217",
+      "id": "ocid1.datasciencemodel.oc1.sa-saopaulo-1.amaaaaaa6dlb45iajquiuluk5i6ty4vi2junjho2rtc7uouuuxc67swyxe7q",
+      "state": "ACTIVE",
+      "algorithm": "lr_l1",
+      "champion": false,
+      "artifact_uploaded": true,
+      "metrics": {
+        "ks_oot": 0.3286,
+        "auc_oot": 0.7209,
+        "gini_oot": 44.19,
+        "psi": 0.0007
+      }
+    }
+  ],
+  "registration_method": "OCI CLI (oci data-science model create + create-model-artifact)",
+  "run_id": "20260217_214614",
+  "n_features": 59,
+  "validation": "PASSED",
+  "notes": [
+    "Both models registered in OCI Data Science Model Catalog with ACTIVE state",
+    "Artifacts uploaded (LGBM: 190KB, LR: 4.6KB)",
+    "LGBM tagged as champion (higher KS/AUC/Gini)",
+    "Metadata includes algorithm, run_id, n_features, KS, AUC in freeform tags",
+    "Models also available as artifacts in Gold bucket (model_artifacts/)"
+  ]
+}
