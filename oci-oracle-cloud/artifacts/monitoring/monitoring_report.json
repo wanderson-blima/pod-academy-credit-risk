@@ -1,0 +1,269 @@
+{
+  "report_date": "2026-03-11 02:36:00",
+  "overall_status": "WARNING",
+  "config": {
+    "target": "FPD",
+    "train_safras": [
+      202410,
+      202411,
+      202412,
+      202501
+    ],
+    "oot_safras": [
+      202502,
+      202503
+    ],
+    "artifact_dir": "/home/opc/artifacts",
+    "data_path": "/home/opc/data/gold"
+  },
+  "score_psi": [
+    {
+      "safra": 202410,
+      "n_records": 436388,
+      "psi": 0.003801,
+      "status": "GREEN"
+    },
+    {
+      "safra": 202411,
+      "n_records": 465850,
+      "psi": 0.000463,
+      "status": "GREEN"
+    },
+    {
+      "safra": 202412,
+      "n_records": 456340,
+      "psi": 0.000199,
+      "status": "GREEN"
+    },
+    {
+      "safra": 202501,
+      "n_records": 463673,
+      "psi": 0.002074,
+      "status": "GREEN"
+    },
+    {
+      "safra": 202502,
+      "n_records": 430064,
+      "psi": 0.000963,
+      "status": "GREEN"
+    },
+    {
+      "safra": 202503,
+      "n_records": 444306,
+      "psi": 0.003963,
+      "status": "GREEN"
+    }
+  ],
+  "feature_drift": [
+    {
+      "feature": "FAT_QTD_FATURAS",
+      "psi": 0.18073,
+      "status": "YELLOW"
+    },
+    {
+      "feature": "FAT_INDICE_CONCENTRACAO_FAT",
+      "psi": 0.161354,
+      "status": "YELLOW"
+    },
+    {
+      "feature": "PAG_QTD_STATUS_R",
+      "psi": 0.154781,
+      "status": "YELLOW"
+    },
+    {
+      "feature": "FAT_TAXA_ATRASO",
+      "psi": 0.156924,
+      "status": "YELLOW"
+    },
+    {
+      "feature": "PAG_VLR_ALOCACAO_PYM",
+      "psi": 0.161684,
+      "status": "YELLOW"
+    },
+    {
+      "feature": "PAG_TAXA_STATUS_R",
+      "psi": 0.148538,
+      "status": "YELLOW"
+    },
+    {
+      "feature": "PAG_VLR_ORIGINAL_PAGAMENTO_TOTAL",
+      "psi": 0.159089,
+      "status": "YELLOW"
+    },
+    {
+      "feature": "PAG_VLR_BAIXA_ATIVIDADE_TOTAL",
+      "psi": 0.15879,
+      "status": "YELLOW"
+    },
+    {
+      "feature": "FAT_QTD_FATURAS_SEM_PDD",
+      "psi": 0.153559,
+      "status": "YELLOW"
+    },
+    {
+      "feature": "FAT_INDICE_CONCENTRACAO_PLATAFORMA",
+      "psi": 0.129966,
+      "status": "YELLOW"
+    },
+    {
+      "feature": "PAG_VLR_PAGAMENTO_CREDITO_MEDIO",
+      "psi": 0.116476,
+      "status": "YELLOW"
+    },
+    {
+      "feature": "REC_QTD_DIAS_RECARGA",
+      "psi": 0.123945,
+      "status": "YELLOW"
+    },
+    {
+      "feature": "FAT_QTD_FAT_AUTOC",
+      "psi": 0.1244,
+      "status": "YELLOW"
+    },
+    {
+      "feature": "FAT_VLR_MEDIO_WO",
+      "psi": 0.093115,
+      "status": "GREEN"
+    },
+    {
+      "feature": "PAG_DIAS_DESDE_ULTIMA_FATURA",
+      "psi": 0.043435,
+      "status": "GREEN"
+    },
+    {
+      "feature": "FAT_QTD_FAT_POSPG",
+      "psi": 0.087313,
+      "status": "GREEN"
+    },
+    {
+      "feature": "PAG_TAXA_FORMA_PB",
+      "psi": 0.074931,
+      "status": "GREEN"
+    },
+    {
+      "feature": "REC_QTD_PLAT_AUTOC",
+      "psi": 0.071321,
+      "status": "GREEN"
+    },
+    {
+      "feature": "PAG_TAXA_FORMA_CA",
+      "psi": 0.066062,
+      "status": "GREEN"
+    },
+    {
+      "feature": "PAG_VLR_STATUS_R",
+      "psi": 0.068136,
+      "status": "GREEN"
+    }
+  ],
+  "features_with_drift": [],
+  "backtesting": [
+    {
+      "safra": 202410,
+      "ks_ensemble": 0.305,
+      "auc_ensemble": 0.71217,
+      "ks_baseline": 0.245917,
+      "auc_baseline": 0.676658,
+      "delta_ks": 0.059083
+    },
+    {
+      "safra": 202411,
+      "ks_ensemble": 0.316078,
+      "auc_ensemble": 0.717649,
+      "ks_baseline": 0.263324,
+      "auc_baseline": 0.68511,
+      "delta_ks": 0.052754
+    },
+    {
+      "safra": 202412,
+      "ks_ensemble": 0.298029,
+      "auc_ensemble": 0.705546,
+      "ks_baseline": 0.245493,
+      "auc_baseline": 0.673405,
+      "delta_ks": 0.052536
+    },
+    {
+      "safra": 202501,
+      "ks_ensemble": 0.299995,
+      "auc_ensemble": 0.705663,
+      "ks_baseline": 0.245353,
+      "auc_baseline": 0.672584,
+      "delta_ks": 0.054643
+    },
+    {
+      "safra": 202502,
+      "ks_ensemble": 0.261439,
+      "auc_ensemble": 0.68124,
+      "ks_baseline": 0.23008,
+      "auc_baseline": 0.660403,
+      "delta_ks": 0.031359
+    },
+    {
+      "safra": 202503,
+      "ks_ensemble": 0.26858,
+      "auc_ensemble": 0.685343,
+      "ks_baseline": 0.23795,
+      "auc_baseline": 0.665189,
+      "delta_ks": 0.03063
+    }
+  ],
+  "base_model_psi": [
+    {
+      "model": "LightGBM_v2",
+      "psi": 0.001732,
+      "status": "GREEN"
+    },
+    {
+      "model": "XGBoost",
+      "psi": 0.002284,
+      "status": "GREEN"
+    },
+    {
+      "model": "CatBoost",
+      "psi": 0.003041,
+      "status": "GREEN"
+    }
+  ],
+  "base_model_agreement": [
+    {
+      "pair": "LightGBM_v2 vs XGBoost",
+      "agreement_rate": 0.9059
+    },
+    {
+      "pair": "LightGBM_v2 vs CatBoost",
+      "agreement_rate": 0.907
+    },
+    {
+      "pair": "XGBoost vs CatBoost",
+      "agreement_rate": 0.9218
+    }
+  ],
+  "catalog_registration": {
+    "attempted": true,
+    "timestamp": "2026-03-11 02:36:00",
+    "registered": false,
+    "reason": "OCI SDK (oci) not installed in current environment.",
+    "metadata": {
+      "model_name": "fpd-credit-risk-ensemble-monitored",
+      "model_version": "v1.0",
+      "framework": "scikit-learn+lightgbm+xgboost+catboost",
+      "target": "FPD",
+      "n_features": 110,
+      "train_safras": [
+        202410,
+        202411,
+        202412,
+        202501
+      ],
+      "oot_safras": [
+        202502,
+        202503
+      ],
+      "monitoring_status": "STABLE",
+      "created_at": "2026-03-11 02:36:00"
+    }
+  },
+  "recommendations": [
+    "Model is stable. No action required."
+  ]
+}

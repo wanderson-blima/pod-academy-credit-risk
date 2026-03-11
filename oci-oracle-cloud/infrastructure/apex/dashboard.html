@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Credit Risk ML Dashboard | PoD Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+  /* ========================= DESIGN TOKENS ========================= */
+  :root {
+    --navy-50: #E8ECF0;
+    --navy-100: #C5D0DC;
+    --navy-200: #9FB3C6;
+    --navy-300: #7995AF;
+    --navy-400: #537899;
+    --navy-500: #1B2D41;
+    --navy-600: #162434;
+    --navy-700: #101B27;
+    --navy-800: #0B121A;
+    --navy-900: #05090D;
+
+    --success: #10B981;
+    --success-light: #D1FAE5;
+    --success-dark: #065F46;
+    --warning: #F59E0B;
+    --warning-light: #FEF3C7;
+    --warning-dark: #92400E;
+    --error: #EF4444;
+    --error-light: #FEE2E2;
+    --error-dark: #991B1B;
+    --info: #3B82F6;
+    --info-light: #DBEAFE;
+
+    --bg-page: #F8FAFC;
+    --bg-surface: #FFFFFF;
+    --bg-surface-hover: #F1F5F9;
+    --border: #E2E8F0;
+    --border-hover: #CBD5E1;
+    --text-primary: #0F172A;
+    --text-secondary: #64748B;
+    --text-muted: #94A3B8;
+
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+    --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+    --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.08), 0 8px 10px -6px rgba(0,0,0,0.04);
+
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+
+    --sidebar-width: 260px;
+    --sidebar-collapsed: 72px;
+    --header-height: 64px;
+  }
+
+  /* ========================= RESET & BASE ========================= */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { font-size: 16px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--bg-page);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+  }
+
+  /* ========================= SCROLLBAR ========================= */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--navy-200); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--navy-300); }
+
+  /* ========================= SIDEBAR ========================= */
+  .sidebar {
+    width: var(--sidebar-width);
+    min-height: 100vh;
+    background: var(--navy-500);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    z-index: 50;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+  }
+  .sidebar-brand {
+    height: var(--header-height);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    flex-shrink: 0;
+  }
+  .sidebar-logo {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+    border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; color: #fff; font-size: 14px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(59,130,246,0.3);
+  }
+  .sidebar-title {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    white-space: nowrap;
+  }
+  .sidebar-subtitle {
+    color: rgba(255,255,255,0.5);
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .sidebar-nav {
+    flex: 1;
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .sidebar-section {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: rgba(255,255,255,0.35);
+    padding: 16px 12px 8px;
+    white-space: nowrap;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    color: rgba(255,255,255,0.65);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 13.5px;
+    font-weight: 500;
+    white-space: nowrap;
+    position: relative;
+  }
+  .nav-item:hover {
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.9);
+  }
+  .nav-item.active {
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    font-weight: 600;
+  }
+  .nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 50%;
+    transform: translateY(-50%);
+    width: 3px; height: 20px;
+    background: #3B82F6;
+    border-radius: 0 3px 3px 0;
+  }
+  .nav-icon {
+    width: 20px; height: 20px;
+    flex-shrink: 0;
+    opacity: 0.8;
+  }
+  .nav-item.active .nav-icon { opacity: 1; }
+  .sidebar-footer {
+    padding: 16px 20px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    flex-shrink: 0;
+  }
+  .sidebar-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.06);
+    border-radius: var(--radius-md);
+    color: rgba(255,255,255,0.7);
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: statusPulse 2s ease-in-out infinite;
+  }
+  .status-dot.green { background: var(--success); box-shadow: 0 0 8px rgba(16,185,129,0.4); }
+  .status-dot.yellow { background: var(--warning); box-shadow: 0 0 8px rgba(245,158,11,0.4); }
+  .status-dot.red { background: var(--error); box-shadow: 0 0 8px rgba(239,68,68,0.4); }
+  @keyframes statusPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.9); }
+  }
+
+  /* ========================= MAIN LAYOUT ========================= */
+  .main {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ========================= TOP BAR ========================= */
+  .topbar {
+    height: var(--header-height);
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    box-shadow: var(--shadow-sm);
+  }
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .topbar-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--navy-700);
+    letter-spacing: -0.4px;
+  }
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .topbar-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+  }
+  .topbar-badge.navy {
+    background: var(--navy-50);
+    color: var(--navy-500);
+    border: 1px solid var(--navy-100);
+  }
+  .topbar-badge.live {
+    background: var(--success-light);
+    color: var(--success-dark);
+    border: 1px solid rgba(16,185,129,0.2);
+  }
+  .last-update {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  /* ========================= CONTENT ========================= */
+  .content {
+    flex: 1;
+    padding: 24px 28px;
+    overflow-y: auto;
+  }
+
+  /* ========================= PAGE HEADER ========================= */
+  .page-header {
+    margin-bottom: 20px;
+  }
+  .page-header h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--navy-700);
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+  .page-header p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 400;
+  }
+
+  /* ========================= PAGES ========================= */
+  .page { display: none; }
+  .page.active { display: block; animation: fadeIn 0.35s ease-out; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ========================= KPI CARDS ========================= */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .kpi-row.cols-6 {
+    grid-template-columns: repeat(6, 1fr);
+  }
+  .kpi-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 22px 24px;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi-card:hover {
+    box-shadow: var(--shadow-lg);
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+  }
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .kpi-card.accent-navy::before { background: var(--navy-500); }
+  .kpi-card.accent-blue::before { background: var(--info); }
+  .kpi-card.accent-green::before { background: var(--success); }
+  .kpi-card.accent-warning::before { background: var(--warning); }
+  .kpi-card.accent-error::before { background: var(--error); }
+  .kpi-card.accent-purple::before { background: #8B5CF6; }
+
+  .kpi-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .kpi-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-secondary);
+  }
+  .kpi-icon {
+    width: 38px; height: 38px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .kpi-icon.navy { background: var(--navy-50); color: var(--navy-500); }
+  .kpi-icon.blue { background: var(--info-light); color: var(--info); }
+  .kpi-icon.green { background: var(--success-light); color: var(--success); }
+  .kpi-icon.purple { background: #EDE9FE; color: #8B5CF6; }
+  .kpi-icon.warning { background: var(--warning-light); color: var(--warning); }
+
+  .kpi-value {
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--navy-700);
+    letter-spacing: -1px;
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+  .kpi-detail {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .kpi-trend-up { color: var(--success); }
+  .kpi-trend-down { color: var(--error); }
+
+  /* ========================= CHART CARDS ========================= */
+  .chart-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .chart-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .chart-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-hover);
+  }
+  .chart-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy-700);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .chart-subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 18px;
+    font-weight: 400;
+  }
+  .chart-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .chart-container { position: relative; height: 280px; }
+  .chart-card, .kpi-card { min-width: 0; } /* prevent grid overflow */
+  .full-width { grid-column: 1 / -1; }
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* ========================= TABLES ========================= */
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 13px;
+  }
+  th {
+    text-align: left;
+    padding: 10px 14px;
+    background: var(--bg-page);
+    color: var(--navy-400);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  th:first-child { border-radius: var(--radius-md) 0 0 0; }
+  th:last-child { border-radius: 0 var(--radius-md) 0 0; }
+  td {
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-primary);
+  }
+  tr { transition: background 0.15s ease; }
+  tr:hover td { background: var(--bg-surface-hover); }
+  tr:last-child td { border-bottom: none; }
+
+  /* ========================= BADGES ========================= */
+  .badge-ok {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--success-light); color: var(--success-dark);
+    padding: 3px 10px; border-radius: 12px;
+    font-size: 11px; font-weight: 600;
+    border: 1px solid rgba(16,185,129,0.2);
+  }
+  .badge-warn {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--warning-light); color: var(--warning-dark);
+    padding: 3px 10px; border-radius: 12px;
+    font-size: 11px; font-weight: 600;
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .badge-danger {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--error-light); color: var(--error-dark);
+    padding: 3px 10px; border-radius: 12px;
+    font-size: 11px; font-weight: 600;
+    border: 1px solid rgba(239,68,68,0.2);
+  }
+  .badge-success { /* alias */
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--success-light); color: var(--success-dark);
+    padding: 3px 10px; border-radius: 12px;
+    font-size: 11px; font-weight: 600;
+    border: 1px solid rgba(16,185,129,0.2);
+  }
+
+  /* ========================= LOADING ========================= */
+  .loading {
+    text-align: center; padding: 48px;
+    color: var(--text-muted); font-size: 14px; font-weight: 500;
+  }
+  .spinner {
+    display: inline-block;
+    width: 20px; height: 20px;
+    border: 2.5px solid var(--border);
+    border-top-color: var(--navy-400);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ========================= FOOTER ========================= */
+  .footer {
+    text-align: center;
+    padding: 20px 28px;
+    color: var(--text-muted);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 0;
+    background: var(--bg-surface);
+    font-weight: 500;
+  }
+  .footer-brand { color: var(--navy-400); font-weight: 600; }
+
+  /* ========================= MOBILE MENU TOGGLE ========================= */
+  .menu-toggle {
+    display: none;
+    width: 40px; height: 40px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    color: var(--navy-500);
+    font-size: 20px;
+    transition: all 0.2s;
+  }
+  .menu-toggle:hover { background: var(--bg-surface-hover); }
+
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(4px);
+    z-index: 45;
+  }
+
+  /* ========================= RESPONSIVE ========================= */
+  /* Order: largest breakpoint first for correct cascade */
+
+  @media (max-width: 1200px) {
+    .kpi-row.cols-6 { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  @media (max-width: 1024px) {
+    /* Sidebar collapses to off-canvas drawer */
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open {
+      transform: translateX(0);
+      box-shadow: 4px 0 24px rgba(0,0,0,0.2);
+    }
+    .sidebar-overlay.open { display: block; }
+    .main { margin-left: 0; }
+    .menu-toggle { display: flex; }
+
+    /* KPIs to 2 cols */
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    .kpi-row.cols-6 { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  @media (max-width: 960px) {
+    /* Charts to single column */
+    .chart-grid { grid-template-columns: 1fr; }
+    .full-width { grid-column: auto; }
+    .kpi-row.cols-6 { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 768px) {
+    /* Topbar: stack vertically */
+    .topbar {
+      height: auto;
+      min-height: var(--header-height);
+      padding: 10px 16px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .topbar-left { width: 100%; }
+    .topbar-right {
+      width: 100%;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .topbar-title { font-size: 16px; }
+    .topbar-badge { font-size: 11px; padding: 4px 10px; }
+    .last-update { font-size: 10px; width: 100%; }
+
+    /* Content padding */
+    .content { padding: 16px 12px; }
+
+    /* KPI cards compact */
+    .kpi-row, .kpi-row.cols-6 { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .kpi-card { padding: 14px 14px; }
+    .kpi-value { font-size: 22px; letter-spacing: -0.5px; }
+    .kpi-label { font-size: 10px; letter-spacing: 0.5px; }
+    .kpi-icon { width: 32px; height: 32px; font-size: 14px; }
+    .kpi-top { margin-bottom: 10px; }
+    .kpi-detail { font-size: 11px; }
+
+    /* Charts compact */
+    .chart-card { padding: 16px 14px; }
+    .chart-container { height: 220px; }
+    .chart-title { font-size: 13px; gap: 8px; }
+    .chart-subtitle { font-size: 11px; margin-bottom: 14px; }
+
+    /* Page header */
+    .page-header h2 { font-size: 18px; }
+    .page-header p { font-size: 13px; }
+    .page-header { margin-bottom: 14px; }
+
+    /* Tables: horizontal scroll */
+    table { font-size: 12px; }
+    th { padding: 8px 10px; font-size: 10px; }
+    td { padding: 8px 10px; }
+
+    /* Footer compact */
+    .footer { padding: 16px 12px; font-size: 11px; }
+  }
+
+  @media (max-width: 480px) {
+    /* KPIs to single column */
+    .kpi-row, .kpi-row.cols-6 { grid-template-columns: 1fr; }
+
+    /* Even more compact */
+    .kpi-value { font-size: 26px; }
+    .kpi-card { padding: 16px; }
+
+    .content { padding: 12px 10px; }
+    .chart-container { height: 200px; }
+    .chart-card { padding: 14px 12px; border-radius: var(--radius-lg); }
+
+    .topbar-badge.navy { display: none; }
+    .page-header p { font-size: 12px; }
+  }
+
+  @media (max-width: 360px) {
+    .topbar-title { font-size: 14px; }
+    .kpi-value { font-size: 22px; }
+    .chart-container { height: 180px; }
+  }
+
+  /* ========================= CHART.JS OVERRIDES ========================= */
+  /* Light theme chart defaults are set in JS */
+</style>
+</head>
+<body>
+
+<!-- ========================= SIDEBAR ========================= -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="sidebar-logo">CR</div>
+    <div>
+      <div class="sidebar-title">Credit Risk</div>
+      <div class="sidebar-subtitle">ML Dashboard</div>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="sidebar-section">Analytics</div>
+    <div class="nav-item active" onclick="showPage('overview', this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Executive Overview
+    </div>
+    <div class="nav-item" onclick="showPage('model', this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
+      Model Performance
+    </div>
+    <div class="nav-item" onclick="showPage('gap', this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      Overfitting & GAP
+    </div>
+
+    <div class="sidebar-section">Operations</div>
+    <div class="nav-item" onclick="showPage('operations', this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6m11-7h-6m-6 0H1m17.36-5.36l-4.24 4.24M9.88 14.12l-4.24 4.24m0-12.72l4.24 4.24m4.24 4.24l4.24 4.24"/></svg>
+      Operations & Costs
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="sidebar-status" id="sidebarStatus">
+      <span class="status-dot green" id="statusDot"></span>
+      <span id="statusText">Connecting...</span>
+    </div>
+  </div>
+</aside>
+
+<!-- ========================= MAIN ========================= -->
+<div class="main">
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="menu-toggle" onclick="toggleSidebar()" aria-label="Toggle menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <span class="topbar-title" id="pageTitle">Executive Overview</span>
+    </div>
+    <div class="topbar-right">
+      <span class="last-update" id="lastUpdate"></span>
+      <span class="topbar-badge navy">OCI Data Lakehouse</span>
+      <span class="topbar-badge live" id="headerStatus">
+        <span style="width:6px;height:6px;border-radius:50%;background:var(--success);display:inline-block;"></span>
+        Loading...
+      </span>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- PAGE 1: EXECUTIVE OVERVIEW -->
+    <div id="overview" class="page active">
+      <div class="page-header">
+        <h2>Executive Overview</h2>
+        <p>Real-time model health, performance metrics, and risk distribution from Oracle ADW</p>
+      </div>
+      <div class="kpi-row cols-6" id="kpiOverview">
+        <div class="loading"><span class="spinner"></span>Loading from database...</div>
+      </div>
+      <div class="chart-grid">
+        <div class="chart-card">
+          <div class="chart-title"><span class="chart-dot" style="background:var(--navy-500)"></span>KS Statistic by SAFRA</div>
+          <div class="chart-subtitle">Kolmogorov-Smirnov discriminative power across time periods</div>
+          <div class="chart-container"><canvas id="ksChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title"><span class="chart-dot" style="background:var(--success)"></span>PSI Stability Trend</div>
+          <div class="chart-subtitle">Population Stability Index — score distribution drift monitoring</div>
+          <div class="chart-container"><canvas id="psiChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title"><span class="chart-dot" style="background:var(--warning)"></span>Risk Band Distribution</div>
+          <div class="chart-subtitle">Client segmentation by risk score across SAFRAs</div>
+          <div class="chart-container"><canvas id="riskChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title"><span class="chart-dot" style="background:#8B5CF6"></span>Score Distribution by SAFRA</div>
+          <div class="chart-subtitle">P25, Mean, and P75 score statistics per period</div>
+          <div class="chart-container"><canvas id="scoreDistChart"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 2: MODEL PERFORMANCE -->
+    <div id="model" class="page">
+      <div class="page-header">
+        <h2>Model Performance</h2>
+        <p>AUC-ROC, Gini, model comparison, and feature drift analysis</p>
+      </div>
+      <div class="kpi-row" id="kpiModel">
+        <div class="loading"><span class="spinner"></span>Loading...</div>
+      </div>
+      <div class="chart-grid">
+        <div class="chart-card">
+          <div class="chart-title"><span class="chart-dot" style="background:var(--navy-500)"></span>AUC-ROC Evolution</div>
+          <div class="chart-subtitle">Area Under the Curve trend per model across SAFRAs</div>
+          <div class="chart-container"><canvas id="aucChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title"><span class="chart-dot" style="background:#8B5CF6"></span>Gini Coefficient Trend</div>
+          <div class="chart-subtitle">Discriminatory power evolution per model</div>
+          <div class="chart-container"><canvas id="giniChart"></canvas></div>
+        </div>
+        <div class="chart-card full-width">
+          <div class="chart-title"><span class="chart-dot" style="background:var(--info)"></span>All Models — Performance Comparison</div>
+          <div class="chart-subtitle">Side-by-side metrics across all SAFRAs and dataset types</div>
+          <div id="comparisonTable"><div class="loading"><span class="spinner"></span>Loading...</div></div>
+        </div>
+        <div class="chart-card full-width">
+          <div class="chart-title"><span class="chart-dot" style="background:var(--warning)"></span>Feature Drift Analysis (Top 20 Features)</div>
+          <div class="chart-subtitle">PSI per feature — monitoring distribution stability</div>
+          <div id="driftTable" style="max-height:420px;overflow-y:auto;"><div class="loading"><span class="spinner"></span>Loading...</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 3: OVERFITTING & GAP ANALYSIS -->
+    <div id="gap" class="page">
+      <div class="page-header">
+        <h2>Overfitting & GAP Analysis</h2>
+        <p>Train vs OOT generalization gap — detecting overfitting across all models and ensembles</p>
+      </div>
+      <div class="kpi-row" id="kpiGap"></div>
+      <div class="chart-grid">
+        <div class="chart-card">
+          <div class="chart-title"><span class="chart-dot" style="background:var(--navy-500)"></span>KS GAP — Train vs OOT</div>
+          <div class="chart-subtitle">Absolute gap showing generalization loss per model</div>
+          <div class="chart-container"><canvas id="gapBarChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title"><span class="chart-dot" style="background:var(--error)"></span>GAP Relativo (%)</div>
+          <div class="chart-subtitle">Percentage drop from training — threshold at 10% (stable) and 15% (attention)</div>
+          <div class="chart-container"><canvas id="gapPctChart"></canvas></div>
+        </div>
+        <div class="chart-card full-width">
+          <div class="chart-title"><span class="chart-dot" style="background:var(--info)"></span>Degradation Path — Train → OOS → OOT</div>
+          <div class="chart-subtitle">Progressive performance loss across temporal splits</div>
+          <div class="chart-container" style="height:320px;"><canvas id="degradationChart"></canvas></div>
+        </div>
+        <div class="chart-card full-width">
+          <div class="chart-title"><span class="chart-dot" style="background:var(--success)"></span>Full GAP Report — All Models & Ensembles</div>
+          <div class="chart-subtitle">Ordered by stability (lowest GAP first)</div>
+          <div id="gapTable"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 4: OPERATIONS & COSTS -->
+    <div id="operations" class="page">
+      <div class="page-header">
+        <h2>Operations & Costs</h2>
+        <p>Infrastructure cost tracking, pipeline execution history, and resource management</p>
+      </div>
+      <div class="kpi-row" id="kpiOps">
+        <div class="loading"><span class="spinner"></span>Loading...</div>
+      </div>
+      <div class="chart-grid">
+        <div class="chart-card">
+          <div class="chart-title"><span class="chart-dot" style="background:#8B5CF6"></span>Cost Breakdown</div>
+          <div class="chart-subtitle">Service-level cost distribution for the latest period</div>
+          <div class="chart-container"><canvas id="costDonutChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title"><span class="chart-dot" style="background:var(--navy-500)"></span>Monthly Cost Trend (BRL)</div>
+          <div class="chart-subtitle">Stacked cost evolution by OCI service</div>
+          <div class="chart-container"><canvas id="costTrendChart"></canvas></div>
+        </div>
+        <div class="chart-card full-width">
+          <div class="chart-title"><span class="chart-dot" style="background:var(--success)"></span>Pipeline Execution History</div>
+          <div class="chart-subtitle">All pipeline stages with status, duration, and record counts</div>
+          <div id="pipelineTable"><div class="loading"><span class="spinner"></span>Loading...</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <div class="footer">
+    <span class="footer-brand">Hackathon PoD Academy 2026</span> &middot; Claro + Oracle Cloud Infrastructure &middot; Dual Architecture: Microsoft Fabric + OCI Data Lakehouse
+    <br><span style="margin-top:4px;display:inline-block;">Dashboard data loaded in real-time from Oracle Autonomous Database via ORDS REST API</span>
+  </div>
+</div><!-- /main -->
+
+<script>
+// ========================= CONFIG =========================
+const BASE = window.location.origin + '/ords/mlmonitor';
+const charts = {};
+
+// Light theme defaults for Chart.js
+Chart.defaults.color = '#64748B';
+Chart.defaults.borderColor = '#E2E8F0';
+Chart.defaults.font.family = "'Inter', system-ui, -apple-system, sans-serif";
+Chart.defaults.font.weight = 500;
+
+// Navy-based color palette for chart series
+const COLORS = {
+  navy: '#1B2D41',
+  navyLight: '#537899',
+  blue: '#3B82F6',
+  green: '#10B981',
+  purple: '#8B5CF6',
+  orange: '#F59E0B',
+  red: '#EF4444',
+  slate: '#94A3B8'
+};
+
+const CHART_SERIES = [COLORS.navy, COLORS.blue, COLORS.purple, COLORS.green, COLORS.orange, COLORS.red];
+
+// ========================= GAP DATA (loaded from ADW model_gap_analysis table) =========================
+let GAP_DATA = [];
+
+// Model name mapping: ADW DB names -> Display names
+const MODEL_DISPLAY = {
+  'Ensemble_Average': 'Ensemble (Top-3)',
+  'LightGBM_v2': 'LightGBM v2',
+  'LR_L1_v2': 'LR L1 v2',
+  'XGBoost': 'XGBoost',
+  'CatBoost': 'CatBoost',
+  'RF': 'Random Forest'
+};
+
+// Color scheme per model display name
+const MODEL_COLORS = {
+  'Ensemble (Top-3)': '#3b82f6',
+  'CatBoost': '#f97316',
+  'LightGBM v2': '#22c55e',
+  'XGBoost': '#8b5cf6',
+  'Random Forest': '#6b7280',
+  'LR L1 v2': '#eab308'
+};
+
+function normalizeModelNames(rows) {
+  return rows.map(r => {
+    if (r.model_name && MODEL_DISPLAY[r.model_name]) {
+      return { ...r, model_name: MODEL_DISPLAY[r.model_name] };
+    }
+    return r;
+  });
+}
+
+// ========================= SIDEBAR TOGGLE =========================
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+
+// ========================= DATA FETCHING =========================
+async function fetchTable(tableName) {
+  const url = `${BASE}/${tableName}/?limit=500`;
+  const resp = await fetch(url);
+  if (!resp.ok) throw new Error(`Failed to fetch ${tableName}: ${resp.status}`);
+  const data = await resp.json();
+  return data.items || [];
+}
+
+async function loadAllData() {
+  try {
+    const [perfRaw, stabilityRaw, distributionRaw, driftRaw, statusRaw, pipeline, cost, gapRaw] = await Promise.all([
+      fetchTable('model_performance'),
+      fetchTable('score_stability'),
+      fetchTable('score_distribution'),
+      fetchTable('feature_drift'),
+      fetchTable('model_status'),
+      fetchTable('pipeline_runs'),
+      fetchTable('cost_tracking'),
+      fetchTable('model_gap_analysis')
+    ]);
+
+    // Normalize all model names from ADW format to display format
+    const perf = normalizeModelNames(perfRaw);
+    const stability = normalizeModelNames(stabilityRaw);
+    const distribution = normalizeModelNames(distributionRaw);
+    const drift = normalizeModelNames(driftRaw);
+    const status = normalizeModelNames(statusRaw);
+
+    // Transform ADW gap rows into the format renderGapPage() expects
+    const gapNameMap = { 'LR_L1_v2': 'LR L1 v2', 'LightGBM_v2': 'LightGBM v2', 'RF': 'Random Forest', 'Ensemble_Average': 'Ens. Top-3 Avg', 'CatBoost': 'CatBoost', 'XGBoost': 'XGBoost' };
+    GAP_DATA = gapRaw.map(r => ({
+      model: gapNameMap[r.model_name] || r.model_name,
+      type: r.model_name.startsWith('Ensemble') ? 'ensemble' : 'individual',
+      ksTrain: r.ks_train, ksOOS: r.ks_train, ksOOT: r.ks_oot,
+      aucTrain: r.auc_train, aucOOT: r.auc_oot,
+      giniTrain: r.gini_train, giniOOT: r.gini_oot,
+      psi: r.psi || 0
+    })).sort((a, b) => (a.ksTrain - a.ksOOT) - (b.ksTrain - b.ksOOT));
+
+    document.getElementById('lastUpdate').textContent =
+      `Updated ${new Date().toLocaleString('pt-BR')}`;
+
+    renderOverviewKPIs(perf, stability, status, distribution);
+    renderKSChart(perf);
+    renderPSIChart(stability);
+    renderRiskChart(distribution);
+    renderScoreDistChart(distribution);
+    renderModelKPIs(perf, drift);
+    renderAUCChart(perf);
+    renderGiniChart(perf);
+    renderComparisonTable(perf);
+    renderDriftTable(drift);
+    renderOpsKPIs(pipeline, cost);
+    renderCostDonut(cost);
+    renderCostTrend(cost);
+    renderPipelineTable(pipeline);
+
+    // GAP page (data loaded from ADW model_gap_analysis)
+    renderGapPage();
+
+    // Update sidebar + header status using champion model
+    const champStatus = status.find(s => s.status === 'CHAMPION') || status.find(s => s.model_name === 'Ensemble (Top-3)') || status[0];
+    if (champStatus) {
+      const isHealthy = ['CHAMPION', 'ACTIVE', 'STABLE'].includes(champStatus.status);
+      const el = document.getElementById('headerStatus');
+      el.innerHTML = `<span style="width:6px;height:6px;border-radius:50%;background:${isHealthy ? 'var(--success)' : 'var(--warning)'};display:inline-block;"></span> ${champStatus.model_name}: ${champStatus.status}`;
+      el.className = isHealthy ? 'topbar-badge live' : 'topbar-badge navy';
+      const dot = document.getElementById('statusDot');
+      dot.className = `status-dot ${isHealthy ? 'green' : 'yellow'}`;
+      document.getElementById('statusText').textContent = `Model ${champStatus.status}`;
+    }
+  } catch (err) {
+    console.error('Error loading data:', err);
+    document.getElementById('lastUpdate').textContent = `Error: ${err.message}`;
+    document.getElementById('statusDot').className = 'status-dot red';
+    document.getElementById('statusText').textContent = 'Connection Error';
+    // Still render GAP page (static data)
+    renderGapPage();
+  }
+}
+
+// ========================= HELPERS =========================
+function uniqueSorted(items, field) {
+  return [...new Set(items.map(i => i[field]))].sort();
+}
+
+function getMetric(items, modelName, safra, datasetType, metric) {
+  const row = items.find(i =>
+    i.model_name === modelName &&
+    i.safra === safra &&
+    (!datasetType || i.dataset_type === datasetType)
+  );
+  return row ? row[metric] : null;
+}
+
+function kpiCard(accentClass, iconClass, iconEmoji, label, value, detail) {
+  return `<div class="kpi-card ${accentClass}">
+    <div class="kpi-top">
+      <span class="kpi-label">${label}</span>
+      <span class="kpi-icon ${iconClass}">${iconEmoji}</span>
+    </div>
+    <div class="kpi-value">${value}</div>
+    <div class="kpi-detail">${detail}</div>
+  </div>`;
+}
+
+function createOrUpdateChart(id, config) {
+  if (charts[id]) { charts[id].destroy(); }
+  charts[id] = new Chart(document.getElementById(id), config);
+  return charts[id];
+}
+
+function statusBadge(status) {
+  if (status === 'OK' || status === 'STABLE' || status === 'SUCCESS' || status === 'PASSED' || status === 'GREEN' || status === 'CHAMPION' || status === 'ACTIVE')
+    return `<span class="badge-ok">${status}</span>`;
+  if (status === 'WARNING' || status === 'YELLOW')
+    return `<span class="badge-warn">${status}</span>`;
+  return `<span class="badge-danger">${status}</span>`;
+}
+
+function formatNum(n, decimals) {
+  if (n == null) return '-';
+  return Number(n).toFixed(decimals !== undefined ? decimals : 2);
+}
+
+function formatVolume(n) {
+  if (n == null) return '-';
+  if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+  if (n >= 1000) return (n / 1000).toFixed(0) + 'K';
+  return String(n);
+}
+
+function gapClassify(pct) {
+  if (pct < 10) return { label: 'Stable', cls: 'badge-ok' };
+  if (pct < 15) return { label: 'Acceptable', cls: 'badge-warn' };
+  if (pct < 25) return { label: 'Attention', cls: 'badge-warn' };
+  return { label: 'Overfit', cls: 'badge-danger' };
+}
+
+// ========================= RENDERERS: OVERVIEW =========================
+
+function renderOverviewKPIs(perf, stability, status, distribution) {
+  // Find champion model (CHAMPION status or fallback to Ensemble (Top-3))
+  const championStatus = status.find(s => s.status === 'CHAMPION') || status.find(s => s.model_name === 'Ensemble (Top-3)');
+  const championName = championStatus ? championStatus.model_name : 'Ensemble (Top-3)';
+  const primaryOOT = perf.filter(p => p.model_name === championName && p.dataset_type === 'OOT')
+    .sort((a, b) => b.safra.localeCompare(a.safra))[0];
+  const latestPSI = stability.filter(s => s.model_name === championName)
+    .sort((a, b) => b.safra.localeCompare(a.safra))[0];
+  const totalScored = distribution.filter(d => d.model_name === championName)
+    .reduce((sum, d) => sum + (d.total_scored || 0), 0);
+  const safraCount = uniqueSorted(perf, 'safra').length;
+  const isOK = championStatus && (championStatus.status === 'CHAMPION' || championStatus.status === 'STABLE' || championStatus.status === 'ACTIVE');
+
+  document.getElementById('kpiOverview').innerHTML = [
+    kpiCard(
+      isOK ? 'accent-green' : 'accent-warning',
+      isOK ? 'green' : 'warning',
+      isOK ? '\u2713' : '\u26A0',
+      'Model Status',
+      championStatus ? championStatus.status : '-',
+      championStatus ? `Quality Gate: ${championStatus.quality_gate}` : ''
+    ),
+    kpiCard('accent-navy', 'navy', '\u2191', 'KS Statistic (OOT)',
+      primaryOOT ? formatNum(primaryOOT.ks_statistic * 100) + '%' : '-', championName),
+    kpiCard('accent-blue', 'blue', '\u25CE', 'AUC-ROC',
+      primaryOOT ? formatNum(primaryOOT.auc_roc, 4) : '-', championName),
+    kpiCard('accent-blue', 'blue', '\u0394', 'Gini',
+      primaryOOT ? formatNum(primaryOOT.gini) + '%' : '-', championName),
+    kpiCard(
+      latestPSI && latestPSI.score_psi < 0.1 ? 'accent-green' : 'accent-warning',
+      latestPSI && latestPSI.score_psi < 0.1 ? 'green' : 'warning',
+      '\u2261',
+      'Score PSI',
+      latestPSI ? formatNum(latestPSI.score_psi, 4) : '-',
+      latestPSI ? ((latestPSI.psi_status === 'OK' || latestPSI.psi_status === 'GREEN') ? 'Stable — No Drift' : latestPSI.psi_status) : ''
+    ),
+    kpiCard('accent-purple', 'purple', '\u2211', 'Volume Scored', formatVolume(totalScored),
+      `${safraCount} SAFRAs Processed`)
+  ].join('');
+}
+
+function renderKSChart(perf) {
+  const safras = uniqueSorted(perf, 'safra');
+  const modelNames = ['Ensemble (Top-3)', 'CatBoost', 'LightGBM v2', 'XGBoost', 'Random Forest', 'LR L1 v2'];
+  const modelStyles = {
+    'Ensemble (Top-3)': { color: '#3b82f6', bg: 'rgba(59,130,246,0.08)', width: 3, radius: 5, hoverRadius: 8, fill: true },
+    'CatBoost': { color: '#f97316', bg: 'rgba(249,115,22,0.06)', width: 2.5, radius: 4, hoverRadius: 7, fill: true },
+    'LightGBM v2': { color: '#22c55e', bg: 'rgba(34,197,94,0.06)', width: 2.5, radius: 4, hoverRadius: 7, fill: false },
+    'XGBoost': { color: '#8b5cf6', bg: 'rgba(139,92,246,0.05)', width: 2, radius: 4, hoverRadius: 7, fill: false },
+    'Random Forest': { color: '#6b7280', bg: 'rgba(107,114,128,0.05)', width: 1.5, radius: 3, hoverRadius: 6, fill: false, dash: [6,4] },
+    'LR L1 v2': { color: '#eab308', bg: 'rgba(234,179,8,0.05)', width: 1.5, radius: 3, hoverRadius: 6, fill: false, dash: [6,4] }
+  };
+
+  const datasets = modelNames.map(name => {
+    const s = modelStyles[name];
+    const data = safras.map(safra => { const r = perf.find(p => p.model_name === name && p.safra === safra); return r ? r.ks_statistic * 100 : null; });
+    return {
+      label: name, data, borderColor: s.color, backgroundColor: s.bg,
+      fill: s.fill, tension: 0.4, pointRadius: s.radius, pointHoverRadius: s.hoverRadius,
+      borderWidth: s.width, pointBackgroundColor: '#fff', pointBorderWidth: 2,
+      ...(s.dash ? { borderDash: s.dash } : {})
+    };
+  });
+
+  createOrUpdateChart('ksChart', {
+    type: 'line',
+    data: { labels: safras, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', labels: { usePointStyle: true, pointStyle: 'circle', padding: 16, font: { size: 12, weight: 500 } } } },
+      scales: {
+        y: { title: { display: true, text: 'KS (%)', font: { size: 12, weight: 600 } }, grid: { color: '#F1F5F9' } },
+        x: { title: { display: true, text: 'SAFRA', font: { size: 12, weight: 600 } }, grid: { display: false } }
+      },
+      interaction: { intersect: false, mode: 'index' }
+    }
+  });
+}
+
+function renderPSIChart(stability) {
+  const safras = uniqueSorted(stability, 'safra');
+  const psiModels = [
+    { name: 'Ensemble (Top-3)', color: '#3b82f6', bg: 'rgba(59,130,246,0.06)', width: 3, radius: 5, fill: true },
+    { name: 'CatBoost', color: '#f97316', bg: 'rgba(249,115,22,0.06)', width: 2.5, radius: 4, fill: true },
+    { name: 'LightGBM v2', color: '#22c55e', bg: 'rgba(34,197,94,0.06)', width: 2.5, radius: 4, fill: false },
+    { name: 'XGBoost', color: '#8b5cf6', bg: 'rgba(139,92,246,0.05)', width: 2, radius: 4, fill: false }
+  ];
+
+  const datasets = psiModels.map(m => ({
+    label: m.name + ' PSI',
+    data: safras.map(s => { const r = stability.find(st => st.model_name === m.name && st.safra === s); return r ? r.score_psi : null; }),
+    borderColor: m.color, backgroundColor: m.bg,
+    fill: m.fill, tension: 0.4, pointRadius: m.radius, borderWidth: m.width,
+    pointBackgroundColor: '#fff', pointBorderWidth: 2, spanGaps: false
+  }));
+
+  // WARNING (0.10) and RETRAIN (0.25) reference lines
+  datasets.push({
+    label: 'WARNING (0.10)',
+    data: safras.map(() => 0.10),
+    borderColor: '#F59E0B', borderWidth: 1.5, borderDash: [8, 4],
+    pointRadius: 0, fill: false, tension: 0
+  });
+  datasets.push({
+    label: 'RETRAIN (0.25)',
+    data: safras.map(() => 0.25),
+    borderColor: '#EF4444', borderWidth: 1.5, borderDash: [8, 4],
+    pointRadius: 0, fill: false, tension: 0
+  });
+
+  createOrUpdateChart('psiChart', {
+    type: 'line',
+    data: { labels: safras, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', labels: { usePointStyle: true, pointStyle: 'circle', padding: 16, font: { size: 12, weight: 500 } } } },
+      scales: {
+        y: { min: 0, title: { display: true, text: 'PSI', font: { size: 12, weight: 600 } }, grid: { color: '#F1F5F9' } },
+        x: { title: { display: true, text: 'SAFRA', font: { size: 12, weight: 600 } }, grid: { display: false } }
+      }
+    }
+  });
+}
+
+function renderRiskChart(distribution) {
+  const data = distribution.filter(d => d.model_name === 'Ensemble (Top-3)').sort((a,b) => a.safra.localeCompare(b.safra));
+  const safras = data.map(d => d.safra);
+
+  createOrUpdateChart('riskChart', {
+    type: 'bar',
+    data: { labels: safras, datasets: [
+      { label: 'Critical (0-299)', data: data.map(d => d.pct_critico), backgroundColor: COLORS.red, borderRadius: 3 },
+      { label: 'High (300-499)', data: data.map(d => d.pct_alto), backgroundColor: COLORS.orange, borderRadius: 3 },
+      { label: 'Medium (500-699)', data: data.map(d => d.pct_medio), backgroundColor: '#FCD34D', borderRadius: 3 },
+      { label: 'Low (700-1000)', data: data.map(d => d.pct_baixo), backgroundColor: COLORS.green, borderRadius: 3 }
+    ]},
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', labels: { usePointStyle: true, pointStyle: 'rect', padding: 16, font: { size: 12, weight: 500 } } } },
+      scales: {
+        x: { stacked: true, grid: { display: false } },
+        y: { stacked: true, max: 100, title: { display: true, text: '%', font: { size: 12, weight: 600 } }, grid: { color: '#F1F5F9' } }
+      }
+    }
+  });
+}
+
+function renderScoreDistChart(distribution) {
+  const ensData = distribution.filter(d => d.model_name === 'Ensemble (Top-3)').sort((a,b) => a.safra.localeCompare(b.safra));
+  const safras = ensData.map(d => d.safra);
+
+  createOrUpdateChart('scoreDistChart', {
+    type: 'bar',
+    data: { labels: safras, datasets: [
+      { label: 'P25', data: ensData.map(d => d.score_p25), backgroundColor: 'rgba(59,130,246,0.15)',
+        borderColor: '#3b82f6', borderWidth: 1, borderRadius: 6 },
+      { label: 'Mean', data: ensData.map(d => d.score_mean), backgroundColor: 'rgba(59,130,246,0.45)',
+        borderColor: '#3b82f6', borderWidth: 2, borderRadius: 6 },
+      { label: 'P75', data: ensData.map(d => d.score_p75), backgroundColor: 'rgba(34,197,94,0.30)',
+        borderColor: '#22c55e', borderWidth: 1.5, borderRadius: 6 }
+    ]},
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', labels: { usePointStyle: true, pointStyle: 'circle', padding: 16, font: { size: 12, weight: 500 } } } },
+      scales: {
+        y: { min: 300, max: 900, title: { display: true, text: 'Score', font: { size: 12, weight: 600 } }, grid: { color: '#F1F5F9' } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+}
+
+// ========================= RENDERERS: MODEL PERFORMANCE =========================
+
+function renderModelKPIs(perf, drift) {
+  const safras = uniqueSorted(perf, 'safra');
+  const features = uniqueSorted(drift, 'feature_name');
+  const driftOK = drift.filter(d => d.drift_status === 'GREEN' || d.drift_status === 'OK').length;
+  const driftYellow = drift.filter(d => d.drift_status === 'YELLOW' || d.drift_status === 'WARNING').length;
+  const driftRed = drift.filter(d => d.drift_status === 'RED' || d.drift_status === 'CRITICAL').length;
+  const driftTotal = drift.length;
+
+  document.getElementById('kpiModel').innerHTML = [
+    kpiCard('accent-navy', 'navy', '\u25A6', 'Features Selected', '110', '5-stage funnel (357\u2192110)'),
+    kpiCard('accent-purple', 'purple', '\u25C9', 'Features Monitored', String(features.length), `${driftOK} GREEN \u00B7 ${driftYellow} YELLOW`),
+    kpiCard('accent-blue', 'blue', '\u29D6', 'Temporal Split', `${safras.length} SAFRAs`,
+      safras.length > 0 ? `${safras[0]} \u2192 ${safras[safras.length-1]}` : ''),
+    kpiCard(driftRed === 0 ? 'accent-green' : 'accent-warning',
+      driftRed === 0 ? 'green' : 'warning',
+      driftRed === 0 ? '\u2713' : '\u26A0',
+      'Drift Status', driftRed === 0 ? 'WARNING' : 'CRITICAL',
+      `${driftYellow} features drifting (PSI 0.09-0.18)`)
+  ].join('');
+}
+
+function renderAUCChart(perf) {
+  const safras = uniqueSorted(perf, 'safra');
+  const aucModels = [
+    { name: 'Ensemble (Top-3)', color: '#3b82f6', bg: 'rgba(59,130,246,0.08)', width: 3, radius: 5, fill: true },
+    { name: 'CatBoost', color: '#f97316', bg: 'rgba(249,115,22,0.06)', width: 2.5, radius: 4, fill: true },
+    { name: 'LightGBM v2', color: '#22c55e', bg: 'rgba(34,197,94,0.06)', width: 2.5, radius: 4, fill: false },
+    { name: 'XGBoost', color: '#8b5cf6', bg: 'rgba(139,92,246,0.05)', width: 2, radius: 4, fill: false }
+  ];
+
+  const datasets = aucModels.map(m => ({
+    label: m.name,
+    data: safras.map(s => { const r = perf.find(p => p.model_name === m.name && p.safra === s); return r ? r.auc_roc : null; }),
+    borderColor: m.color, backgroundColor: m.bg,
+    fill: m.fill, tension: 0.4, pointRadius: m.radius, borderWidth: m.width,
+    pointBackgroundColor: '#fff', pointBorderWidth: 2
+  }));
+
+  createOrUpdateChart('aucChart', {
+    type: 'line',
+    data: { labels: safras, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', labels: { usePointStyle: true, pointStyle: 'circle', padding: 16, font: { size: 12, weight: 500 } } } },
+      scales: {
+        y: { title: { display: true, text: 'AUC-ROC', font: { size: 12, weight: 600 } }, grid: { color: '#F1F5F9' } },
+        x: { title: { display: true, text: 'SAFRA', font: { size: 12, weight: 600 } }, grid: { display: false } }
+      },
+      interaction: { intersect: false, mode: 'index' }
+    }
+  });
+}
+
+function renderGiniChart(perf) {
+  const safras = uniqueSorted(perf, 'safra');
+  const giniModels = [
+    { name: 'Ensemble (Top-3)', color: '#3b82f6', bg: 'rgba(59,130,246,0.08)', width: 3, radius: 5, fill: true },
+    { name: 'CatBoost', color: '#f97316', bg: 'rgba(249,115,22,0.06)', width: 2.5, radius: 4, fill: true },
+    { name: 'LightGBM v2', color: '#22c55e', bg: 'rgba(34,197,94,0.06)', width: 2.5, radius: 4, fill: false },
+    { name: 'XGBoost', color: '#8b5cf6', bg: 'rgba(139,92,246,0.05)', width: 2, radius: 4, fill: false }
+  ];
+
+  const datasets = giniModels.map(m => ({
+    label: m.name,
+    data: safras.map(s => { const r = perf.find(p => p.model_name === m.name && p.safra === s); return r ? r.gini : null; }),
+    borderColor: m.color, backgroundColor: m.bg,
+    fill: m.fill, tension: 0.4, pointRadius: m.radius, borderWidth: m.width,
+    pointBackgroundColor: '#fff', pointBorderWidth: 2
+  }));
+
+  createOrUpdateChart('giniChart', {
+    type: 'line',
+    data: { labels: safras, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', labels: { usePointStyle: true, pointStyle: 'circle', padding: 16, font: { size: 12, weight: 500 } } } },
+      scales: {
+        y: { title: { display: true, text: 'Gini (%)', font: { size: 12, weight: 600 } }, grid: { color: '#F1F5F9' } },
+        x: { title: { display: true, text: 'SAFRA', font: { size: 12, weight: 600 } }, grid: { display: false } }
+      },
+      interaction: { intersect: false, mode: 'index' }
+    }
+  });
+}
+
+function renderComparisonTable(perf) {
+  const safras = uniqueSorted(perf, 'safra');
+  const compModels = [
+    { key: 'Ensemble (Top-3)', abbr: 'ENS', style: 'color:#3b82f6;font-weight:700;' },
+    { key: 'CatBoost', abbr: 'CAT', style: 'color:#f97316;font-weight:600;' },
+    { key: 'LightGBM v2', abbr: 'LGBM', style: '' },
+    { key: 'XGBoost', abbr: 'XGB', style: '' },
+    { key: 'Random Forest', abbr: 'RF', style: '' },
+    { key: 'LR L1 v2', abbr: 'LR', style: '' }
+  ];
+
+  let rows = '';
+  for (const s of safras) {
+    const firstMatch = compModels.map(m => perf.find(p => p.model_name === m.key && p.safra === s)).find(Boolean);
+    const dsType = (firstMatch || {}).dataset_type || '-';
+    let cells = `<td style="font-weight:600;">${s}</td><td>${statusBadge(dsType)}</td>`;
+    for (const m of compModels) {
+      const r = perf.find(p => p.model_name === m.key && p.safra === s);
+      cells += `<td style="${m.style}">${r ? formatNum(r.ks_statistic * 100) + '%' : '-'}</td>`;
+      cells += `<td style="${m.style}">${r ? formatNum(r.auc_roc, 4) : '-'}</td>`;
+      cells += `<td style="${m.style}">${r ? formatNum(r.gini) + '%' : '-'}</td>`;
+    }
+    rows += `<tr>${cells}</tr>`;
+  }
+
+  let headerCells = '<th>SAFRA</th><th>Dataset</th>';
+  for (const m of compModels) {
+    const hStyle = m.key === 'Ensemble (Top-3)' ? ' style="color:#3b82f6;"' : (m.key === 'CatBoost' ? ' style="color:#f97316;"' : '');
+    headerCells += `<th${hStyle}>${m.abbr} KS</th><th${hStyle}>${m.abbr} AUC</th><th${hStyle}>${m.abbr} Gini</th>`;
+  }
+
+  document.getElementById('comparisonTable').innerHTML = `<div class="table-wrap"><table>
+    <thead><tr>${headerCells}</tr></thead>
+    <tbody>${rows}</tbody></table></div>`;
+}
+
+function renderDriftTable(drift) {
+  const lgbmDrift = (drift.filter(d => d.model_name === 'Ensemble (Top-3)').length > 0
+    ? drift.filter(d => d.model_name === 'Ensemble (Top-3)')
+    : drift.filter(d => d.model_name === 'CatBoost')
+  ).sort((a, b) => b.feature_psi - a.feature_psi);
+  const safras = uniqueSorted(lgbmDrift, 'safra');
+  const latestSafra = safras[safras.length - 1];
+  const prevSafra = safras.length > 1 ? safras[safras.length - 2] : null;
+  const features = uniqueSorted(lgbmDrift, 'feature_name');
+  let rows = '';
+  for (const f of features) {
+    const latest = lgbmDrift.find(d => d.feature_name === f && d.safra === latestSafra);
+    const prev = prevSafra ? lgbmDrift.find(d => d.feature_name === f && d.safra === prevSafra) : null;
+    if (!latest) continue;
+    const psiLatest = latest.feature_psi;
+    const psiPrev = prev ? prev.feature_psi : null;
+    let trendHtml = '-';
+    if (psiPrev != null && psiPrev > 0) {
+      const pctChange = ((psiLatest - psiPrev) / psiPrev * 100);
+      const absPct = Math.abs(pctChange).toFixed(0);
+      const isWorse = psiLatest > psiPrev;
+      const arrow = isWorse ? '\u25B2' : '\u25BC';
+      const color = isWorse ? 'var(--error)' : 'var(--success)';
+      const label = isWorse ? `+${absPct}%` : `-${absPct}%`;
+      trendHtml = `<span style="color:${color};font-weight:600;">${arrow} ${label}</span>`;
+    }
+    rows += `<tr>
+      <td style="font-family:'Inter',monospace;font-size:12px;font-weight:500;">${f}</td>
+      <td>${psiPrev != null ? formatNum(psiPrev, 4) : '-'}</td>
+      <td>${formatNum(psiLatest, 4)}</td>
+      <td>${trendHtml}</td>
+      <td>${statusBadge(latest.drift_status)}</td>
+    </tr>`;
+  }
+  document.getElementById('driftTable').innerHTML = `<div class="table-wrap"><table>
+    <thead><tr><th>Feature</th><th>PSI (${prevSafra || '-'})</th><th>PSI (${latestSafra})</th><th>Trend</th><th>Status</th></tr></thead>
+    <tbody>${rows}</tbody></table></div>`;
+}
+
+// ========================= RENDERERS: OPERATIONS =========================
+
+function renderOpsKPIs(pipeline, cost) {
+  const totalCost = cost.reduce((sum, c) => sum + (c.cost_brl || 0), 0);
+  const successCount = pipeline.filter(p => p.status === 'SUCCESS').length;
+  const totalPipeline = pipeline.length;
+  const activeServices = cost.filter(c => c.notes && !c.notes.includes('stopped') && !c.notes.includes('not used') && !c.notes.includes('STOPPED') && !c.notes.includes('INACTIVE'));
+  const totalDuration = pipeline.reduce((sum, p) => sum + (p.duration_sec || 0), 0);
+
+  document.getElementById('kpiOps').innerHTML = [
+    kpiCard('accent-navy', 'navy', '\u2302', 'OCI Resources', `${cost.length}`, `${activeServices.length} active \u00B7 Always Free tier`),
+    kpiCard('accent-purple', 'purple', 'R$', 'Monthly Cost', `R$ ${totalCost.toFixed(0)}`,
+      cost.some(c => c.notes && c.notes.includes('Live from OCI'))
+        ? 'Live from OCI Usage API'
+        : (totalCost < 200 ? 'Within Always Free budget' : 'of R$ 2,500 Trial')),
+    kpiCard(successCount === totalPipeline ? 'accent-green' : 'accent-warning',
+      successCount === totalPipeline ? 'green' : 'warning',
+      successCount === totalPipeline ? '\u2713' : '\u26A0',
+      'Pipeline Stages', `${successCount}/${totalPipeline} SUCCESS`,
+      `Total: ${Math.round(totalDuration / 60)} min`),
+    kpiCard('accent-blue', 'blue', '\u29D6', 'Last Run', 'Run 20260311',
+      pipeline.length > 0 ? `${pipeline[0].started_at ? new Date(pipeline[0].started_at).toLocaleDateString('pt-BR') : '-'}` : '-')
+  ].join('');
+}
+
+function renderCostDonut(cost) {
+  const periods = uniqueSorted(cost, 'period');
+  const latestPeriod = periods[periods.length - 1];
+  const periodCost = cost.filter(c => c.period === latestPeriod);
+
+  // Show all services including R$0 (Always Free), use minimum 0.5 for visibility
+  const chartData = periodCost.map(c => c.cost_brl > 0 ? c.cost_brl : 0.5);
+  const chartLabels = periodCost.map(c => {
+    const free = (c.cost_brl || 0) === 0;
+    return free ? `${c.service_name} (Free)` : c.service_name;
+  });
+  const allColors = [COLORS.navy, COLORS.blue, COLORS.purple, COLORS.green, COLORS.orange, COLORS.slate, '#EC4899'];
+
+  createOrUpdateChart('costDonutChart', {
+    type: 'doughnut',
+    data: {
+      labels: chartLabels,
+      datasets: [{
+        data: chartData,
+        backgroundColor: periodCost.map((c, i) => (c.cost_brl || 0) === 0 ? '#E2E8F0' : allColors[i % allColors.length]),
+        borderColor: '#fff', borderWidth: 3, hoverOffset: 8
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '68%',
+      plugins: {
+        legend: { position: 'bottom', labels: { usePointStyle: true, pointStyle: 'circle', padding: 12, font: { size: 11, weight: 500 } } },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              const realCost = periodCost[ctx.dataIndex].cost_brl || 0;
+              return `${periodCost[ctx.dataIndex].service_name}: R$ ${realCost.toFixed(2)} ${realCost === 0 ? '(Always Free)' : ''}`;
+            }
+          }
+        },
+        title: { display: true, text: `Period: ${latestPeriod}`, color: COLORS.slate, font: { size: 13, weight: 600 } }
+      }
+    }
+  });
+}
+
+function renderCostTrend(cost) {
+  const periods = uniqueSorted(cost, 'period');
+  const services = uniqueSorted(cost, 'service_name');
+
+  const datasets = services.map((svc, i) => ({
+    label: svc,
+    data: periods.map(p => { const r = cost.find(c => c.period === p && c.service_name === svc); return r ? r.cost_brl : 0; }),
+    backgroundColor: CHART_SERIES[i % CHART_SERIES.length],
+    borderRadius: 4
+  }));
+
+  createOrUpdateChart('costTrendChart', {
+    type: 'bar',
+    data: { labels: periods, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'top', labels: { usePointStyle: true, pointStyle: 'rect', padding: 16, font: { size: 12, weight: 500 } } },
+        tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: R$ ${ctx.parsed.y.toFixed(2)}` } }
+      },
+      scales: {
+        x: { stacked: true, grid: { display: false } },
+        y: { stacked: true, title: { display: true, text: 'R$ (BRL)', font: { size: 12, weight: 600 } }, grid: { color: '#F1F5F9' } }
+      }
+    }
+  });
+}
+
+function renderPipelineTable(pipeline) {
+  const sorted = [...pipeline].sort((a, b) => {
+    const da = a.started_at || ''; const db = b.started_at || '';
+    return db.localeCompare(da);
+  });
+  let rows = '';
+  for (const p of sorted) {
+    const started = p.started_at ? new Date(p.started_at).toLocaleString('pt-BR') : '-';
+    rows += `<tr>
+      <td><strong>${p.stage}</strong></td>
+      <td>${statusBadge(p.status)}</td>
+      <td>${started}</td>
+      <td>${p.duration_sec ? p.duration_sec + 's' : '-'}</td>
+      <td>${p.records_in ? Number(p.records_in).toLocaleString('pt-BR') : '-'}</td>
+      <td style="color:var(--text-secondary);font-size:12px;">${p.notes || ''}</td>
+    </tr>`;
+  }
+  document.getElementById('pipelineTable').innerHTML = `<div class="table-wrap"><table>
+    <thead><tr><th>Stage</th><th>Status</th><th>Started</th><th>Duration</th><th>Records</th><th>Notes</th></tr></thead>
+    <tbody>${rows}</tbody></table></div>`;
+}
+
+// ========================= RENDERERS: GAP ANALYSIS =========================
+
+function renderGapPage() {
+  if (!GAP_DATA || GAP_DATA.length === 0) {
+    document.getElementById('kpiGap').innerHTML = '<p style="color:var(--text-secondary);padding:24px;">No gap analysis data available.</p>';
+    return;
+  }
+  // KPIs
+  const champion = GAP_DATA.find(d => d.model === 'Ens. Top-3 Avg');
+  const bestGap = GAP_DATA[0]; // Already sorted by gap asc
+  const worstGap = GAP_DATA[GAP_DATA.length - 1];
+  const avgGap = GAP_DATA.reduce((s, d) => s + ((d.ksTrain - d.ksOOT) / d.ksTrain * 100), 0) / GAP_DATA.length;
+
+  document.getElementById('kpiGap').innerHTML = [
+    kpiCard('accent-green', 'green', '\u2713', 'Champion GAP',
+      formatNum((champion.ksTrain - champion.ksOOT) / champion.ksTrain * 100, 1) + '%',
+      `${champion.model} — Stable`),
+    kpiCard('accent-navy', 'navy', '\u2193', 'Best Stability',
+      formatNum((bestGap.ksTrain - bestGap.ksOOT) / bestGap.ksTrain * 100, 1) + '%',
+      `${bestGap.model}`),
+    kpiCard('accent-error', 'warning', '\u2191', 'Worst GAP',
+      formatNum((worstGap.ksTrain - worstGap.ksOOT) / worstGap.ksTrain * 100, 1) + '%',
+      `${worstGap.model} — ${gapClassify((worstGap.ksTrain - worstGap.ksOOT) / worstGap.ksTrain * 100).label}`),
+    kpiCard('accent-blue', 'blue', '\u00D8', 'Avg GAP (All)',
+      formatNum(avgGap, 1) + '%',
+      `${GAP_DATA.length} models evaluated`)
+  ].join('');
+
+  // Bar chart: Absolute GAP
+  const labels = GAP_DATA.map(d => d.model);
+  const gaps = GAP_DATA.map(d => ((d.ksTrain - d.ksOOT) * 100).toFixed(2));
+  const barColors = GAP_DATA.map(d => {
+    const pct = (d.ksTrain - d.ksOOT) / d.ksTrain * 100;
+    if (pct < 10) return COLORS.green;
+    if (pct < 15) return COLORS.orange;
+    return COLORS.red;
+  });
+
+  createOrUpdateChart('gapBarChart', {
+    type: 'bar',
+    data: { labels, datasets: [{
+      label: 'KS GAP (pp)',
+      data: gaps,
+      backgroundColor: barColors.map(c => c + '33'),
+      borderColor: barColors,
+      borderWidth: 2,
+      borderRadius: 6
+    }]},
+    options: {
+      responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { title: { display: true, text: 'GAP (percentage points)', font: { size: 12, weight: 600 } }, grid: { color: '#F1F5F9' } },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+
+  // Bar chart: GAP %
+  const gapsPct = GAP_DATA.map(d => ((d.ksTrain - d.ksOOT) / d.ksTrain * 100).toFixed(1));
+
+  createOrUpdateChart('gapPctChart', {
+    type: 'bar',
+    data: { labels, datasets: [{
+      label: 'GAP Relativo (%)',
+      data: gapsPct,
+      backgroundColor: barColors.map(c => c + '33'),
+      borderColor: barColors,
+      borderWidth: 2,
+      borderRadius: 6
+    }]},
+    options: {
+      responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+      plugins: {
+        legend: { display: false },
+        annotation: {} // placeholder
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'GAP (%)', font: { size: 12, weight: 600 } },
+          grid: { color: '#F1F5F9' }
+        },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+
+  // Degradation chart: Train -> OOS -> OOT grouped bar
+  const stageLabels = ['Train', 'OOS', 'OOT'];
+  const degradationModels = GAP_DATA.filter(d => d.model !== 'Ens. Blend'); // skip duplicate
+  const modelColors = [COLORS.green, COLORS.blue, COLORS.navy, COLORS.purple, COLORS.orange, '#EC4899', COLORS.red];
+
+  createOrUpdateChart('degradationChart', {
+    type: 'bar',
+    data: {
+      labels: degradationModels.map(d => d.model),
+      datasets: [
+        { label: 'KS Train', data: degradationModels.map(d => (d.ksTrain * 100).toFixed(2)),
+          backgroundColor: 'rgba(27,45,65,0.7)', borderColor: COLORS.navy, borderWidth: 1.5, borderRadius: 4 },
+        { label: 'KS OOS', data: degradationModels.map(d => (d.ksOOS * 100).toFixed(2)),
+          backgroundColor: 'rgba(59,130,246,0.5)', borderColor: COLORS.blue, borderWidth: 1.5, borderRadius: 4 },
+        { label: 'KS OOT', data: degradationModels.map(d => (d.ksOOT * 100).toFixed(2)),
+          backgroundColor: 'rgba(16,185,129,0.5)', borderColor: COLORS.green, borderWidth: 1.5, borderRadius: 4 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', labels: { usePointStyle: true, pointStyle: 'rect', padding: 16, font: { size: 12, weight: 500 } } } },
+      scales: {
+        y: { min: 28, title: { display: true, text: 'KS (%)', font: { size: 12, weight: 600 } }, grid: { color: '#F1F5F9' } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+
+  // Full GAP table
+  let rows = '';
+  GAP_DATA.forEach((d, i) => {
+    const gapAbs = (d.ksTrain - d.ksOOT);
+    const gapPct = (gapAbs / d.ksTrain * 100);
+    const gapAucAbs = (d.aucTrain - d.aucOOT);
+    const gapAucPct = (gapAucAbs / d.aucTrain * 100);
+    const cls = gapClassify(gapPct);
+    const isChampion = d.model === 'Ens. Top-3 Avg';
+    const rowStyle = isChampion ? 'background:rgba(16,185,129,0.06);' : '';
+
+    rows += `<tr style="${rowStyle}">
+      <td style="font-weight:600;">${i + 1}</td>
+      <td style="font-weight:600;">${d.model}${isChampion ? ' <span style="color:var(--success);font-size:10px;font-weight:700;">CHAMPION</span>' : ''}</td>
+      <td><span style="font-size:10px;font-weight:600;color:var(--text-muted);text-transform:uppercase;">${d.type}</span></td>
+      <td>${formatNum(d.ksTrain, 5)}</td>
+      <td>${formatNum(d.ksOOT, 5)}</td>
+      <td style="font-weight:700;">${formatNum(gapAbs, 5)}</td>
+      <td style="font-weight:700;">${formatNum(gapPct, 1)}%</td>
+      <td>${formatNum(gapAucPct, 1)}%</td>
+      <td>${formatNum(d.psi, 6)}</td>
+      <td><span class="${cls.cls}">${cls.label}</span></td>
+    </tr>`;
+  });
+
+  document.getElementById('gapTable').innerHTML = `<div class="table-wrap"><table>
+    <thead><tr><th>#</th><th>Model</th><th>Type</th><th>KS Train</th><th>KS OOT</th><th>GAP (abs)</th><th>GAP (%)</th><th>AUC GAP (%)</th><th>PSI</th><th>Status</th></tr></thead>
+    <tbody>${rows}</tbody></table></div>`;
+}
+
+// ========================= NAVIGATION =========================
+function showPage(pageId, navEl) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+  navEl.classList.add('active');
+
+  const titles = { overview: 'Executive Overview', model: 'Model Performance', gap: 'Overfitting & GAP Analysis', operations: 'Operations & Costs' };
+  document.getElementById('pageTitle').textContent = titles[pageId] || '';
+
+  // Close sidebar on mobile
+  if (window.innerWidth <= 1024) {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebarOverlay').classList.remove('open');
+  }
+  setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
+}
+
+// ========================= INIT =========================
+loadAllData();
+</script>
+</body>
+</html>

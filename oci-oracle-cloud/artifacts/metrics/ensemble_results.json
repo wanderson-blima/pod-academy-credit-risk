@@ -1,0 +1,66 @@
+{
+  "champion_strategy": "average",
+  "strategies": {
+    "average": {
+      "ks_train": 0.39441,
+      "auc_train": 0.76611,
+      "ks_oos": 0.39047,
+      "auc_oos": 0.76295,
+      "ks_oot": 0.35005,
+      "auc_oot": 0.73677,
+      "gini_oot": 47.35,
+      "psi": 0.000754,
+      "weights": {
+        "LightGBM_v2": 0.3333,
+        "XGBoost": 0.3333,
+        "CatBoost": 0.3333
+      }
+    },
+    "blend": {
+      "ks_train": 0.39441,
+      "auc_train": 0.76611,
+      "ks_oos": 0.39047,
+      "auc_oos": 0.76295,
+      "ks_oot": 0.35005,
+      "auc_oot": 0.73677,
+      "gini_oot": 47.35,
+      "psi": 0.000754,
+      "weights": {
+        "LightGBM_v2": 0.3333,
+        "XGBoost": 0.3333,
+        "CatBoost": 0.3333
+      },
+      "optimizer_success": true,
+      "optimizer_message": "Optimization terminated successfully"
+    },
+    "stacking": {
+      "ks_train": 0.45681,
+      "auc_train": 0.80598,
+      "ks_oos": 0.46115,
+      "auc_oos": 0.80827,
+      "ks_oot": 0.31289,
+      "auc_oot": 0.7072,
+      "gini_oot": 41.44,
+      "psi": 0.001379,
+      "meta_learner_coefs": {
+        "LightGBM_v2": 1.2406,
+        "XGBoost": 24.731,
+        "CatBoost": -20.8917
+      },
+      "meta_learner_intercept": -3.7505
+    }
+  },
+  "quality_gate": {
+    "KS > 0.20": true,
+    "AUC > 0.65": true,
+    "Gini > 30": true,
+    "PSI < 0.25": true
+  },
+  "quality_gate_passed": true,
+  "base_models": [
+    "LightGBM_v2",
+    "XGBoost",
+    "CatBoost"
+  ],
+  "timestamp": "2026-03-11 02:24:46"
+}

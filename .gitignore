@@ -19,6 +19,8 @@
 .claude/
 squads/
 node_modules/
+.aios-sync.yaml
+docs/
 
 # ==========================================
 # Development Artifacts (stories, PRDs, reviews)
@@ -107,4 +109,4 @@ references/
 oci/artifacts/ensemble/ensemble_model.pkl
 oci/artifacts/ensemble/models_v2/RandomForest.pkl
 *.parquet
-
+_legacy/

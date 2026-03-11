@@ -1,0 +1,181 @@
+{
+  "total_records": 3900378,
+  "train_records": 2632587,
+  "production_records": 1267791,
+  "train_safras": [
+    202410,
+    202411,
+    202412,
+    202501
+  ],
+  "production_safras": [
+    202502,
+    202503
+  ],
+  "records_per_safra": {
+    "202410": 653586,
+    "202411": 665737,
+    "202412": 646037,
+    "202501": 667227,
+    "202502": 619961,
+    "202503": 647830
+  },
+  "safra_metrics": {
+    "202410": {
+      "safra": 202410,
+      "population": "TREINO",
+      "total_records": 653586,
+      "labeled_records": 436388,
+      "fpd_count": 89205,
+      "fpd_rate": 0.2044,
+      "score_mean": 538.7,
+      "score_median": 546,
+      "score_std": 214.8,
+      "risk_distribution": {
+        "BAIXO": 188025,
+        "MEDIO": 183230,
+        "ALTO": 169077,
+        "CRITICO": 113254
+      },
+      "ks": 0.4009,
+      "auc": 0.7704,
+      "gini": 54.07
+    },
+    "202411": {
+      "safra": 202411,
+      "population": "TREINO",
+      "total_records": 665737,
+      "labeled_records": 465850,
+      "fpd_count": 100835,
+      "fpd_rate": 0.2165,
+      "score_mean": 537.6,
+      "score_median": 545,
+      "score_std": 216.5,
+      "risk_distribution": {
+        "BAIXO": 191662,
+        "MEDIO": 185216,
+        "ALTO": 171020,
+        "CRITICO": 117839
+      },
+      "ks": 0.4024,
+      "auc": 0.7716,
+      "gini": 54.33
+    },
+    "202412": {
+      "safra": 202412,
+      "population": "TREINO",
+      "total_records": 646037,
+      "labeled_records": 456340,
+      "fpd_count": 98319,
+      "fpd_rate": 0.2155,
+      "score_mean": 541.4,
+      "score_median": 551,
+      "score_std": 213.2,
+      "risk_distribution": {
+        "MEDIO": 186222,
+        "BAIXO": 186209,
+        "ALTO": 165659,
+        "CRITICO": 107947
+      },
+      "ks": 0.3844,
+      "auc": 0.7595,
+      "gini": 51.89
+    },
+    "202501": {
+      "safra": 202501,
+      "population": "TREINO",
+      "total_records": 667227,
+      "labeled_records": 463673,
+      "fpd_count": 98847,
+      "fpd_rate": 0.2132,
+      "score_mean": 534.0,
+      "score_median": 543,
+      "score_std": 213.9,
+      "risk_distribution": {
+        "MEDIO": 189616,
+        "BAIXO": 186411,
+        "ALTO": 172292,
+        "CRITICO": 118908
+      },
+      "ks": 0.3905,
+      "auc": 0.763,
+      "gini": 52.59
+    },
+    "202502": {
+      "safra": 202502,
+      "population": "PRODUCAO",
+      "total_records": 619961,
+      "labeled_records": 430064,
+      "fpd_count": 90723,
+      "fpd_rate": 0.211,
+      "score_mean": 542.1,
+      "score_median": 551,
+      "score_std": 211.5,
+      "risk_distribution": {
+        "MEDIO": 180061,
+        "BAIXO": 178137,
+        "ALTO": 161121,
+        "CRITICO": 100642
+      },
+      "ks": 0.3441,
+      "auc": 0.734,
+      "gini": 46.8
+    },
+    "202503": {
+      "safra": 202503,
+      "population": "PRODUCAO",
+      "total_records": 647830,
+      "labeled_records": 444306,
+      "fpd_count": 95701,
+      "fpd_rate": 0.2154,
+      "score_mean": 534.9,
+      "score_median": 543,
+      "score_std": 212.1,
+      "risk_distribution": {
+        "MEDIO": 184504,
+        "BAIXO": 179808,
+        "ALTO": 172587,
+        "CRITICO": 110931
+      },
+      "ks": 0.3559,
+      "auc": 0.7393,
+      "gini": 47.87
+    }
+  },
+  "score_stats_all": {
+    "mean": 538.06,
+    "median": 546.0,
+    "min": 23,
+    "max": 982,
+    "std": 213.72
+  },
+  "score_stats_production": {
+    "mean": 538.41,
+    "median": 547.0,
+    "min": 24,
+    "max": 980,
+    "std": 211.85
+  },
+  "score_stats_train": {
+    "mean": 537.89,
+    "median": 546.0,
+    "min": 23,
+    "max": 982,
+    "std": 214.61
+  },
+  "risk_distribution_all": {
+    "BAIXO": 1110252,
+    "MEDIO": 1108849,
+    "ALTO": 1011756,
+    "CRITICO": 669521
+  },
+  "risk_distribution_production": {
+    "MEDIO": 364565,
+    "BAIXO": 357945,
+    "ALTO": 333708,
+    "CRITICO": 211573
+  },
+  "model_version": "ensemble-v1",
+  "preprocessing_note": "Pipeline includes SimpleImputer (training medians) + StandardScaler. No manual fillna applied.",
+  "timestamp": "2026-03-11T02:27:05.925537"
+}

@@ -1,0 +1,120 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# OCI Data Lakehouse — Terraform Variables
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# Copie este arquivo para terraform.tfvars e preencha com seus valores:
+#   cp terraform.tfvars.example terraform.tfvars
+#
+# Para encontrar os OCIDs:
+#   tenancy_ocid    → OCI Console > Profile > Tenancy: OCID
+#   user_ocid       → OCI Console > Profile > My Profile: OCID
+#   compartment_ocid → Identity > Compartments > seu compartment: OCID
+#   fingerprint     → Profile > API Keys > Fingerprint
+#   namespace       → Administration > Tenancy Details > Object Storage Namespace
+#
+# Documentacao: infrastructure/terraform/README.md
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+# ─── OCI Provider Credentials (REQUIRED) ─────────────────────────────────────
+# Gere API Key em: OCI Console > Profile > API Keys > Add API Key
+# Salve o private key PEM e anote o fingerprint
+
+tenancy_ocid     = "ocid1.tenancy.oc1..aaaaaaaaXXXXXXXXXXXXXX"
+user_ocid        = "ocid1.user.oc1..aaaaaaaaXXXXXXXXXXXXXX"
+fingerprint      = "aa:bb:cc:dd:ee:ff:00:11:22:33:44:55:66:77:88:99"
+private_key_path = "~/.oci/oci_api_key.pem"
+
+
+# ─── Project (REQUIRED) ──────────────────────────────────────────────────────
+# Compartment: crie um dedicado para o projeto em Identity > Compartments
+# Namespace: visivel em Administration > Tenancy Details
+
+compartment_ocid = "ocid1.compartment.oc1..aaaaaaaaXXXXXXXXXXXXXX"
+namespace        = "your-object-storage-namespace"
+
+
+# ─── Region ──────────────────────────────────────────────────────────────────
+# Regiao do datacenter. sa-saopaulo-1 = Sao Paulo (menor latencia para Brasil)
+
+region = "sa-saopaulo-1"
+
+
+# ─── Project Settings ────────────────────────────────────────────────────────
+# prefix: prefixo para nomes de recursos (buckets, instancias, etc.)
+# environment: label para separar ambientes (dev, staging, prod)
+
+prefix      = "pod-academy"
+environment = "dev"
+
+
+# ─── Network ─────────────────────────────────────────────────────────────────
+# CIDR da VCN. /16 oferece 65K IPs. Nao alterar a menos que haja conflito.
+
+vcn_cidr = "10.0.0.0/16"
+
+
+# ─── Database (ADW) ──────────────────────────────────────────────────────────
+# Always Free: use_free_tier = true (2 ECPUs, 20 GB storage, sem custo)
+# Pago: use_free_tier = false (mais performance, consome trial credit)
+# APEX e habilitado automaticamente em ambos os casos.
+
+adw_ecpu_count = 2
+use_free_tier  = true    # RECOMENDADO: Always Free para trial
+
+
+# ─── Data Flow (Spark) ───────────────────────────────────────────────────────
+# Shapes dos nodes Spark. E4.Flex oferece boa relacao custo/performance.
+# Custo: ~R$ 0.20/OCPU/hora de execucao (sob demanda, nao 24x7)
+# Pipeline completo (Bronze+Silver+Gold): ~R$ 50 por execucao
+
+driver_shape        = "VM.Standard.E4.Flex"
+executor_shape      = "VM.Standard.E4.Flex"
+executor_ocpus      = 1       # OCPUs por executor
+executor_memory_gb  = 16      # Memoria por executor (16 GB/OCPU para E4)
+max_executors       = 4       # Pool maximo
+num_executors       = 1       # Executors para Bronze/Silver
+num_executors_heavy = 2       # Executors para Gold (feature engineering)
+
+
+# ─── Data Science Notebook ───────────────────────────────────────────────────
+# Usado para desenvolvimento interativo e experimentacao.
+# Trial: ate 24 E4 OCPUs para Data Science (separado do limite compute)
+# Custo: ~R$ 2/hora (10 OCPUs). PARAR quando nao em uso!
+
+notebook_shape     = "VM.Standard.E4.Flex"
+notebook_ocpus     = 10       # OCPUs (trial max: 24 E4)
+notebook_memory_gb = 160      # 16 GB/OCPU para E4.Flex
+
+
+# ─── Orchestrator (Airflow VM) ───────────────────────────────────────────────
+# VM com Docker + Airflow. Roda os scripts Python localmente.
+# Custo idle (2 OCPUs): ~R$ 0.40/hora. ML (4 OCPUs): ~R$ 0.80/hora
+# RECOMENDACAO: manter 2/16 e resize para 4/64 apenas durante ML pipeline.
+# Resize: bash orchestrator-lifecycle.sh resize-up/resize-down
+
+availability_domain    = "TjOZ:SA-SAOPAULO-1-AD-1"   # Verificar em sua regiao
+ssh_public_key         = ""                            # Conteudo da chave publica SSH
+orchestrator_shape     = "VM.Standard.E3.Flex"         # E3 ou E4.Flex
+orchestrator_ocpus     = 2                             # 2 idle, 4 para ML
+orchestrator_memory_gb = 16                            # 16 idle, 64 para ML
+create_orchestrator    = true
+
+
+# ─── Cost Management ─────────────────────────────────────────────────────────
+# Budget alert: envia email quando o gasto atinge o limite.
+# NAO bloqueia recursos — apenas notificacao.
+# Trial OCI: US$ 500 (aproximadamente R$ 2.500)
+
+monthly_budget   = 500                          # BRL (alerta, nao limite)
+alert_recipients = "your-email@example.com"     # Email para alertas
+
+
+# ─── Security ────────────────────────────────────────────────────────────────
+# ssh_allowed_cidr: CIDR com acesso SSH. Default: apenas dentro da VCN.
+#   Para acesso externo (nao recomendado): "0.0.0.0/0"
+# enable_vault: Cria OCI Vault + CMK para encriptacao dos buckets.
+#   Custo: ~R$ 15/mes por chave. Desabilitar se nao necessario.
+
+ssh_allowed_cidr = "10.0.0.0/16"    # Apenas VCN (seguro)
+enable_vault     = true              # Encriptacao customer-managed

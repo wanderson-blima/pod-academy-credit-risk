@@ -1,0 +1,43 @@
+{
+  "model_type": "ensemble",
+  "strategy": "average",
+  "n_base_models": 3,
+  "base_models": [
+    "LightGBM_v2",
+    "XGBoost",
+    "CatBoost"
+  ],
+  "metrics": {
+    "ks_oot": 0.35005,
+    "auc_oot": 0.73677,
+    "gini_oot": 47.35,
+    "psi": 0.000754,
+    "ks_train": 0.39441,
+    "auc_train": 0.76611,
+    "ks_oos": 0.39047,
+    "auc_oos": 0.76295
+  },
+  "n_features": 110,
+  "target": "FPD",
+  "train_safras": [
+    202410,
+    202411,
+    202412,
+    202501
+  ],
+  "oos_safras": [
+    202501
+  ],
+  "oot_safras": [
+    202502,
+    202503
+  ],
+  "quality_gate_passed": true,
+  "quality_gate_details": {
+    "KS > 0.20": true,
+    "AUC > 0.65": true,
+    "Gini > 30": true,
+    "PSI < 0.25": true
+  },
+  "timestamp": "2026-03-11 02:24:46"
+}

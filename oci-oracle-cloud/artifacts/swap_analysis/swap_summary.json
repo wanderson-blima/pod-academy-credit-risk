@@ -1,0 +1,122 @@
+{
+  "timestamp": "2026-03-11T03:14:52.421683",
+  "total_records": 3900378,
+  "labeled_records": 2696621,
+  "unlabeled_records": 1203757,
+  "labeled_fpd_rate": 0.212722,
+  "psi_labeled_vs_unlabeled": 0.643502,
+  "score_stats": {
+    "labeled": {
+      "mean": 603.8880732590898,
+      "median": 620.0,
+      "std": 187.87326578166497
+    },
+    "unlabeled": {
+      "mean": 449.70567813935867,
+      "median": 420.0,
+      "std": 188.35166482432535
+    }
+  },
+  "by_safra": {
+    "202410": {
+      "total": 653586,
+      "labeled": 436388,
+      "unlabeled": 217198,
+      "fpd_rate": 0.204417
+    },
+    "202411": {
+      "total": 665737,
+      "labeled": 465850,
+      "unlabeled": 199887,
+      "fpd_rate": 0.216454
+    },
+    "202412": {
+      "total": 646037,
+      "labeled": 456340,
+      "unlabeled": 189697,
+      "fpd_rate": 0.215451
+    },
+    "202501": {
+      "total": 667227,
+      "labeled": 463673,
+      "unlabeled": 203554,
+      "fpd_rate": 0.213183
+    },
+    "202502": {
+      "total": 619961,
+      "labeled": 430064,
+      "unlabeled": 189897,
+      "fpd_rate": 0.210952
+    },
+    "202503": {
+      "total": 647830,
+      "labeled": 444306,
+      "unlabeled": 203524,
+      "fpd_rate": 0.215394
+    }
+  },
+  "cutoff_analysis": [
+    {
+      "cutoff": 300,
+      "approved_count": 2514949,
+      "approved_pct": 93.26,
+      "approved_fpd_rate": 0.184333,
+      "rejected_count": 181672,
+      "rejected_fpd_rate": 0.605712,
+      "swap_in_count": 71631,
+      "swap_in_pct_of_rejected": 39.43,
+      "swap_out_count": 463589,
+      "swap_out_pct_of_approved": 18.43
+    },
+    {
+      "cutoff": 400,
+      "approved_count": 2250450,
+      "approved_pct": 83.45,
+      "approved_fpd_rate": 0.156011,
+      "rejected_count": 446171,
+      "rejected_fpd_rate": 0.498766,
+      "swap_in_count": 223636,
+      "swap_in_pct_of_rejected": 50.12,
+      "swap_out_count": 351095,
+      "swap_out_pct_of_approved": 15.6
+    },
+    {
+      "cutoff": 500,
+      "approved_count": 1877480,
+      "approved_pct": 69.62,
+      "approved_fpd_rate": 0.124743,
+      "rejected_count": 819141,
+      "rejected_fpd_rate": 0.414371,
+      "swap_in_count": 479713,
+      "swap_in_pct_of_rejected": 58.56,
+      "swap_out_count": 234202,
+      "swap_out_pct_of_approved": 12.47
+    },
+    {
+      "cutoff": 600,
+      "approved_count": 1450020,
+      "approved_pct": 53.77,
+      "approved_fpd_rate": 0.096899,
+      "rejected_count": 1246601,
+      "rejected_fpd_rate": 0.347444,
+      "swap_in_count": 813477,
+      "swap_in_pct_of_rejected": 65.26,
+      "swap_out_count": 140506,
+      "swap_out_pct_of_approved": 9.69
+    },
+    {
+      "cutoff": 700,
+      "approved_count": 977829,
+      "approved_pct": 36.26,
+      "approved_fpd_rate": 0.0715,
+      "rejected_count": 1718792,
+      "rejected_fpd_rate": 0.293063,
+      "swap_in_count": 1215077,
+      "swap_in_pct_of_rejected": 70.69,
+      "swap_out_count": 69915,
+      "swap_out_pct_of_approved": 7.15
+    }
+  ],
+  "recommended_cutoff": 700,
+  "recommendation_rationale": "Cutoff 700 approves 36.3% of population with FPD rate 0.0715 (<= 2x overall rate 0.2127). Swap-out: 69,915 bad customers (7.2% of approved)."
+}

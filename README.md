@@ -10,6 +10,9 @@
     <img src="https://img.shields.io/badge/PySpark-3.x-E25A1C?logo=apachespark&logoColor=white" alt="PySpark">
     <img src="https://img.shields.io/badge/Terraform-IaC-7B42BC?logo=terraform&logoColor=white" alt="Terraform">
     <img src="https://img.shields.io/badge/LightGBM-GBDT-green?logo=lightgbm" alt="LightGBM">
+    <img src="https://img.shields.io/badge/XGBoost-GBDT-blue" alt="XGBoost">
+    <img src="https://img.shields.io/badge/CatBoost-GBDT-yellow" alt="CatBoost">
+    <img src="https://img.shields.io/badge/Airflow-Orchestration-017CEE?logo=apacheairflow&logoColor=white" alt="Airflow">
     <img src="https://img.shields.io/badge/Delta_Lake-Storage-003366" alt="Delta Lake">
   </p>
 </p>
@@ -20,54 +23,70 @@
 
 Clientes migrando de planos **Pre-pago para Controle** (pos-pago) representam um risco de credito que precisa ser quantificado. Este projeto constroi um **score de risco** que prediz a probabilidade de inadimplencia no primeiro pagamento (**FPD — First Payment Default**), permitindo decisoes de credito mais assertivas.
 
-Desenvolvido em parceria com **Claro** e **Oracle**, o projeto apresenta **duas arquiteturas completas** que processam **3.9 milhoes de registros** com **402+ features** extraidas de dados transacionais, comportamentais e demograficos.
+Desenvolvido em parceria com **Claro** e **Oracle**, o projeto apresenta **duas arquiteturas completas** que processam **3.9 milhoes de registros** com **402+ features** extraidas de dados transacionais, comportamentais e demograficos. A plataforma OCI treina **5 modelos com hiperparametros otimizados (HPO)** e seleciona um **ensemble champion** (Top-3 Average) que supera qualquer modelo individual.
 
 ---
 
-## Arquiteturas
+## Resultados Alcancados
 
-O projeto implementa o pipeline de credit risk em duas plataformas cloud, demonstrando portabilidade e evolucao:
+### Ensemble Champion — Top-3 Average (LightGBM + XGBoost + CatBoost)
 
-| | Microsoft Fabric | Oracle Cloud (OCI) |
-|---|---|---|
-| **Pipeline** | Medallion (Bronze/Silver/Gold) via PySpark + Delta Lake | Medallion via Data Flow (Spark) + Object Storage + ADW |
-| **Feature Store** | `Gold.feature_store.clientes_consolidado` | Autonomous Data Warehouse |
-| **Modelos** | LR L1 + LightGBM (MLflow) | LR L1 + LightGBM (local + OCI Data Science) |
-| **Infra** | Workspace Fabric (PaaS) | Terraform IaC — 7 modulos, 43 recursos (IaaS/PaaS) |
-| **Deploy** | Scoring batch via notebook | Container Docker-ready + endpoint REST |
-| **Detalhes** | [`fabric/README.md`](fabric/README.md) | [`oci/README.md`](oci/README.md) |
+| Metrica | Valor |
+|---------|-------|
+| **KS OOT** | **0.3501** |
+| **AUC OOT** | **0.7368** |
+| **Gini OOT** | **47.35%** |
+| **PSI** | **0.000754** |
 
-```mermaid
-graph LR
-    A[Dados Brutos<br/>CSV/Excel/Parquet] --> B[BRONZE<br/>Ingestao]
-    B --> C[SILVER<br/>Limpeza + Tipagem]
-    C --> D[GOLD<br/>Feature Store<br/>402 features]
-    D --> E[Modelos<br/>LR + LGBM]
-    E --> F[Scoring<br/>0-1000]
+### Performance dos 5 Modelos + Ensemble
 
-    style A fill:#f9f,stroke:#333
-    style D fill:#ffd700,stroke:#333
-    style F fill:#90ee90,stroke:#333
-```
+| Modelo | KS OOT | AUC OOT | Gini OOT | PSI |
+|--------|--------|---------|----------|-----|
+| LR L1 v2 | 0.3314 | 0.7231 | 44.62% | 0.001361 |
+| LightGBM v2 (HPO) | 0.3494 | 0.7365 | 47.29% | 0.000933 |
+| XGBoost (HPO) | 0.3494 | 0.7362 | 47.24% | 0.000817 |
+| CatBoost (HPO) | 0.3482 | 0.7354 | 47.08% | 0.000563 |
+| Random Forest | 0.3370 | 0.7278 | 45.56% | 0.001209 |
+| **Ensemble Top-3 Avg** | **0.3501** | **0.7368** | **47.35%** | **0.000754** |
 
----
+### Confusion Matrix (Cutoff 700)
 
-## Resultados do Modelo
+| Metrica | Valor |
+|---------|-------|
+| Precision | 93,13% |
+| Recall (Sensibilidade) | 40,33% |
+| Specificity | 88,99% |
+| F1-Score | 56,28% |
+| Aprovados | 919.274 (34,1%) |
+| FPD rate aprovados | 6,87% |
 
-| Modelo | KS (OOT) | AUC (OOT) | Gini (OOT) | KS (OOS) | AUC (OOS) |
-|--------|-----------|-----------|-------------|----------|-----------|
-| **LightGBM (baseline)** | **33.97%** | **0.7303** | **46.06 pp** | 35.89% | 0.7437 |
-| Logistic Regression L1 | 32.77% | 0.7207 | 44.15 pp | 34.79% | 0.7347 |
-| *Benchmark (Score Bureau)* | *33.10%* | *—* | *—* | *—* | *—* |
+### Faixas de Risco
 
-> O modelo LightGBM **supera o benchmark do Score Bureau** em 0.87 pp de KS, com estabilidade temporal validada (PSI < 0.002).
+| Faixa | Score | Clientes | FPD |
+|-------|-------|----------|-----|
+| CRITICO | 0–299 | 206.535 | 59,2% |
+| ALTO | 300–499 | 652.566 | 34,8% |
+| MEDIO | 500–699 | 918.246 | 17,5% |
+| BAIXO | 700–1000 | 919.274 | 6,9% |
 
-### Destaques
+### Impacto Financeiro
 
-- **Lift 2.47x** no top decil — 52.7% de taxa de default vs 21.3% media
-- **59 features** selecionadas de 398 por pipeline de 4 etapas (IV + L1 + Correlacao + LGBM)
-- **PSI < 0.002** entre periodos de treino e teste (distribuicao estavel)
-- **Paridade OCI 100%** — 10/10 metricas PASS, pipeline portado com Terraform IaC (R$ 171 acumulado / US$ 500 trial credit)
+| Indicador | Valor |
+|-----------|-------|
+| **Economia de perda (cutoff 700)** | **R$ 22,9M** |
+| Reducao de FPD | 21,3% → 6,9% (-68%) |
+| ROI vs infra OCI | > 11.000x (~R$ 168/mes) |
+| Gain top 10% | 26,4% dos inadimplentes (lift 2,64x) |
+| Gain top 30% | 58,7% dos inadimplentes |
+
+### Quality Gate QG-05
+
+| Criterio | Threshold | Resultado | Status |
+|----------|-----------|-----------|--------|
+| KS OOT | > 0.20 | 0.3501 | PASS |
+| AUC OOT | > 0.65 | 0.7368 | PASS |
+| Gini OOT | > 30% | 47.35% | PASS |
+| PSI | < 0.25 | 0.000754 | PASS |
 
 ### Visualizacoes do Modelo
 
@@ -83,32 +102,71 @@ graph LR
 
 ---
 
+## Arquiteturas
+
+O projeto implementa o pipeline de credit risk em duas plataformas cloud, demonstrando portabilidade e evolucao:
+
+| | Microsoft Fabric | Oracle Cloud (OCI) |
+|---|---|---|
+| **Pipeline** | Medallion (Bronze/Silver/Gold) via PySpark + Delta Lake | Medallion via Object Storage + E3.Flex VM |
+| **Feature Store** | `Gold.feature_store.clientes_consolidado` | Object Storage (Parquet) + ADW |
+| **Modelos** | LR L1 + LightGBM (MLflow) | 5 modelos HPO + Ensemble Champion |
+| **Infra** | Workspace Fabric (PaaS) | Terraform IaC (8 modulos) + Airflow |
+| **Orchestracao** | Manual (notebooks) | 2 Airflow DAGs (Data + ML) |
+| **Deploy** | Scoring batch via notebook | 6 ScoringPipeline PKLs self-contained |
+| **Detalhes** | [`fabric/README.md`](fabric/README.md) | [`oci-oracle-cloud/README.md`](oci-oracle-cloud/README.md) |
+
+```mermaid
+graph LR
+    A[Dados Brutos<br/>CSV/Excel/Parquet] --> B[BRONZE<br/>19 tabelas]
+    B --> C[SILVER<br/>Limpeza + Dedup]
+    C --> D[GOLD<br/>Feature Store<br/>402 features]
+    D --> E[Feature Selection<br/>357 → 110]
+    E --> F[5 Modelos HPO<br/>LR·LGBM·XGB·CB·RF]
+    F --> G[Ensemble<br/>Top-3 Average]
+    G --> H[Scoring<br/>0-1000]
+    H --> I[Confusion Matrix<br/>+ Faixas de Risco]
+
+    style A fill:#f9f,stroke:#333
+    style D fill:#ffd700,stroke:#333
+    style G fill:#90ee90,stroke:#333
+    style H fill:#87ceeb,stroke:#333
+```
+
+---
+
 ## Estrutura do Repositorio
 
 ```
 projeto-final/
-├── fabric/                    # Microsoft Fabric (pipeline original)
-│   ├── src/                   #   Codigo-fonte (ingestao, tipagem, features, modelo)
-│   ├── notebooks/             #   EDAs e analise exploratoria
-│   ├── config/                #   Configuracao centralizada
-│   ├── artifacts/             #   Modelos treinados, metricas, plots
-│   ├── schemas/               #   DDLs + metadados enriquecidos
-│   └── docs/                  #   Arquitetura, features, modelagem
+├── oci-oracle-cloud/              # Entrega oficial OCI (producao)
+│   ├── scripts/                   #   10 scripts Python de producao
+│   ├── artifacts/                 #   Modelos, metricas, plots (Run 20260311)
+│   ├── infrastructure/            #   Terraform, Airflow DAGs, ADW, APEX
+│   ├── deliverable/               #   6 ScoringPipeline PKLs self-contained
+│   ├── research/                  #   Pesquisa: 6 fases (diagnostic → production)
+│   ├── notebooks/                 #   12 Jupyter notebooks
+│   └── docs/                      #   Arquitetura, modelo, operacoes, pipeline
 │
-├── oci/                       # Oracle Cloud Infrastructure (evolucao cloud-native)
-│   ├── infrastructure/        #   Terraform IaC (7 modulos) + ops scripts
-│   ├── pipeline/              #   ETL: ingest_bronze, transform_silver, engineer_gold
-│   ├── model/                 #   train, evaluate, scoring, deploy, monitor, OCI metrics
-│   ├── infrastructure/apex/   #   Dashboard ORDS ao vivo (Chart.js, dark theme, 3 paginas)
-│   ├── artifacts/             #   Modelos OCI (.pkl) + metricas + monitoring
-│   ├── deliverable/           #   Entregavel: scoring Docker-ready
-│   └── docs/                  #   PRD, reports, runbook, cost dashboard
+├── fabric/                        # Microsoft Fabric (pipeline original)
+│   ├── src/                       #   Codigo-fonte (ingestao, tipagem, features, modelo)
+│   ├── notebooks/                 #   EDAs e analise exploratoria
+│   ├── config/                    #   Configuracao centralizada
+│   ├── artifacts/                 #   Modelos treinados, metricas, plots
+│   ├── schemas/                   #   DDLs + metadados enriquecidos
+│   └── docs/                      #   Arquitetura, features, modelagem
 │
-├── docs/                      # Documentacao compartilhada
-│   ├── presentation/          #   Apresentacao do hackathon
-│   └── report.html            #   Relatorio consolidado
+├── _legacy/                       # Versoes anteriores (oci/, oci-project/, oci-final/)
 │
-├── README.md                  # <- Voce esta aqui
+├── 1-ingestao-dados/              # Notebooks Fabric — Ingestao
+├── 2-metadados/                   # Notebooks Fabric — Tipagem + Dedup
+├── 3-edas/                        # Notebooks Fabric — EDA
+├── 4-construcao-books/            # Notebooks Fabric — Feature Engineering
+│
+├── docs/                          # Documentacao compartilhada
+├── squads/                        # Squads de agentes AI (Synkra AIOS)
+├── references/                    # Referencias e materiais de apoio
+├── README.md                      # <- Voce esta aqui
 └── LICENSE
 ```
 
@@ -130,14 +188,31 @@ projeto-final/
 
 | # | Etapa | Script | Descricao |
 |---|-------|--------|-----------|
-| 0 | Infra | [`oci/infrastructure/terraform/`](oci/infrastructure/terraform/) | `terraform apply` — provisiona toda a infra (7 modulos, 43 recursos) |
-| 1 | Bronze | [`oci/pipeline/ingest_bronze.py`](oci/pipeline/ingest_bronze.py) | Ingestao → Object Storage |
-| 2 | Silver | [`oci/pipeline/transform_silver.py`](oci/pipeline/transform_silver.py) | Transformacao via Data Flow |
-| 3 | Gold | [`oci/pipeline/engineer_gold.py`](oci/pipeline/engineer_gold.py) | Feature engineering → ADW |
-| 4 | Modelo | [`oci/model/train_credit_risk.py`](oci/model/train_credit_risk.py) | Treinamento LR + LGBM |
-| 5 | Deploy | [`oci/model/deploy_endpoint.py`](oci/model/deploy_endpoint.py) | Endpoint REST |
-| 6 | Monitor | [`oci/model/monitor_model.py`](oci/model/monitor_model.py) | PSI + feature drift monitoring |
-| 7 | Dashboard | [`oci/infrastructure/apex/`](oci/infrastructure/apex/) | [Dashboard ORDS ao vivo](https://G95D3985BD0D2FD-PODACADEMY.adb.sa-saopaulo-1.oraclecloudapps.com/ords/mlmonitor/dashboard/) — KPIs, charts, custos |
+| 1 | Data Quality | [`oci-oracle-cloud/scripts/data_quality.py`](oci-oracle-cloud/scripts/data_quality.py) | Validacao Bronze/Silver/Gold |
+| 2 | Feature Selection | [`oci-oracle-cloud/scripts/feature_selection.py`](oci-oracle-cloud/scripts/feature_selection.py) | Funnel 5 estagios (357 → 110 features) |
+| 3 | Treinamento | [`oci-oracle-cloud/scripts/train_credit_risk.py`](oci-oracle-cloud/scripts/train_credit_risk.py) | 5 modelos com HPO |
+| 4 | Ensemble | [`oci-oracle-cloud/scripts/ensemble.py`](oci-oracle-cloud/scripts/ensemble.py) | 3 estrategias, selecao champion |
+| 5 | Scoring | [`oci-oracle-cloud/scripts/batch_scoring.py`](oci-oracle-cloud/scripts/batch_scoring.py) | Scoring batch (3.9M clientes) |
+| 6 | Monitoring | [`oci-oracle-cloud/scripts/monitoring.py`](oci-oracle-cloud/scripts/monitoring.py) | PSI, drift, backtesting |
+| 7 | Confusion Matrix | [`oci-oracle-cloud/scripts/confusion_matrix_analysis.py`](oci-oracle-cloud/scripts/confusion_matrix_analysis.py) | Analise por cutoff + faixas de risco |
+| 8 | Swap Analysis | [`oci-oracle-cloud/scripts/swap_analysis.py`](oci-oracle-cloud/scripts/swap_analysis.py) | Swap-in/swap-out por cutoff |
+
+**Orquestracao**: 2 Airflow DAGs — [`credit_risk_data_pipeline`](oci-oracle-cloud/infrastructure/dags/credit_risk_data_pipeline.py) (Bronze → Silver → Gold) e [`credit_risk_ml_pipeline`](oci-oracle-cloud/infrastructure/dags/credit_risk_ml_pipeline.py) (FS → Train → Ensemble → Score → Monitor)
+
+---
+
+## Pesquisa e Desenvolvimento
+
+O projeto inclui uma fase de pesquisa estruturada em **6 etapas**, documentada em [`oci-oracle-cloud/research/`](oci-oracle-cloud/research/):
+
+| Fase | Descricao |
+|------|-----------|
+| 01 - Diagnostic | Analise exploratoria, correlacoes, estabilidade |
+| 02 - Feature Engineering | Interacoes, ratios, PCA, transformacoes nao-lineares |
+| 03 - HPO | Otimizacao de hiperparametros (Optuna) para LGBM, XGBoost, CatBoost |
+| 04 - Models | Treinamento multi-modelo, analise de diversidade |
+| 05 - Ensemble | Blend, stack, selecao de ensemble |
+| 06 - Production | Avaliacao final, scorecard, MODEL_CARD |
 
 ---
 
@@ -147,11 +222,13 @@ projeto-final/
 |------------|--------|-----|
 | Plataforma | Microsoft Fabric | Oracle Cloud Infrastructure |
 | Storage | Delta Lake (OneLake) | Object Storage + ADW |
-| Processamento | PySpark 3.x | OCI Data Flow (Spark) |
-| ML | scikit-learn, LightGBM | scikit-learn, LightGBM |
-| Tracking | MLflow 2.12.2 | Local artifacts |
-| IaC | N/A (PaaS) | Terraform (7 modulos, 43 recursos) |
-| Deploy | Notebook batch | Docker container |
+| Processamento | PySpark 3.x | PyArrow + Pandas (E3.Flex VM) |
+| ML | scikit-learn, LightGBM | scikit-learn, LightGBM, XGBoost, CatBoost, Optuna |
+| Orchestracao | Manual | Apache Airflow (Docker Compose) |
+| Tracking | MLflow 2.12.2 | JSON artifacts + PKL pipelines |
+| IaC | N/A (PaaS) | Terraform (8 modulos) |
+| Deploy | Notebook batch | 6 ScoringPipeline PKLs |
+| Dashboard | N/A | APEX (ADW Always Free) |
 
 ## Volumes de Dados
 
@@ -169,15 +246,19 @@ projeto-final/
 | Documento | Link |
 |-----------|------|
 | Pipeline Fabric | [`fabric/README.md`](fabric/README.md) |
-| Pipeline OCI | [`oci/README.md`](oci/README.md) |
+| Pipeline OCI | [`oci-oracle-cloud/README.md`](oci-oracle-cloud/README.md) |
+| Guia de Execucao OCI | [`oci-oracle-cloud/EXECUTION-GUIDE.md`](oci-oracle-cloud/EXECUTION-GUIDE.md) |
 | Arquitetura de Dados | [`fabric/docs/architecture/data-architecture.md`](fabric/docs/architecture/data-architecture.md) |
 | Feature Engineering | [`fabric/docs/feature-engineering/`](fabric/docs/feature-engineering/) |
 | Resultados do Modelo | [`fabric/docs/modeling/model-results.md`](fabric/docs/modeling/model-results.md) |
 | Decisoes Tecnicas | [`fabric/docs/technical-decisions.md`](fabric/docs/technical-decisions.md) |
-| OCI Validation Report | [`oci/docs/oci-e2e-validation-report.md`](oci/docs/oci-e2e-validation-report.md) |
-| OCI Operations Runbook | [`oci/docs/operations-runbook.md`](oci/docs/operations-runbook.md) |
-| OCI Cost Dashboard | [`oci/docs/cost-dashboard.md`](oci/docs/cost-dashboard.md) |
-| OCI Documentation Package | [`oci/docs/final-documentation-package.md`](oci/docs/final-documentation-package.md) |
+| Confusion Matrix Analysis | [`oci-oracle-cloud/docs/model/confusion-matrix-analysis.md`](oci-oracle-cloud/docs/model/confusion-matrix-analysis.md) |
+| Analise de Valor Financeiro | [`oci-oracle-cloud/docs/model/business-value-analysis.md`](oci-oracle-cloud/docs/model/business-value-analysis.md) |
+| Selecao do Ensemble | [`oci-oracle-cloud/docs/model/ensemble-selection.md`](oci-oracle-cloud/docs/model/ensemble-selection.md) |
+| Swap Analysis | [`oci-oracle-cloud/docs/model/swap-analysis.md`](oci-oracle-cloud/docs/model/swap-analysis.md) |
+| Pesquisa (6 fases) | [`oci-oracle-cloud/research/README.md`](oci-oracle-cloud/research/README.md) |
+| Artefatos OCI | [`oci-oracle-cloud/artifacts/README.md`](oci-oracle-cloud/artifacts/README.md) |
+| OCI Operations Runbook | [`oci-oracle-cloud/docs/operations/`](oci-oracle-cloud/docs/operations/) |
 | Apresentacao | [`docs/presentation/`](docs/presentation/) |
 
 ---
