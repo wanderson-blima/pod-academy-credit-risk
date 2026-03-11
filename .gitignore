@@ -20,7 +20,6 @@
 squads/
 node_modules/
 .aios-sync.yaml
-docs/
 
 # ==========================================
 # Development Artifacts (stories, PRDs, reviews)
