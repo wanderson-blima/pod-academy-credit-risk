@@ -88,16 +88,36 @@ Desenvolvido em parceria com **Claro** e **Oracle**, o projeto apresenta **duas 
 | Gini OOT | > 30% | 47.35% | PASS |
 | PSI | < 0.25 | 0.000754 | PASS |
 
-### Visualizacoes do Modelo
+### Visualizacoes do Modelo (Run 20260311_015100)
 
 <p align="center">
-  <img src="fabric/docs/images/panel1_performance.png" alt="Performance do Modelo" width="100%">
-  <br><em>Painel 1 — Metricas de Performance (KS, ROC, PR, Score Distribution)</em>
+  <img src="oci-oracle-cloud/artifacts/plots/roc_overlay_oot_20260311_015100.png" alt="ROC Overlay OOT" width="80%">
+  <br><em>ROC Overlay — 5 modelos + Ensemble Champion (OOT)</em>
 </p>
 
 <p align="center">
-  <img src="fabric/docs/images/shap_beeswarm.png" alt="SHAP Beeswarm" width="80%">
-  <br><em>SHAP Beeswarm — Top 40 features por importancia</em>
+  <img src="oci-oracle-cloud/artifacts/plots/score_distributions_oot_20260311_015100.png" alt="Score Distribution OOT" width="80%">
+  <br><em>Distribuicao de Scores — Bom vs Mau pagador (OOT)</em>
+</p>
+
+<p align="center">
+  <img src="oci-oracle-cloud/artifacts/plots/feature_importance_comparison_20260311_015100.png" alt="Feature Importance" width="80%">
+  <br><em>Feature Importance — Comparacao entre modelos (Top features)</em>
+</p>
+
+<p align="center">
+  <img src="oci-oracle-cloud/artifacts/plots/confusion_matrix_cutoff700.png" alt="Confusion Matrix" width="60%">
+  <br><em>Confusion Matrix — Cutoff 700 (Champion Ensemble)</em>
+</p>
+
+<p align="center">
+  <img src="oci-oracle-cloud/artifacts/plots/financial_impact_analysis.png" alt="Financial Impact" width="80%">
+  <br><em>Analise de Impacto Financeiro — Economia por cutoff</em>
+</p>
+
+<p align="center">
+  <img src="oci-oracle-cloud/artifacts/plots/gain_lift_chart.png" alt="Gain Lift" width="80%">
+  <br><em>Gain & Lift Chart — Poder de ordenacao do modelo</em>
 </p>
 
 ---
@@ -163,7 +183,6 @@ projeto-final/
 ├── 3-edas/                        # Notebooks Fabric — EDA
 ├── 4-construcao-books/            # Notebooks Fabric — Feature Engineering
 │
-├── docs/                          # Documentacao compartilhada
 ├── squads/                        # Squads de agentes AI (Synkra AIOS)
 ├── references/                    # Referencias e materiais de apoio
 ├── README.md                      # <- Voce esta aqui
@@ -248,10 +267,10 @@ O projeto inclui uma fase de pesquisa estruturada em **6 etapas**, documentada e
 | Pipeline Fabric | [`fabric/README.md`](fabric/README.md) |
 | Pipeline OCI | [`oci-oracle-cloud/README.md`](oci-oracle-cloud/README.md) |
 | Guia de Execucao OCI | [`oci-oracle-cloud/EXECUTION-GUIDE.md`](oci-oracle-cloud/EXECUTION-GUIDE.md) |
-| Arquitetura de Dados | [`fabric/docs/architecture/data-architecture.md`](fabric/docs/architecture/data-architecture.md) |
-| Feature Engineering | [`fabric/docs/feature-engineering/`](fabric/docs/feature-engineering/) |
-| Resultados do Modelo | [`fabric/docs/modeling/model-results.md`](fabric/docs/modeling/model-results.md) |
-| Decisoes Tecnicas | [`fabric/docs/technical-decisions.md`](fabric/docs/technical-decisions.md) |
+| Guia de Arquitetura OCI | [`oci-oracle-cloud/docs/architecture/`](oci-oracle-cloud/docs/architecture/) |
+| Feature Engineering | [`oci-oracle-cloud/docs/pipeline/`](oci-oracle-cloud/docs/pipeline/) |
+| Dicionario de Dados | [`oci-oracle-cloud/docs/data/`](oci-oracle-cloud/docs/data/) |
+| Overfitting Gap Analysis | [`oci-oracle-cloud/docs/model/overfitting-gap-analysis.md`](oci-oracle-cloud/docs/model/overfitting-gap-analysis.md) |
 | Confusion Matrix Analysis | [`oci-oracle-cloud/docs/model/confusion-matrix-analysis.md`](oci-oracle-cloud/docs/model/confusion-matrix-analysis.md) |
 | Analise de Valor Financeiro | [`oci-oracle-cloud/docs/model/business-value-analysis.md`](oci-oracle-cloud/docs/model/business-value-analysis.md) |
 | Selecao do Ensemble | [`oci-oracle-cloud/docs/model/ensemble-selection.md`](oci-oracle-cloud/docs/model/ensemble-selection.md) |
@@ -259,7 +278,7 @@ O projeto inclui uma fase de pesquisa estruturada em **6 etapas**, documentada e
 | Pesquisa (6 fases) | [`oci-oracle-cloud/research/README.md`](oci-oracle-cloud/research/README.md) |
 | Artefatos OCI | [`oci-oracle-cloud/artifacts/README.md`](oci-oracle-cloud/artifacts/README.md) |
 | OCI Operations Runbook | [`oci-oracle-cloud/docs/operations/`](oci-oracle-cloud/docs/operations/) |
-| Apresentacao | [`docs/presentation/`](docs/presentation/) |
+| Dashboard Guide | [`oci-oracle-cloud/docs/model/dashboard-guide.md`](oci-oracle-cloud/docs/model/dashboard-guide.md) |
 
 ---
 
