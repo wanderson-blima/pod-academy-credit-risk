@@ -138,19 +138,29 @@ O projeto implementa o pipeline de credit risk em duas plataformas cloud, demons
 
 ```mermaid
 graph LR
-    A[Dados Brutos<br/>CSV/Excel/Parquet] --> B[BRONZE<br/>19 tabelas]
-    B --> C[SILVER<br/>Limpeza + Dedup]
-    C --> D[GOLD<br/>Feature Store<br/>402 features]
-    D --> E[Feature Selection<br/>357 → 110]
-    E --> F[5 Modelos HPO<br/>LR·LGBM·XGB·CB·RF]
-    F --> G[Ensemble<br/>Top-3 Average]
-    G --> H[Scoring<br/>0-1000]
-    H --> I[Confusion Matrix<br/>+ Faixas de Risco]
+    subgraph INGEST["Ingestao"]
+        A["Dados Brutos<br/>CSV/Excel/Parquet"]
+    end
+    subgraph MEDALLION["Pipeline Medallion"]
+        B["BRONZE<br/>19 tabelas"]
+        C["SILVER<br/>Limpeza + Dedup"]
+        D["GOLD<br/>Feature Store<br/>402 features"]
+    end
+    subgraph ML["Machine Learning"]
+        E["Feature Selection<br/>357 → 110"]
+        F["5 Modelos HPO<br/>LR·LGBM·XGB·CB·RF"]
+        G["Ensemble<br/>Top-3 Average"]
+    end
+    subgraph OUTPUT["Resultado"]
+        H["Scoring<br/>0-1000"]
+        I["Confusion Matrix<br/>+ Faixas de Risco"]
+    end
 
-    style A fill:#f9f,stroke:#333
-    style D fill:#ffd700,stroke:#333
-    style G fill:#90ee90,stroke:#333
-    style H fill:#87ceeb,stroke:#333
+    A --> B --> C --> D --> E --> F --> G --> H --> I
+
+    style B fill:#CD7F32,color:#fff,stroke:#D99A5B
+    style C fill:#A8A9AD,color:#000,stroke:#C0C0C0
+    style D fill:#FFD700,color:#000,stroke:#FFE44D
 ```
 
 ---

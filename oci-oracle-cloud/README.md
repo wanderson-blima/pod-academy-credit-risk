@@ -27,35 +27,33 @@ Plataforma completa de modelagem de risco de credito em OCI, com pipeline Medall
 
 ## Arquitetura
 
-```
- CSV/Excel/Parquet (Claro)
-        |
-  [OCI Object Storage]
-        |
-  Bronze (staging/) ──> Silver (rawdata/) ──> Gold (feature_store/)
-  19 tabelas Delta       19 tabelas limpas     3 books + consolidado
-  163M rows              275K dupes removed     3.9M rows x 402 cols
-        |
-  [OCI E3.Flex VM (4 OCPUs / 64 GB) + Airflow]
-        |
-  Feature Selection (5-stage funnel)
-  357 → 185 (IV) → 162 (L1) → 114 (Corr) → 110 (PSI) → 110 (anti-leakage)
-        |
-  Model Training (5 modelos HPO-otimizados)
-  LR L1 v2 | LightGBM v2 | XGBoost | CatBoost | Random Forest
-        |
-  Ensemble (3 estrategias: Average, Blend SLSQP, Stacking LR)
-  Champion selecionado por max KS OOT
-        |
-  Batch Scoring (3,900,378 clientes, 0-1000 scale)
-  CRITICO | ALTO | MEDIO | BAIXO
-        |
-  Confusion Matrix Analysis (multi-threshold + por faixa)
-  Precision 93.1% | Specificity 89.0% | Gain/Lift charts
-        |
-  Monitoring (PSI, feature drift, backtesting, agreement)
-        |
-  [ADW + APEX Dashboard] + [OCI Data Catalog]
+```mermaid
+graph TD
+    subgraph INGEST["Ingestao"]
+        A["CSV/Excel/Parquet<br/>(Claro)"]
+        B["OCI Object Storage"]
+    end
+    subgraph MEDALLION["Pipeline Medallion"]
+        C["Bronze<br/>19 tabelas · 163M rows"]
+        D["Silver<br/>19 tabelas · 275K dupes removed"]
+        E["Gold<br/>3 books + consolidado<br/>3.9M rows x 402 cols"]
+    end
+    subgraph ML["Machine Learning"]
+        F["Feature Selection<br/>5-stage funnel · 357 → 110"]
+        G["Model Training<br/>5 modelos HPO"]
+        H["Ensemble<br/>3 estrategias · Champion: Top-3 Avg"]
+    end
+    subgraph OUTPUT["Resultado"]
+        I["Batch Scoring<br/>3.9M clientes · 0-1000"]
+        J["Confusion Matrix<br/>Precision 93.1% · Specificity 89.0%"]
+        K["Monitoring + ADW/APEX"]
+    end
+
+    A --> B --> C --> D --> E --> F --> G --> H --> I --> J --> K
+
+    style C fill:#CD7F32,color:#fff,stroke:#D99A5B
+    style D fill:#A8A9AD,color:#000,stroke:#C0C0C0
+    style E fill:#FFD700,color:#000,stroke:#FFE44D
 ```
 
 ---

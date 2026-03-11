@@ -12,14 +12,20 @@ Este diretorio contem toda a **pesquisa cientifica** que fundamentou o modelo de
 
 ### Fluxo da Pesquisa
 
-```
-Fase 1           Fase 2              Fase 3         Fase 4           Fase 5          Fase 6
-DIAGNOSTICO  ->  FEATURE ENG.    ->  HPO        ->  TREINAMENTO  ->  ENSEMBLE    ->  PRODUCAO
-(4 scripts)      (7 scripts)         (5 scripts)    (3 scripts)      (4 scripts)     (3 scripts)
+```mermaid
+graph LR
+    subgraph RESEARCH["Pesquisa"]
+        P1["Fase 1<br/>DIAGNOSTICO<br/>4 scripts"]
+        P2["Fase 2<br/>FEATURE ENG.<br/>7 scripts"]
+        P3["Fase 3<br/>HPO<br/>5 scripts"]
+    end
+    subgraph PRODUCTION["Producao"]
+        P4["Fase 4<br/>TREINAMENTO<br/>3 scripts"]
+        P5["Fase 5<br/>ENSEMBLE<br/>4 scripts"]
+        P6["Fase 6<br/>PRODUCAO<br/>3 scripts"]
+    end
 
-402 features     402 -> 449 (+47)    Optuna 50t     5 modelos        3 estrategias   Avaliacao
-Baseline LGBM    449 -> 72 (funnel)  3 modelos      HPO params       Champion: Avg   Quality Gates
-Error analysis   IV>0.02, PSI<0.20   CV temporal    KS/AUC/Gini      KS=0.3442       Scoring 3.9M
+    P1 --> P2 --> P3 --> P4 --> P5 --> P6
 ```
 
 ### Resultado Final

@@ -23,24 +23,21 @@ Documentacao completa da estrategia de modelagem, desde preprocessamento ate mon
 
 ## Pipeline
 
-```
-398 features
-    │
-    ▼
-[Preprocessamento] → Limpeza, encoding, split temporal
-    │
-    ▼
-[Feature Selection] → IV → L1 → Correlacao → LGBM Top 70 → 59 features
-    │
-    ▼
-[Treinamento] → LR L1 + LightGBM (GridSearch)
-    │
-    ▼
-[Avaliacao] → KS, AUC, Gini (OOS + OOT)
-    │
-    ▼
-[Scoring] → Probabilidade → Score 0-1000 → Faixas de Risco
-    │
-    ▼
-[Monitoramento] → PSI Score + PSI Features + Performance Drift
+```mermaid
+graph TD
+    subgraph PREP["Preparacao"]
+        A["398 features"]
+        B["Preprocessamento<br/>Limpeza, encoding, split temporal"]
+        C["Feature Selection<br/>IV → L1 → Correlacao → LGBM Top 70<br/>→ 59 features"]
+    end
+    subgraph TRAIN["Treinamento"]
+        D["Treinamento<br/>LR L1 + LightGBM (GridSearch)"]
+        E["Avaliacao<br/>KS, AUC, Gini (OOS + OOT)"]
+    end
+    subgraph DEPLOY["Deploy"]
+        F["Scoring<br/>Probabilidade → Score 0-1000<br/>→ Faixas de Risco"]
+        G["Monitoramento<br/>PSI Score + PSI Features + Drift"]
+    end
+
+    A --> B --> C --> D --> E --> F --> G
 ```

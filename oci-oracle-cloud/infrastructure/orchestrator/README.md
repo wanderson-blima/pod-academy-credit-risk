@@ -39,11 +39,32 @@ Execution order: run data pipeline first, then ML pipeline.
 
 ### ML Pipeline Tasks (credit_risk_ml_pipeline)
 
-```
-verify_instance -> install_ml_packages -> check_resources -> check_gold_data
-    -> run_data_quality -> run_feature_selection -> run_training
-    -> run_ensemble -> run_scoring -> run_monitoring
-    -> collect_artifacts -> resize_down_reminder
+```mermaid
+graph LR
+    subgraph PREFLIGHT["Preflight"]
+        A["verify_instance"]
+        B["install_packages"]
+        C["check_resources"]
+        D["check_gold_data"]
+    end
+    subgraph PROCESSING["Processing"]
+        E["data_quality"]
+        F["feature_selection"]
+    end
+    subgraph TRAINING["Training"]
+        G["training"]
+        H["ensemble"]
+    end
+    subgraph DEPLOY["Deploy"]
+        I["scoring"]
+        J["monitoring"]
+    end
+    subgraph CLEANUP["Cleanup"]
+        K["collect_artifacts"]
+        L["resize_down"]
+    end
+
+    A --> B --> C --> D --> E --> F --> G --> H --> I --> J --> K --> L
 ```
 
 Total time: ~58 min on E3.Flex 4 OCPUs / 64 GB.

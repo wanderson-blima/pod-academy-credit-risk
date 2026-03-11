@@ -4,8 +4,17 @@ Pipeline de engenharia de dados e machine learning construido na plataforma **Mi
 
 ## Arquitetura Medallion
 
-```
-CSV/Excel/Parquet → BRONZE (staging) → SILVER (rawdata + books) → GOLD (feature_store) → Modelo → Scoring
+```mermaid
+graph LR
+    A["CSV/Excel/Parquet"] --> B["BRONZE<br/>(staging)"]
+    B --> C["SILVER<br/>(rawdata + books)"]
+    C --> D["GOLD<br/>(feature_store)"]
+    D --> E["Modelo"]
+    E --> F["Scoring"]
+
+    style B fill:#CD7F32,color:#fff,stroke:#D99A5B
+    style C fill:#A8A9AD,color:#000,stroke:#C0C0C0
+    style D fill:#FFD700,color:#000,stroke:#FFE44D
 ```
 
 | Camada | Lakehouse | Schemas | Tabelas |
