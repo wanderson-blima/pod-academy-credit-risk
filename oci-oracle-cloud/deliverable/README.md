@@ -13,6 +13,8 @@ pip install -r requirements.txt
 
 ## Estrutura
 
+Este pacote e **100% self-contained** — basta a pasta `deliverable/` para rodar o notebook e scoring.
+
 ```
 deliverable/
 ├── scoring.py                          # Script CLI de scoring
@@ -26,41 +28,32 @@ deliverable/
 │   ├── pipeline_lgbm_v2.pkl            #   LightGBM v2 (HPO) — 7.4 MB
 │   ├── pipeline_xgboost.pkl            #   XGBoost (HPO) — 8.7 MB
 │   ├── pipeline_catboost.pkl           #   CatBoost (HPO) — 0.8 MB
-│   ├── pipeline_rf.pkl                 #   Random Forest — 131.6 MB
+│   ├── pipeline_rf.pkl.gz              #   Random Forest (comprimido) — 56 MB
 │   └── pipeline_lr_l1_v2.pkl           #   LR L1 v2 — 16 KB
 ├── config/
 │   └── selected_features.json          # 110 features selecionadas
-└── data/
-    └── clientes_consolidado.parquet    # 3.9M registros (110 features + ID + FPD)
+├── data/
+│   └── clientes_consolidado.parquet    # 3.9M registros (110 features + ID + FPD)
+└── artifacts/                          # Metricas, plots e artefatos do pipeline
+    ├── metrics/                        #   Metricas de todos os modelos
+    │   ├── training_results_20260311_015100.json
+    │   ├── ensemble_results.json
+    │   ├── champion_metadata.json
+    │   ├── confusion_matrix_results.json
+    │   └── feature_importance_*.csv    #   5 CSVs (1 por modelo)
+    ├── scoring/
+    │   └── scoring_summary.json        #   Resumo batch scoring 3.9M
+    ├── monitoring/
+    │   └── monitoring_report.json      #   PSI, drift, backtesting
+    ├── swap_analysis/
+    │   └── swap_summary.json           #   Analise de swap por cutoff
+    ├── plots/                          #   16 visualizacoes PNG
+    ├── funnel_summary.json             #   Funil de feature selection
+    ├── selected_features.json          #   110 features (copia)
+    └── data_quality_report.json        #   Validacao de qualidade
 ```
 
 Cada PKL e um `ScoringPipeline` auto-contido — basta `pipeline.score(df)` para obter scores. Nenhum arquivo externo necessario.
-
-**Artefatos completos do pipeline** (modelos raw + metricas) em `../artifacts/`:
-
-```
-artifacts/
-├── models/                             # 6 PKL — modelos raw (sklearn.Pipeline c/ preprocessing)
-│   ├── credit_risk_lgbm_v2.pkl         #   LightGBM v2 (HPO) — 7.4 MB
-│   ├── credit_risk_xgboost.pkl         #   XGBoost (HPO) — 8.7 MB
-│   ├── credit_risk_catboost.pkl        #   CatBoost (HPO) — 0.8 MB
-│   ├── credit_risk_rf.pkl              #   Random Forest — 131.6 MB
-│   ├── credit_risk_lr_l1_v2.pkl        #   LR L1 v2 — 0.01 MB
-│   └── champion_ensemble.pkl           #   Ensemble Top-3 raw (_EnsembleModel) — 16.9 MB
-├── metrics/                            # Metricas de todos os modelos
-│   ├── training_results_20260311_015100.json  # Resultados dos 5 modelos
-│   ├── ensemble_results.json           #   3 estrategias de ensemble
-│   ├── champion_metadata.json          #   Metadata do champion
-│   └── feature_importance_*.csv        #   5 CSVs (1 por modelo)
-├── hpo/
-│   └── best_params_all.json            # Hyperparametros otimizados
-├── plots/                              # 10 visualizacoes PNG
-├── scoring/
-│   └── scoring_summary.json            # Resumo batch scoring 3.9M
-└── monitoring/
-    ├── monitoring_report.json           # PSI, drift, backtesting
-    └── catalog_registration.json        # Registro Data Catalog
-```
 
 ## Pipelines Self-contained
 
@@ -78,7 +71,7 @@ Todos os 6 PKLs no `models/` sao `ScoringPipeline` — encapsulam **tudo** neces
 | pipeline_lgbm_v2.pkl | LightGBM v2 (HPO) | 0.34943 | 0.73645 | 7.4 MB |
 | pipeline_xgboost.pkl | XGBoost (HPO) | 0.34938 | 0.73619 | 8.7 MB |
 | pipeline_catboost.pkl | CatBoost (HPO) | 0.34821 | 0.73539 | 0.8 MB |
-| pipeline_rf.pkl | Random Forest | 0.33700 | 0.72778 | 131.6 MB |
+| pipeline_rf.pkl.gz | Random Forest | 0.33700 | 0.72778 | 56 MB |
 | pipeline_lr_l1_v2.pkl | LR L1 v2 | 0.33140 | 0.72310 | 16 KB |
 
 ### Uso em Python
@@ -178,6 +171,8 @@ Executa 38 checks: carregamento de PKL, atributos do pipeline, features, preproc
 ```bash
 jupyter notebook Credit_Risk_Scoring_Deliverable.ipynb
 ```
+
+O notebook resolve automaticamente a pasta `artifacts/` local (dentro de `deliverable/`). Nao depende de pastas externas.
 
 13 secoes com plots interativos cobrindo o pipeline completo:
 1. Setup e carregamento de artefatos

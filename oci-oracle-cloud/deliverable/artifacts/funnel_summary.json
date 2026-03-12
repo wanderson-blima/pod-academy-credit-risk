@@ -1,0 +1,9 @@
+{
+  "initial_candidates": 357,
+  "stage_1_iv": 185,
+  "stage_2_l1": 162,
+  "stage_3_corr": 114,
+  "stage_4_psi": 110,
+  "stage_5_antileakage": 110,
+  "final_selected": 110
+}

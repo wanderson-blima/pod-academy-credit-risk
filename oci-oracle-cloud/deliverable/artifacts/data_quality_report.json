@@ -1,0 +1,385 @@
+{
+  "run_timestamp": "2026-03-11T01:37:53.543935",
+  "summary": {
+    "total_checks": 53,
+    "passed": 0,
+    "failed": 46,
+    "warnings": 0,
+    "skipped": 7,
+    "pass_rate": "0.0%",
+    "overall": "FAIL"
+  },
+  "results": [
+    {
+      "layer": "Bronze",
+      "check": "table:dados_cadastrais",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.464720"
+    },
+    {
+      "layer": "Bronze",
+      "check": "table:telco",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.466153"
+    },
+    {
+      "layer": "Bronze",
+      "check": "table:score_bureau_movel",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.467593"
+    },
+    {
+      "layer": "Bronze",
+      "check": "table:recarga",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.468974"
+    },
+    {
+      "layer": "Bronze",
+      "check": "table:pagamento",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.470661"
+    },
+    {
+      "layer": "Bronze",
+      "check": "table:faturamento",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.472041"
+    },
+    {
+      "layer": "Bronze",
+      "check": "table:dim_calendario",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.473431"
+    },
+    {
+      "layer": "Bronze",
+      "check": "table:dim_canal_aquisicao_credito",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.474826"
+    },
+    {
+      "layer": "Bronze",
+      "check": "table:dim_forma_pagamento",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.476208"
+    },
+    {
+      "layer": "Bronze",
+      "check": "table:dim_instituicao",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.477637"
+    },
+    {
+      "layer": "Bronze",
+      "check": "table:dim_plano_preco",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.479030"
+    },
+    {
+      "layer": "Bronze",
+      "check": "table:dim_plataforma",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.480410"
+    },
+    {
+      "layer": "Bronze",
+      "check": "table:dim_promocao_credito",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.481863"
+    },
+    {
+      "layer": "Bronze",
+      "check": "table:dim_status_plataforma",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.483213"
+    },
+    {
+      "layer": "Bronze",
+      "check": "table:dim_tecnologia",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.484900"
+    },
+    {
+      "layer": "Bronze",
+      "check": "table:dim_tipo_credito",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.486417"
+    },
+    {
+      "layer": "Bronze",
+      "check": "table:dim_tipo_insercao",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.487822"
+    },
+    {
+      "layer": "Bronze",
+      "check": "table:dim_tipo_recarga",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.489294"
+    },
+    {
+      "layer": "Bronze",
+      "check": "table:dim_tipo_faturamento",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.490667"
+    },
+    {
+      "layer": "Bronze",
+      "check": "all_tables_exist",
+      "status": "FAIL",
+      "detail": "0/19 tables present | missing: ['dados_cadastrais', 'telco', 'score_bureau_movel', 'recarga', 'pagamento', 'faturamento', 'dim_calendario', 'dim_canal_aquisicao_credito', 'dim_forma_pagamento', 'dim_instituicao', 'dim_plano_preco', 'dim_plataforma', 'dim_promocao_credito', 'dim_status_plataforma', 'dim_tecnologia', 'dim_tipo_credito', 'dim_tipo_insercao', 'dim_tipo_recarga', 'dim_tipo_faturamento']",
+      "timestamp": "2026-03-11T01:37:53.490697"
+    },
+    {
+      "layer": "Silver",
+      "check": "table:dados_cadastrais",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.492040"
+    },
+    {
+      "layer": "Silver",
+      "check": "table:telco",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.493429"
+    },
+    {
+      "layer": "Silver",
+      "check": "table:score_bureau_movel",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.494793"
+    },
+    {
+      "layer": "Silver",
+      "check": "table:recarga",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.496140"
+    },
+    {
+      "layer": "Silver",
+      "check": "table:pagamento",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.497528"
+    },
+    {
+      "layer": "Silver",
+      "check": "table:faturamento",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.498867"
+    },
+    {
+      "layer": "Silver",
+      "check": "table:dim_calendario",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.500263"
+    },
+    {
+      "layer": "Silver",
+      "check": "table:dim_canal_aquisicao_credito",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.501669"
+    },
+    {
+      "layer": "Silver",
+      "check": "table:dim_forma_pagamento",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.503121"
+    },
+    {
+      "layer": "Silver",
+      "check": "table:dim_instituicao",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.504553"
+    },
+    {
+      "layer": "Silver",
+      "check": "table:dim_plano_preco",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.505899"
+    },
+    {
+      "layer": "Silver",
+      "check": "table:dim_plataforma",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.507268"
+    },
+    {
+      "layer": "Silver",
+      "check": "table:dim_promocao_credito",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.508742"
+    },
+    {
+      "layer": "Silver",
+      "check": "table:dim_status_plataforma",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.510090"
+    },
+    {
+      "layer": "Silver",
+      "check": "table:dim_tecnologia",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.511420"
+    },
+    {
+      "layer": "Silver",
+      "check": "table:dim_tipo_credito",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.512836"
+    },
+    {
+      "layer": "Silver",
+      "check": "table:dim_tipo_insercao",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.514209"
+    },
+    {
+      "layer": "Silver",
+      "check": "table:dim_tipo_recarga",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.515578"
+    },
+    {
+      "layer": "Silver",
+      "check": "table:dim_tipo_faturamento",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.516976"
+    },
+    {
+      "layer": "Silver",
+      "check": "all_tables_exist",
+      "status": "FAIL",
+      "detail": "0/19 tables present | missing: ['dados_cadastrais', 'telco', 'score_bureau_movel', 'recarga', 'pagamento', 'faturamento', 'dim_calendario', 'dim_canal_aquisicao_credito', 'dim_forma_pagamento', 'dim_instituicao', 'dim_plano_preco', 'dim_plataforma', 'dim_promocao_credito', 'dim_status_plataforma', 'dim_tecnologia', 'dim_tipo_credito', 'dim_tipo_insercao', 'dim_tipo_recarga', 'dim_tipo_faturamento']",
+      "timestamp": "2026-03-11T01:37:53.516999"
+    },
+    {
+      "layer": "Gold-Books",
+      "check": "book:book_recarga_cmv",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.518386"
+    },
+    {
+      "layer": "Gold-Books",
+      "check": "book:book_pagamento",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.519844"
+    },
+    {
+      "layer": "Gold-Books",
+      "check": "book:book_faturamento",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.521216"
+    },
+    {
+      "layer": "Gold-Books",
+      "check": "all_books_exist",
+      "status": "FAIL",
+      "detail": "0/3 books present | missing: ['book_recarga_cmv', 'book_pagamento', 'book_faturamento']",
+      "timestamp": "2026-03-11T01:37:53.521230"
+    },
+    {
+      "layer": "Gold-Consolidated",
+      "check": "exists",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.522630"
+    },
+    {
+      "layer": "Gold-Final",
+      "check": "exists",
+      "status": "FAIL",
+      "detail": "CLI error: [Errno 13] Permission denied: 'oci'",
+      "timestamp": "2026-03-11T01:37:53.524051"
+    },
+    {
+      "layer": "Cross-Layer",
+      "check": "bronze_vs_silver:dados_cadastrais",
+      "status": "SKIP",
+      "detail": "CLI error (bronze=[Errno 13] Permission denied: 'oci', silver=[Errno 13] Permission denied: 'oci')",
+      "timestamp": "2026-03-11T01:37:53.526935"
+    },
+    {
+      "layer": "Cross-Layer",
+      "check": "bronze_vs_silver:telco",
+      "status": "SKIP",
+      "detail": "CLI error (bronze=[Errno 13] Permission denied: 'oci', silver=[Errno 13] Permission denied: 'oci')",
+      "timestamp": "2026-03-11T01:37:53.529701"
+    },
+    {
+      "layer": "Cross-Layer",
+      "check": "bronze_vs_silver:score_bureau_movel",
+      "status": "SKIP",
+      "detail": "CLI error (bronze=[Errno 13] Permission denied: 'oci', silver=[Errno 13] Permission denied: 'oci')",
+      "timestamp": "2026-03-11T01:37:53.532512"
+    },
+    {
+      "layer": "Cross-Layer",
+      "check": "bronze_vs_silver:recarga",
+      "status": "SKIP",
+      "detail": "CLI error (bronze=[Errno 13] Permission denied: 'oci', silver=[Errno 13] Permission denied: 'oci')",
+      "timestamp": "2026-03-11T01:37:53.535369"
+    },
+    {
+      "layer": "Cross-Layer",
+      "check": "bronze_vs_silver:pagamento",
+      "status": "SKIP",
+      "detail": "CLI error (bronze=[Errno 13] Permission denied: 'oci', silver=[Errno 13] Permission denied: 'oci')",
+      "timestamp": "2026-03-11T01:37:53.538147"
+    },
+    {
+      "layer": "Cross-Layer",
+      "check": "bronze_vs_silver:faturamento",
+      "status": "SKIP",
+      "detail": "CLI error (bronze=[Errno 13] Permission denied: 'oci', silver=[Errno 13] Permission denied: 'oci')",
+      "timestamp": "2026-03-11T01:37:53.540941"
+    },
+    {
+      "layer": "Cross-Layer",
+      "check": "bronze_vs_silver:dim_calendario",
+      "status": "SKIP",
+      "detail": "CLI error (bronze=[Errno 13] Permission denied: 'oci', silver=[Errno 13] Permission denied: 'oci')",
+      "timestamp": "2026-03-11T01:37:53.543787"
+    }
+  ]
+}

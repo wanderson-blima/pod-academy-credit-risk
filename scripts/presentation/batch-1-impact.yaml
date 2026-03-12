@@ -1,0 +1,222 @@
+# =============================================================================
+# BATCH 1 — IMPACTO E RESULTADOS (Slides 1-5)
+# Hackathon PoD Academy — Claro + Oracle
+# =============================================================================
+# Estrategia: Abrir com o dinheiro. Executivos querem ver resultado antes de tecnica.
+# Instrucao para Notebook LM: Gere 5 slides de apresentacao seguindo o design system abaixo.
+# =============================================================================
+
+prompt: |
+  Crie 5 slides de apresentacao executiva (16:9, 1920x1080) para o Hackathon PoD Academy (Claro + Oracle).
+
+  ## DESIGN SYSTEM (siga rigorosamente)
+
+  **Fundo**: Branco puro (#FFFFFF). SEM fundos escuros.
+  **Cards**: Fundo #F8F9FA, border-radius 12px, borda 1px cyan rgba(0,240,255,0.3), shadow sutil, padding 24px.
+  **Cards KPI Hero**: Fundo branco, borda 2px #00F0FF, glow 0 0 20px rgba(0,240,255,0.3), padding 32px.
+  **Cores de acento**: Cyan #00F0FF (primario), Green #00FF88 (positivo), Yellow #FFD600 (alerta), Red #FF3366 (critico).
+  **Texto**: Titulos #1A1A2E (36-42pt Bold), Corpo #4A4A6A (16-18pt), Labels #8A8AAA (12-14pt uppercase).
+  **Numeros Hero**: 64-80pt ExtraBold #1A1A2E.
+  **Tipografia**: Inter ou Montserrat.
+  **Decoracao**: Linhas finas de circuito impresso nos cantos (cyan 30% opacity), grid de pontos sutil no fundo.
+  **Header**: Barra com logo Claro (esquerda) + Oracle (direita), borda inferior cyan.
+  **Footer**: "Hackathon PoD Academy — Marco 2026" (esquerda) + "Slide N/18" (direita), 10pt #8A8AAA.
+  **Margens**: 80px em todos os lados.
+
+  ---
+
+  ## SLIDE 1 — TITLE SLIDE
+
+  **Layout**: Centrado, impactante, minimalista.
+
+  **Elementos**:
+  - Centro superior: Titulo principal em 2 linhas
+    - Linha 1: "Plataforma de Credit Risk" (42pt Bold, #1A1A2E)
+    - Linha 2: "IA-First" (64pt ExtraBold, com gradiente cyan→green ou cor #00F0FF)
+  - Abaixo do titulo: Subtitulo "Predicao de First Payment Default para Telecom" (18pt, #4A4A6A)
+  - Meio: Linha divisoria fina cyan (#00F0FF, 30% opacity, 400px largura)
+  - Abaixo da linha: "Hackathon PoD Academy" (24pt Bold, #1A1A2E)
+  - Logo bar: Claro + Oracle lado a lado, centralizados
+  - Footer: "Marco 2026" centralizado
+  - Decoracao: Linhas de circuito nos 4 cantos do slide, mais elaboradas que nos demais slides
+
+  **Mood**: Futurista, confiante, corporate. Primeiro impacto visual forte.
+
+  ---
+
+  ## SLIDE 2 — EXECUTIVE SUMMARY KPIs
+
+  **Layout**: 4 cards KPI Hero em grid 2x2 (ou 1 row de 4 se couber).
+
+  **Titulo do slide**: "Resultados em Numeros" (36pt Bold, #1A1A2E)
+
+  **4 Cards KPI Hero** (cada um com borda cyan 2px, glow neon):
+
+  Card 1 (top-left):
+  - Label: "BASE SCORADA" (12pt uppercase, #8A8AAA)
+  - Hero Number: "3.9M" (72pt ExtraBold, #1A1A2E)
+  - Subtitle: "clientes avaliados em 6 SAFRAs" (14pt, #4A4A6A)
+
+  Card 2 (top-right):
+  - Label: "PODER DISCRIMINANTE" (12pt uppercase, #8A8AAA)
+  - Hero Number: "KS = 0.350" (72pt ExtraBold, #1A1A2E)
+  - Subtitle: "Champion Ensemble (Top-3 Average)" (14pt, #4A4A6A)
+  - Icone ou badge: checkmark verde (#00FF88) indicando "QG-05 PASSED"
+
+  Card 3 (bottom-left):
+  - Label: "ECONOMIA ESTIMADA" (12pt uppercase, #8A8AAA)
+  - Hero Number: "R$ 22.6M" (72pt ExtraBold, cor #00FF88 verde)
+  - Subtitle: "perdas brutas evitadas (cutoff 700) | liq.: -R$34M" (14pt, #4A4A6A)
+
+  Card 4 (bottom-right):
+  - Label: "CUSTO INFRAESTRUTURA" (12pt uppercase, #8A8AAA)
+  - Hero Number: "< R$ 170" (72pt ExtraBold, #1A1A2E)
+  - Subtitle: "por mes na OCI" (14pt, #4A4A6A)
+  - Icone ou badge: seta para cima verde
+
+  **Footnote**: "Fonte: Run 20260311_015100 | Ensemble Top-3 (LightGBM+XGBoost+CatBoost) | LGD proxy = mediana VAL_FAT_ABERTO R$44,89"
+
+  ---
+
+  ## SLIDE 3 — IMPACTO FINANCEIRO
+
+  **Layout**: 3 colunas (cenarios) + barra comparativa embaixo.
+
+  **Titulo do slide**: "Impacto Financeiro por Cenario" (36pt Bold)
+
+  **3 Cards de Cenario** (lado a lado, largura igual):
+
+  Card Esquerdo — "AGRESSIVO (Volume)":
+  - Header do card: borda 2px #00FF88, glow verde
+  - Badge: "UNICO LIQ. POSITIVO" em verde
+  - Cutoff: "Score 300"
+  - Aprovados: "93.3%"
+  - FPD Aprovados: "18.4%"
+  - Economia bruta: "R$ 4.9M" (36pt Bold, #00FF88)
+  - Receita perdida: "R$ 3.2M" (14pt, #FF4444)
+  - Economia liquida: "+R$ 1.7M" (28pt Bold, #00FF88)
+
+  Card Central — "EQUILIBRADO" (destaque):
+  - Header do card: fundo mais claro, badge cyan (#00F0FF)
+  - Badge: "BREAKEVEN"
+  - Cutoff: "Score 400"
+  - Aprovados: "83.5%"
+  - FPD Aprovados: "15.6%"
+  - Economia bruta: "R$ 10.0M" (36pt Bold, #00F0FF)
+  - Receita perdida: "R$ 10.0M" (14pt, #FF4444)
+  - Economia liquida: "~R$ 0" (28pt Bold, #FFD600)
+
+  Card Direito — "CONSERVADOR (Risco)":
+  - Header do card: fundo #F8F9FA, badge amarelo (#FFD600)
+  - Badge: "MIN. INADIMPLENCIA"
+  - Cutoff: "Score 700"
+  - Aprovados: "36.3%"
+  - FPD Aprovados: "7.2%"
+  - Economia bruta: "R$ 22.6M" (36pt Bold, #FFD600)
+  - Receita perdida: "R$ 56.9M" (28pt Bold, #FF3366)
+  - Economia liquida: "-R$ 32.0M" (28pt Bold, #FF3366)
+
+  **Barra inferior**: Card insight — "Decisao de negocio: cutoff depende de LGD real, CAC, ARPU e estrategia comercial da Claro".
+
+  **Footnote**: "Fonte: swap_summary.json | LGD proxy = R$44,89 (mediana VAL_FAT_ABERTO) | Base: 2.696.621 clientes labelados"
+
+  ---
+
+  ## SLIDE 4 — SWAP ANALYSIS
+
+  **Layout**: Esquerda (60%) info do cutoff + direita (40%) faixas de risco.
+
+  **Titulo do slide**: "Swap Analysis — Cenario Conservador (Cutoff 700)" (36pt Bold)
+
+  **Lado Esquerdo — Cutoff 700 (card grande)**:
+  - Header: "CUTOFF 700" em badge amarelo (#FFD600)
+  - Grid 2x2 de mini-KPIs:
+    - "Aprovados": "36.3%" (28pt Bold)
+    - "FPD Aprovados": "7.15%" (28pt Bold, #00FF88)
+    - "Precision": "93.1%" (28pt Bold)
+    - "Swap-out": "69.915 maus" (28pt Bold, #FF3366)
+  - Texto explicativo: "De cada 100 aprovados, apenas 7 entram em default. Swap-out = clientes ruins que passariam sem o modelo."
+
+  **Lado Direito — 4 Faixas de Risco (cards empilhados verticalmente)**:
+
+  Faixa CRITICO (topo, borda vermelha):
+  - Range: "0-299"
+  - Populacao: "7.7%" (206.535)
+  - FPD Rate: "59.2%" (vermelho bold)
+
+  Faixa ALTO (borda amarela):
+  - Range: "300-499"
+  - Populacao: "24.2%" (652.566)
+  - FPD Rate: "34.8%" (amarelo bold)
+
+  Faixa MEDIO (borda cyan):
+  - Range: "500-699"
+  - Populacao: "34.1%" (918.246)
+  - FPD Rate: "17.5%" (cyan bold)
+
+  Faixa BAIXO (borda verde):
+  - Range: "700-1000"
+  - Populacao: "34.1%" (919.274)
+  - FPD Rate: "6.9%" (verde bold)
+
+  **Footnote**: "Fonte: confusion_matrix_results.json | 2.696.621 clientes labelados"
+
+  ---
+
+  ## SLIDE 5 — SCORE DISTRIBUTION
+
+  **Layout**: Grafico de barras (histograma) + tabela resumo embaixo.
+
+  **Titulo do slide**: "Distribuicao de Score — 3.9M Clientes" (36pt Bold)
+
+  **Grafico Principal (area central, 70% do slide)**:
+  - Histograma horizontal ou vertical mostrando a distribuicao dos scores
+  - Eixo X: Score (0 a 1000, bins de 50 ou 100)
+  - Eixo Y: Numero de clientes
+  - Cores das barras por faixa de risco:
+    - 0-299: Vermelho (#FF3366)
+    - 300-499: Amarelo (#FFD600)
+    - 500-699: Cyan (#00F0FF)
+    - 700-1000: Verde (#00FF88)
+  - Linha vertical tracejada no cutoff 700, label "CUTOFF 700 (Conservador)"
+  - Estatisticas no canto: Mean=538, Median=546, Std=214, Min=23, Max=982
+
+  **Tabela Resumo (embaixo do grafico)**:
+  | Faixa | Range | Clientes | % Total | FPD Rate |
+  |-------|-------|----------|---------|----------|
+  | CRITICO | 0-299 | 669.521 | 17.2% | 59.2% |
+  | ALTO | 300-499 | 1.011.756 | 25.9% | 34.8% |
+  | MEDIO | 500-699 | 1.108.849 | 28.4% | 17.5% |
+  | BAIXO | 700-1000 | 1.110.252 | 28.5% | 6.9% |
+
+  Nota: A tabela usa os dados de risk_distribution_all do scoring_summary (3.9M total)
+  e os FPD rates do risk_band_contingency do confusion_matrix_results (clientes labelados).
+
+  **Footnote**: "Fonte: scoring_summary.json (3.900.378 clientes) + confusion_matrix_results.json (FPD rates dos 2.696.621 labelados)"
+
+slides:
+  - number: 1
+    title: "Title Slide"
+    data_sources: []
+  - number: 2
+    title: "Executive Summary KPIs"
+    data_sources:
+      - "scoring_summary.json: total_records=3900378"
+      - "ensemble_results.json: ks_oot=0.35005, auc_oot=0.73677, gini_oot=47.35"
+      - "business-value-analysis.md: R$22.6M economia bruta (cutoff 700), liq. -R$34M, <R$170/mes"
+  - number: 3
+    title: "Impacto Financeiro"
+    data_sources:
+      - "swap_summary.json: cutoff_analysis (500, 600, 700)"
+      - "business-value-analysis.md: economia por cutoff"
+      - "confusion_matrix_results.json: lgd_proxy=44.89"
+  - number: 4
+    title: "Swap Analysis"
+    data_sources:
+      - "swap_summary.json: recommended_cutoff=700, approved_pct=36.26, fpd_rate=0.0715"
+      - "confusion_matrix_results.json: risk_band_contingency, precision=0.931323"
+  - number: 5
+    title: "Score Distribution"
+    data_sources:
+      - "scoring_summary.json: risk_distribution_all, score_stats_all"
+      - "confusion_matrix_results.json: risk_band_contingency (FPD rates)"

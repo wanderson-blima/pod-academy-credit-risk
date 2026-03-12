@@ -1,0 +1,330 @@
+{
+  "timestamp": "2026-03-11T14:06:15.376721",
+  "run_id": "20260311_015100",
+  "total_records": 3900378,
+  "labeled_records": 2696621,
+  "overall_fpd_rate": 0.212722,
+  "fpd_count": 573630,
+  "good_count": 2122991,
+  "lgd_proxy": 44.89,
+  "cutoffs_analyzed": [
+    300,
+    400,
+    500,
+    600,
+    700
+  ],
+  "confusion_matrices": [
+    {
+      "cutoff": 300,
+      "TP": 2038733,
+      "FP": 451353,
+      "TN": 122277,
+      "FN": 84258,
+      "total": 2696621,
+      "approved": 2490086,
+      "rejected": 206535,
+      "approval_rate": 92.34,
+      "precision": 0.81874,
+      "recall": 0.960312,
+      "specificity": 0.213164,
+      "f1": 0.883893,
+      "accuracy": 0.801377,
+      "fpd_rate_approved": 18.126,
+      "fpd_rate_rejected": 59.204
+    },
+    {
+      "cutoff": 400,
+      "TP": 1873070,
+      "FP": 335970,
+      "TN": 237660,
+      "FN": 249921,
+      "total": 2696621,
+      "approved": 2209040,
+      "rejected": 487581,
+      "approval_rate": 81.92,
+      "precision": 0.847911,
+      "recall": 0.882279,
+      "specificity": 0.414309,
+      "f1": 0.864754,
+      "accuracy": 0.782731,
+      "fpd_rate_approved": 15.2089,
+      "fpd_rate_rejected": 48.7427
+    },
+    {
+      "cutoff": 500,
+      "TP": 1613537,
+      "FP": 223983,
+      "TN": 349647,
+      "FN": 509454,
+      "total": 2696621,
+      "approved": 1837520,
+      "rejected": 859101,
+      "approval_rate": 68.14,
+      "precision": 0.878106,
+      "recall": 0.76003,
+      "specificity": 0.609534,
+      "f1": 0.814813,
+      "accuracy": 0.728016,
+      "fpd_rate_approved": 12.1894,
+      "fpd_rate_rejected": 40.6992
+    },
+    {
+      "cutoff": 600,
+      "TP": 1255906,
+      "FP": 129094,
+      "TN": 444536,
+      "FN": 867085,
+      "total": 2696621,
+      "approved": 1385000,
+      "rejected": 1311621,
+      "approval_rate": 51.36,
+      "precision": 0.906791,
+      "recall": 0.591574,
+      "specificity": 0.774952,
+      "f1": 0.716026,
+      "accuracy": 0.630582,
+      "fpd_rate_approved": 9.3209,
+      "fpd_rate_rejected": 33.8921
+    },
+    {
+      "cutoff": 700,
+      "TP": 856141,
+      "FP": 63133,
+      "TN": 510497,
+      "FN": 1266850,
+      "total": 2696621,
+      "approved": 919274,
+      "rejected": 1777347,
+      "approval_rate": 34.09,
+      "precision": 0.931323,
+      "recall": 0.403271,
+      "specificity": 0.889941,
+      "f1": 0.562831,
+      "accuracy": 0.506796,
+      "fpd_rate_approved": 6.8677,
+      "fpd_rate_rejected": 28.7224
+    }
+  ],
+  "risk_band_contingency": [
+    {
+      "band": "CRITICO",
+      "range": "0-299",
+      "total": 206535,
+      "good_count": 84258,
+      "fpd_count": 122277,
+      "fpd_rate": 59.204,
+      "pct_of_total": 7.66
+    },
+    {
+      "band": "ALTO",
+      "range": "300-499",
+      "total": 652566,
+      "good_count": 425196,
+      "fpd_count": 227370,
+      "fpd_rate": 34.8425,
+      "pct_of_total": 24.2
+    },
+    {
+      "band": "MEDIO",
+      "range": "500-699",
+      "total": 918246,
+      "good_count": 757396,
+      "fpd_count": 160850,
+      "fpd_rate": 17.5171,
+      "pct_of_total": 34.05
+    },
+    {
+      "band": "BAIXO",
+      "range": "700-1000",
+      "total": 919274,
+      "good_count": 856141,
+      "fpd_count": 63133,
+      "fpd_rate": 6.8677,
+      "pct_of_total": 34.09
+    }
+  ],
+  "decile_gain_lift": [
+    {
+      "decile": 1,
+      "n_total": 269662,
+      "n_bad": 151548,
+      "bad_rate": 0.561992,
+      "cum_bad": 151548,
+      "cum_bad_pct": 0.264191,
+      "cum_total_pct": 0.1,
+      "lift": 2.6419
+    },
+    {
+      "decile": 2,
+      "n_total": 269662,
+      "n_bad": 104129,
+      "bad_rate": 0.386146,
+      "cum_bad": 255677,
+      "cum_bad_pct": 0.445718,
+      "cum_total_pct": 0.2,
+      "lift": 2.2286
+    },
+    {
+      "decile": 3,
+      "n_total": 269662,
+      "n_bad": 81089,
+      "bad_rate": 0.300706,
+      "cum_bad": 336766,
+      "cum_bad_pct": 0.587079,
+      "cum_total_pct": 0.3,
+      "lift": 1.9569
+    },
+    {
+      "decile": 4,
+      "n_total": 269662,
+      "n_bad": 63448,
+      "bad_rate": 0.235287,
+      "cum_bad": 400214,
+      "cum_bad_pct": 0.697687,
+      "cum_total_pct": 0.4,
+      "lift": 1.7442
+    },
+    {
+      "decile": 5,
+      "n_total": 269662,
+      "n_bad": 50714,
+      "bad_rate": 0.188065,
+      "cum_bad": 450928,
+      "cum_bad_pct": 0.786096,
+      "cum_total_pct": 0.5,
+      "lift": 1.5722
+    },
+    {
+      "decile": 6,
+      "n_total": 269662,
+      "n_bad": 40036,
+      "bad_rate": 0.148467,
+      "cum_bad": 490964,
+      "cum_bad_pct": 0.85589,
+      "cum_total_pct": 0.6,
+      "lift": 1.4265
+    },
+    {
+      "decile": 7,
+      "n_total": 269662,
+      "n_bad": 31328,
+      "bad_rate": 0.116175,
+      "cum_bad": 522292,
+      "cum_bad_pct": 0.910503,
+      "cum_total_pct": 0.7,
+      "lift": 1.3007
+    },
+    {
+      "decile": 8,
+      "n_total": 269662,
+      "n_bad": 24144,
+      "bad_rate": 0.089534,
+      "cum_bad": 546436,
+      "cum_bad_pct": 0.952593,
+      "cum_total_pct": 0.8,
+      "lift": 1.1907
+    },
+    {
+      "decile": 9,
+      "n_total": 269662,
+      "n_bad": 17841,
+      "bad_rate": 0.066161,
+      "cum_bad": 564277,
+      "cum_bad_pct": 0.983695,
+      "cum_total_pct": 0.9,
+      "lift": 1.093
+    },
+    {
+      "decile": 10,
+      "n_total": 269663,
+      "n_bad": 9353,
+      "bad_rate": 0.034684,
+      "cum_bad": 573630,
+      "cum_bad_pct": 1.0,
+      "cum_total_pct": 1.0,
+      "lift": 1.0
+    }
+  ],
+  "financial_impact": [
+    {
+      "cutoff": 0,
+      "approved": 2696621,
+      "approval_rate": 100.0,
+      "revenue_good": 95301065.99,
+      "loss_bad": 25750250.7,
+      "net_impact": 69550815.29,
+      "avoided_loss": 0.0,
+      "lost_revenue": 0.0,
+      "net_vs_baseline": 0.0,
+      "net_vs_baseline_pct": 0.0
+    },
+    {
+      "cutoff": 300,
+      "approved": 2490086,
+      "approval_rate": 92.34,
+      "revenue_good": 91518724.37,
+      "loss_bad": 20261236.17,
+      "net_impact": 71257488.2,
+      "avoided_loss": 5489014.53,
+      "lost_revenue": 3782341.62,
+      "net_vs_baseline": 1706672.91,
+      "net_vs_baseline_pct": 2.45
+    },
+    {
+      "cutoff": 400,
+      "approved": 2209040,
+      "approval_rate": 81.92,
+      "revenue_good": 84082112.3,
+      "loss_bad": 15081693.3,
+      "net_impact": 69000419.0,
+      "avoided_loss": 10668557.4,
+      "lost_revenue": 11218953.69,
+      "net_vs_baseline": -550396.29,
+      "net_vs_baseline_pct": -0.79
+    },
+    {
+      "cutoff": 500,
+      "approved": 1837520,
+      "approval_rate": 68.14,
+      "revenue_good": 72431675.93,
+      "loss_bad": 10054596.87,
+      "net_impact": 62377079.06,
+      "avoided_loss": 15695653.83,
+      "lost_revenue": 22869390.06,
+      "net_vs_baseline": -7173736.23,
+      "net_vs_baseline_pct": -10.31
+    },
+    {
+      "cutoff": 600,
+      "approved": 1385000,
+      "approval_rate": 51.36,
+      "revenue_good": 56377620.34,
+      "loss_bad": 5795029.66,
+      "net_impact": 50582590.68,
+      "avoided_loss": 19955221.04,
+      "lost_revenue": 38923445.65,
+      "net_vs_baseline": -18968224.61,
+      "net_vs_baseline_pct": -27.27
+    },
+    {
+      "cutoff": 700,
+      "approved": 919274,
+      "approval_rate": 34.09,
+      "revenue_good": 38432169.49,
+      "loss_bad": 2834040.37,
+      "net_impact": 35598129.12,
+      "avoided_loss": 22916210.33,
+      "lost_revenue": 56868896.5,
+      "net_vs_baseline": -33952686.17,
+      "net_vs_baseline_pct": -48.82
+    }
+  ],
+  "score_stats": {
+    "mean": 593.15,
+    "median": 608,
+    "std": 189.04,
+    "min": 37,
+    "max": 981
+  }
+}

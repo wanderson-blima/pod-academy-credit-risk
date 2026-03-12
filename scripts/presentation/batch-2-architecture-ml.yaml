@@ -1,0 +1,287 @@
+# =============================================================================
+# BATCH 2 — ARQUITETURA E ML (Slides 6-10)
+# Hackathon PoD Academy — Claro + Oracle
+# =============================================================================
+# Estrategia: Mostrar a engenharia por tras do resultado.
+# Pipeline Medallion, custos, selecao de features, modelos, monitoring.
+# =============================================================================
+
+prompt: |
+  Crie 5 slides de apresentacao executiva (16:9, 1920x1080) para o Hackathon PoD Academy (Claro + Oracle).
+  Estes sao os slides 6 a 10 de 18. Mantenha consistencia visual com os slides anteriores.
+
+  ## DESIGN SYSTEM (siga rigorosamente)
+
+  **Fundo**: Branco puro (#FFFFFF). SEM fundos escuros.
+  **Cards**: Fundo #F8F9FA, border-radius 12px, borda 1px cyan rgba(0,240,255,0.3), shadow sutil, padding 24px.
+  **Cards KPI Hero**: Fundo branco, borda 2px #00F0FF, glow 0 0 20px rgba(0,240,255,0.3), padding 32px.
+  **Cores de acento**: Cyan #00F0FF (primario), Green #00FF88 (positivo), Yellow #FFD600 (alerta), Red #FF3366 (critico).
+  **Texto**: Titulos #1A1A2E (36-42pt Bold), Corpo #4A4A6A (16-18pt), Labels #8A8AAA (12-14pt uppercase).
+  **Numeros Hero**: 64-80pt ExtraBold #1A1A2E.
+  **Tipografia**: Inter ou Montserrat.
+  **Decoracao**: Linhas finas de circuito impresso nos cantos (cyan 30% opacity), grid de pontos sutil no fundo.
+  **Header**: Barra com logo Claro (esquerda) + Oracle (direita), borda inferior cyan.
+  **Footer**: "Hackathon PoD Academy — Marco 2026" (esquerda) + "Slide N/18" (direita), 10pt #8A8AAA.
+  **Tabelas**: Header #1A1A2E fundo com texto branco, linhas alternadas branco/#F8F9FA, borda cyan sutil.
+  **Margens**: 80px em todos os lados.
+
+  ---
+
+  ## SLIDE 6 — ARCHITECTURE OVERVIEW
+
+  **Layout**: Diagrama de pipeline horizontal (Medallion) com metricas em cada estagio.
+
+  **Titulo do slide**: "Arquitetura End-to-End na OCI" (36pt Bold)
+
+  **Pipeline Medallion (horizontal, da esquerda para direita)**:
+  Representar como 4 blocos conectados por setas, cada bloco e um card:
+
+  Bloco 1 — BRONZE (borda #CD7F32 bronze):
+  - Icone: database
+  - "Bronze Layer"
+  - "22 min"
+  - "19 tabelas"
+  - "163M rows"
+  - Tecnologia: "Object Storage + Delta Lake"
+
+  Seta → (linha cyan animada, #00F0FF)
+
+  Bloco 2 — SILVER (borda #C0C0C0 prata):
+  - Icone: filter
+  - "Silver Layer"
+  - "25.5 min"
+  - "19 tabelas"
+  - "275K dupes removidos"
+  - Tecnologia: "Type casting + Dedup + MERGE"
+
+  Seta →
+
+  Bloco 3 — GOLD (borda #FFD600 dourado):
+  - Icone: star
+  - "Gold Layer"
+  - "4h 58min"
+  - "3 books + consolidado"
+  - "3.9M × 402 cols"
+  - Tecnologia: "Feature Store"
+
+  Seta →
+
+  Bloco 4 — ML (borda #00FF88 verde):
+  - Icone: brain/AI
+  - "ML Pipeline"
+  - "58 min"
+  - "12 tasks (Airflow)"
+  - "5 modelos + 3 ensembles"
+  - Tecnologia: "scikit-learn + LightGBM + XGBoost + CatBoost"
+
+  **Barra inferior**: Timeline total "Pipeline completo: ~6h 43min (dados brutos → score de credito)"
+
+  **Icones OCI (embaixo do pipeline)**: Object Storage, Data Science, ADW, Airflow — logos pequenos alinhados.
+
+  **Footnote**: "Fonte: Pipeline executado em VM E3.Flex (4 OCPUs / 64 GB) | Regiao sa-saopaulo-1"
+
+  ---
+
+  ## SLIDE 7 — COST ARCHITECTURE
+
+  **Layout**: Tabela de custos (esquerda, 55%) + card ROI (direita, 45%).
+
+  **Titulo do slide**: "Custo vs Retorno — Infrastructure as Value" (36pt Bold)
+
+  **Tabela de Custos (lado esquerdo)**:
+  Header: "Cenarios de Custo Mensal (OCI)"
+
+  | Cenario | Descricao | Custo/Mes |
+  |---------|-----------|-----------|
+  | Parado | Recursos inativos (storage only) | R$ 33 |
+  | 1 Execucao | Pipeline completo mensal | R$ 121 |
+  | Desenvolvimento | Desenvolvimento ativo diario | R$ 248 |
+  | Producao | Execucao diaria automatizada | R$ 908 |
+
+  Detalhamento:
+  | Recurso | Custo |
+  |---------|-------|
+  | VM Orchestrator (E3.Flex 4 OCPU / 64 GB) | ~R$ 120/mes |
+  | Object Storage (4 buckets, ~10 GB) | ~R$ 5/mes |
+  | ADW | Always Free (R$ 0) |
+  | Data Catalog | Always Free (R$ 0) |
+  | Networking (VCN + Subnet) | ~R$ 43/mes |
+  | **Total** | **~R$ 168/mes** |
+
+  **Card ROI (lado direito)** — Card hero com glow verde:
+  - Label: "RETORNO SOBRE INVESTIMENTO"
+  - Hero Number: "< R$ 170/mes" (72pt ExtraBold, #00FF88)
+  - Comparativo visual:
+    - Barra vermelha pequena: "Custo anual: R$ 2.016"
+    - Barra verde: "Perdas brutas evitadas (cutoff 700): R$ 22.6M"
+    - Barra laranja: "Receita perdida (rejeicao bons): R$ 56.9M"
+  - Texto: "Economia liquida depende do cutoff: +R$1.7M (300) | ~0 (400) | -R$34M (700)"
+  - Badge: "Decisao de negocio: cutoff define trade-off"
+
+  **Footnote**: "Fonte: Precos OCI sa-saopaulo-1 (marco 2026) | ADW e Data Catalog Always Free"
+
+  ---
+
+  ## SLIDE 8 — FEATURE FUNNEL
+
+  **Layout**: Funil visual (esquerda, 55%) + composicao por book (direita, 45%).
+
+  **Titulo do slide**: "Selecao de Features — Funil 5 Estagios" (36pt Bold)
+
+  **Funil (lado esquerdo)**:
+  Visualizacao em formato de funil, cada estagio mais estreito:
+
+  Estagio 0 — Entrada:
+  - "402 features (consolidado)" — barra mais larga, cinza claro
+  - Nota: "Excluidas 45 non-numeric → 357 candidatas"
+
+  Estagio 1 — Information Value (IV > 0.02):
+  - "357 → 185" — barra cyan
+  - Label: "-48.3%"
+
+  Estagio 2 — L1 Regularization (coefs != 0):
+  - "185 → 162" — barra cyan medio
+  - Label: "-12.4%"
+
+  Estagio 3 — Correlation Filter (|r| < 0.95):
+  - "162 → 114" — barra cyan escuro
+  - Label: "-29.6%"
+
+  Estagio 4 — PSI Stability (PSI < 0.25):
+  - "114 → 110" — barra verde
+  - Label: "-3.5%"
+
+  Estagio 5 — Anti-leakage:
+  - "110 → 110" — barra verde intensa
+  - Label: "0 removidas"
+
+  Resultado final: "110 FEATURES SELECIONADAS" (badge verde com glow)
+
+  **Composicao por Book (lado direito)**:
+  3 cards empilhados mostrando a composicao das 110 features:
+
+  Card FAT (Faturamento):
+  - "41 features" (28pt Bold, #00F0FF)
+  - "37.3% do total"
+  - Barra proporcional cyan
+
+  Card REC (Recarga):
+  - "34 features" (28pt Bold, #00FF88)
+  - "30.9% do total"
+  - Barra proporcional verde
+
+  Card PAG (Pagamento):
+  - "25 features" (28pt Bold, #FFD600)
+  - "22.7% do total"
+  - Barra proporcional amarela
+
+  Card Outros (CADASTRO + TELCO + TARGET + vars):
+  - "10 features" (28pt Bold, #8A8AAA)
+  - "9.1% do total"
+  - Barra proporcional cinza
+
+  **Footnote**: "Fonte: funnel_summary.json | Feature counts: FAT=41, REC=34, PAG=25, outros=10"
+
+  ---
+
+  ## SLIDE 9 — MODEL COMPARISON
+
+  **Layout**: Tabela comparativa (topo, 55%) + champion highlight (embaixo, 45%).
+
+  **Titulo do slide**: "Comparativo de Modelos — Champion Selection" (36pt Bold)
+
+  **Tabela de Modelos (area principal)**:
+  Tabela com 8 linhas (5 modelos + 3 ensembles), destaque na linha champion:
+
+  | Modelo | KS OOT | AUC OOT | Gini OOT | PSI | GAP* | Status |
+  |--------|--------|---------|----------|-----|------|--------|
+  | LR L1 v2 | 0.3314 | 0.7231 | 44.62% | 0.001361 | 5.7% | PASS |
+  | LightGBM v2 | 0.3494 | 0.7365 | 47.29% | 0.000933 | 12.0% | PASS |
+  | XGBoost | 0.3494 | 0.7362 | 47.24% | 0.000817 | 14.5% | PASS |
+  | CatBoost | 0.3482 | 0.7354 | 47.08% | 0.000563 | 7.0% | PASS |
+  | Random Forest | 0.3370 | 0.7278 | 45.56% | 0.001209 | 9.3% | PASS |
+  | **Top-3 Average** | **0.3501** | **0.7368** | **47.35%** | **0.000754** | **11.2%** | **CHAMPION** |
+  | Blend (SLSQP) | 0.3501 | 0.7368 | 47.35% | 0.000754 | 11.2% | = Average |
+  | ~~Stacking~~ | ~~0.3129~~ | ~~0.7072~~ | ~~41.44%~~ | ~~0.001379~~ | ~~31.6%~~ | ~~REJECTED~~ |
+
+  *GAP = (KS_train - KS_oot) / KS_train × 100 — mede overfitting
+
+  Formatacao da tabela:
+  - Linha Champion: fundo rgba(0, 255, 136, 0.1), borda esquerda 3px #00FF88
+  - Linha Stacking: texto riscado, fundo rgba(255, 51, 102, 0.05), tag "REJECTED" em vermelho
+  - Header: fundo #1A1A2E, texto branco
+  - Alternancia de cores nas linhas
+
+  **Card Champion (embaixo da tabela)**:
+  - "CHAMPION: Top-3 Average (LightGBM + XGBoost + CatBoost)" (24pt Bold)
+  - 3 mini KPIs inline: KS=0.3501 | AUC=0.7368 | Gini=47.35%
+  - Badge: "QG-05 PASSED" (verde)
+  - Nota: "Blend (SLSQP) otimizador convergiu para pesos iguais (1/3 cada) = identico ao Average"
+
+  **Footnote**: "Fonte: training_results_20260311_015100.json + ensemble_results.json | OOT: SAFRAs 202502-202503"
+
+  ---
+
+  ## SLIDE 10 — MONITORING
+
+  **Layout**: Score PSI timeline (topo) + Feature drift summary (centro) + Agreement (embaixo).
+
+  **Titulo do slide**: "Monitoring — Estabilidade do Modelo" (36pt Bold)
+
+  **Secao 1 — Score PSI por SAFRA (topo, 40% do slide)**:
+  Grafico de barras horizontais ou mini-cards em linha:
+
+  | SAFRA | PSI | Status |
+  |-------|-----|--------|
+  | 202410 | 0.0038 | GREEN |
+  | 202411 | 0.0005 | GREEN |
+  | 202412 | 0.0002 | GREEN |
+  | 202501 | 0.0021 | GREEN |
+  | 202502 | 0.0010 | GREEN |
+  | 202503 | 0.0040 | GREEN |
+
+  Cada barra/card com cor verde (#00FF88), badge "GREEN".
+  Titulo da secao: "Score PSI — Todas as SAFRAs GREEN" (com checkmark verde)
+  Threshold line: PSI < 0.10 = GREEN, 0.10-0.25 = YELLOW, > 0.25 = RED
+
+  **Secao 2 — Feature Drift (centro, 35% do slide)**:
+  Card resumo:
+  - "13 features YELLOW" (cor #FFD600) — "PSI entre 0.10 e 0.18"
+  - "0 features RED" (cor #00FF88) — "Nenhuma feature com PSI > 0.25"
+  - "97 features GREEN" — estavel
+  - Overall Status: "WARNING" (badge amarelo) — "Monitorar features com drift moderado"
+  - Top 3 features com drift: FAT_QTD_FATURAS (0.181), FAT_INDICE_CONCENTRACAO_FAT (0.161), PAG_VLR_ALOCACAO_PYM (0.162)
+
+  **Secao 3 — Model Agreement (embaixo, 25% do slide)**:
+  3 mini-cards inline:
+  - "LGBM vs XGB": "90.6%" (verde)
+  - "LGBM vs CB": "90.7%" (verde)
+  - "XGB vs CB": "92.2%" (verde)
+  Titulo: "Agreement entre modelos base > 90%"
+
+  **Footnote**: "Fonte: monitoring_report.json | Status geral: WARNING (features com drift moderado, scores estaveis)"
+
+slides:
+  - number: 6
+    title: "Architecture Overview"
+    data_sources:
+      - "Pipeline times: Bronze 22min, Silver 25.5min, Gold 4h58, ML 58min"
+      - "Tables: 19 Bronze, 19 Silver, 3 books + consolidado Gold"
+  - number: 7
+    title: "Cost Architecture"
+    data_sources:
+      - "business-value-analysis.md: custos OCI, ROI 11000x"
+  - number: 8
+    title: "Feature Funnel"
+    data_sources:
+      - "funnel_summary.json: 357→185→162→114→110→110"
+      - "training_results_20260311_015100.json: feature_names (110 features)"
+  - number: 9
+    title: "Model Comparison"
+    data_sources:
+      - "training_results_20260311_015100.json: model_metrics, model_psi"
+      - "ensemble_results.json: strategies (average, blend, stacking)"
+  - number: 10
+    title: "Monitoring"
+    data_sources:
+      - "monitoring_report.json: score_psi, feature_drift, base_model_agreement"
