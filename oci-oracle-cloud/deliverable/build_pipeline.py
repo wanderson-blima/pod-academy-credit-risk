@@ -254,14 +254,22 @@ def _load_raw_models(artifacts, model_selection):
 
 
 def _compute_train_medians(data_path, features):
-    """Compute training medians from parquet data."""
+    """Compute training medians from parquet data.
+
+    Mirrors train_credit_risk.py: only rows with non-null FPD from training
+    SAFRAs are used, matching the SimpleImputer fit population exactly.
+    """
     print(f"\n[MEDIANS] Computing from {data_path}")
-    df = pd.read_parquet(data_path, columns=["SAFRA"] + [f for f in features if f != "SAFRA"])
+    target_col = "FPD"
+    load_cols = ["SAFRA", target_col] + [f for f in features if f not in ("SAFRA", target_col)]
+    df = pd.read_parquet(data_path, columns=load_cols)
     print(f"  Total: {len(df):,} rows")
 
     train_safras = [202410, 202411, 202412, 202501]
-    df_train = df[df["SAFRA"].isin(train_safras)]
-    print(f"  Train rows (SAFRAs {train_safras}): {len(df_train):,}")
+    df_train = df[(df["SAFRA"].isin(train_safras)) & (df[target_col].notna())].copy()
+    n_total_train = df["SAFRA"].isin(train_safras).sum()
+    n_dropped = n_total_train - len(df_train)
+    print(f"  Train rows (SAFRAs {train_safras}): {len(df_train):,} (dropped {n_dropped:,} NaN FPD)")
     del df
 
     train_medians = {}

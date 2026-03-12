@@ -28,10 +28,8 @@ deliverable/
 │   ├── pipeline_lgbm_v2.pkl            #   LightGBM v2 (HPO) — 7.4 MB
 │   ├── pipeline_xgboost.pkl            #   XGBoost (HPO) — 8.7 MB
 │   ├── pipeline_catboost.pkl           #   CatBoost (HPO) — 0.8 MB
-│   ├── pipeline_rf.pkl.gz              #   Random Forest (comprimido) — 56 MB
+│   ├── pipeline_rf.pkl.gz              #   Random Forest (comprimido) — 57 MB
 │   └── pipeline_lr_l1_v2.pkl           #   LR L1 v2 — 16 KB
-├── config/
-│   └── selected_features.json          # 110 features selecionadas
 ├── data/
 │   └── clientes_consolidado.parquet    # 3.9M registros (110 features + ID + FPD)
 └── artifacts/                          # Metricas, plots e artefatos do pipeline
@@ -48,8 +46,8 @@ deliverable/
     ├── swap_analysis/
     │   └── swap_summary.json           #   Analise de swap por cutoff
     ├── plots/                          #   16 visualizacoes PNG
+    ├── selected_features.json          #   110 features selecionadas
     ├── funnel_summary.json             #   Funil de feature selection
-    ├── selected_features.json          #   110 features (copia)
     └── data_quality_report.json        #   Validacao de qualidade
 ```
 
@@ -60,7 +58,7 @@ Cada PKL e um `ScoringPipeline` auto-contido — basta `pipeline.score(df)` para
 Todos os 6 PKLs no `models/` sao `ScoringPipeline` — encapsulam **tudo** necessario para scoring:
 
 1. **110 features** selecionadas (lista embutida)
-2. **Medianas do treino** (SAFRAs 202410-202501) para imputacao de NaN
+2. **Medianas do treino** (1,822,251 rows rotulados, SAFRAs 202410-202501, FPD != NaN) para imputacao — identicas ao `SimpleImputer` do treinamento
 3. **Modelo** (ensemble ou individual)
 4. **Conversao de score** (0-1000) e classificacao de risco
 5. **Metadata** com metricas do modelo
@@ -135,7 +133,7 @@ python scoring.py --data-path /caminho/para/dados.parquet
 | Parametro | Obrigatorio | Default | Descricao |
 |-----------|-------------|---------|-----------|
 | `--data-path` | Sim | — | Caminho para parquet (arquivo ou diretorio) |
-| `--artifacts-path` | Nao | `artifacts` | Diretorio com `models/` e `config/` |
+| `--artifacts-path` | Nao | `artifacts` | Diretorio com `models/` e metricas |
 | `--output-path` | Nao | `output` | Diretorio para salvar resultados |
 
 ## Outputs
@@ -215,6 +213,6 @@ O notebook resolve automaticamente a pasta `artifacts/` local (dentro de `delive
 | **Top 3 (Champion)** | **0.35005** | **0.73677** | **47.35%** | +0.045 | **16.9 MB** |
 | All 5 | 0.34772 | 0.73502 | 47.00% | +0.037 | 148.5 MB |
 
-**Treino**: SAFRAs 202410-202501 | **OOT**: SAFRAs 202502-202503
+**Treino**: SAFRAs 202410-202501 (1,822,251 rotulados) | **OOT**: SAFRAs 202502-202503 (874,370 rotulados, FPD != NaN)
 
 Top 3 (LightGBM + XGBoost + CatBoost) selecionado: melhor KS/AUC OOT, 89% menor PKL. LR L1 e Random Forest removidos por pior performance individual — RF sozinho responsavel por 93% do tamanho do PKL. Ver `docs/model/ensemble-selection.md`.
