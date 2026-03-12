@@ -11,17 +11,23 @@ Plataforma completa de modelagem de risco de credito em OCI, com pipeline Medall
 
 ## Impacto Financeiro
 
+| Cenario | Cutoff | Economia Bruta | Receita Perdida | **Economia Liquida** | FPD Aprov. | Aprovados |
+|---------|--------|----------------|-----------------|----------------------|------------|-----------|
+| **Agressivo** | 300 | R$ 4,92M | R$ 3,22M | **+R$ 1,70M** | 18,4% | 93,3% |
+| **Moderado** | 400 | R$ 9,99M | R$ 10,04M | **~Breakeven** | 15,6% | 83,5% |
+| **Conservador** | 700 | R$ 22,61M | R$ 54,56M | **-R$ 31,95M** | 7,2% | 36,3% |
+
 | Indicador | Valor |
 |-----------|-------|
-| **Economia anual estimada** | **R$ 22,9M** (cutoff 700) |
-| Reducao de FPD | 21,3% → 6,9% (-68%) |
+| Perdas brutas evitadas (cutoff 700) | R$ 22,6M |
+| Reducao de FPD (cutoff 700) | 21,3% → 7,2% (-66%) |
 | Base scorada | 3.900.378 clientes |
 | Ensemble champion | Top-3 Average (KS=0.3501, AUC=0.7368, Gini=47.35%) |
 | Precision (cutoff 700) | 93,13% |
 | Specificity (cutoff 700) | 88,99% |
-| ROI vs custo OCI | > 11.000x (infra ~R$ 168/mes) |
+| Custo infra OCI | ~R$ 168/mes |
 
-> O modelo reduz a inadimplencia em 68%, evitando ~503 mil defaults em 6 SAFRAs. Detalhes completos na [Analise de Valor Financeiro](docs/model/business-value-analysis.md).
+> O modelo evita ate ~503 mil defaults (cutoff 700), porem a economia liquida depende do trade-off entre perdas evitadas e receita perdida por rejeicao de bons clientes. O cutoff ideal e uma **decisao de negocio**. Detalhes em [Analise de Valor Financeiro](docs/model/business-value-analysis.md).
 
 ---
 

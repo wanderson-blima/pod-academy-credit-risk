@@ -9,7 +9,7 @@
 
 ## Acesso
 
-**URL**: https://G95D3985BD0D2FD-PODACADEMY.adb.sa-saopaulo-1.oraclecloudapps.com/ords/mlmonitor/dashboard/
+**URL**: https://G95D3985BD0D2FD-PODACADEMY2.adb.sa-saopaulo-1.oraclecloudapps.com/ords/mlmonitor/dashboard/
 
 Acesso publico, sem autenticacao. Dados carregados em tempo real do ADW via ORDS REST.
 
@@ -445,7 +445,7 @@ python /tmp/gen_seed.py
 
 # 4. Executar seed no ADW via ORDS
 curl -X POST \
-  "https://G95D3985BD0D2FD-PODACADEMY.adb.sa-saopaulo-1.oraclecloudapps.com/ords/mlmonitor/_/sql" \
+  "https://G95D3985BD0D2FD-PODACADEMY2.adb.sa-saopaulo-1.oraclecloudapps.com/ords/mlmonitor/_/sql" \
   -u "MLMONITOR:CreditRisk2026#ML" \
   -H "Content-Type: application/sql" \
   -d @03_seed_data.sql

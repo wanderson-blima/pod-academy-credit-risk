@@ -8,15 +8,24 @@
 
 ## 1. Resumo Executivo
 
-> **R$ 22,6 milhoes de economia anual estimada** ao aplicar o modelo de credit risk com cutoff 700, reduzindo a taxa de FPD de 21,3% para 7,2% na populacao aprovada.
+> O modelo de credit risk permite reduzir a taxa de FPD de 21,3% para 7,2%–18,4% dependendo do cutoff aplicado, evitando ate **R$ 22,6M em perdas brutas** (cutoff 700). Porem, a **economia liquida** depende do trade-off entre perdas evitadas e receita perdida por rejeicao de bons clientes. O cutoff ideal e uma **decisao de negocio** que depende da estrategia comercial da operadora.
+
+| Cenario | Cutoff | Economia Bruta | Receita Perdida | **Economia Liquida** | FPD Aprov. |
+|---------|--------|----------------|-----------------|----------------------|------------|
+| **Agressivo** | 300 | R$ 4,92M | R$ 3,22M | **+R$ 1,70M** | 18,4% |
+| **Equilibrado** | 400 | R$ 9,99M | R$ 10,04M | **-R$ 0,05M** | 15,6% |
+| **Conservador** | 700 | R$ 22,61M | R$ 54,56M | **-R$ 31,95M** | 7,2% |
 
 | Indicador | Valor |
 |-----------|-------|
-| Economia anual estimada (cutoff 700) | **R$ 22,6M** |
-| Reducao de FPD | 21,3% → 7,2% (-66%) |
-| ROI vs custo OCI | > 11.000x |
+| Perdas brutas evitadas (cutoff 700) | R$ 22,6M |
+| Receita perdida por rejeicao (cutoff 700) | R$ 54,6M |
+| Economia liquida (cutoff 700) | **-R$ 31,95M** |
+| Reducao de FPD | 21,3% → 7,2% (-66%) no cutoff 700 |
 | Base scorada | 3,9M clientes |
 | Modelo champion | Ensemble Top-3 (KS=0.3501, AUC=0.7368) |
+
+> **Nota**: A economia bruta considera apenas as perdas evitadas (defaults barrados × LGD). A economia liquida desconta a receita perdida por rejeicao de bons clientes (swap-in × LGD proxy). O cutoff 300 e o unico com economia liquida positiva; cutoffs mais altos protegem mais contra inadimplencia mas rejeitam volume significativo de bons pagadores.
 
 ---
 
@@ -63,13 +72,15 @@ Sem nenhum modelo de credit risk aplicado, todos os clientes sao aprovados:
 
 A tabela abaixo mostra o impacto financeiro de cada cutoff de score, baseado nos dados reais do `swap_summary.json`:
 
-| Cutoff | Aprovados | % Aprovados | FPD Aprovados | Defaults Evitados | Perda Residual | Economia vs Baseline |
-|--------|-----------|-------------|---------------|-------------------|----------------|---------------------|
+| Cutoff | Aprovados | % Aprovados | FPD Aprovados | Defaults Evitados | Perda Residual | Economia Bruta |
+|--------|-----------|-------------|---------------|-------------------|----------------|----------------|
 | 300 | 2.514.949 | 93,3% | 18,4% | 110.041 | R$ 20,83M | **R$ 4,92M** |
 | 400 | 2.250.450 | 83,5% | 15,6% | 222.399 | R$ 15,76M | **R$ 9,99M** |
 | 500 | 1.877.480 | 69,6% | 12,5% | 339.428 | R$ 10,52M | **R$ 15,23M** |
 | 600 | 1.450.020 | 53,8% | 9,7% | 433.173 | R$ 6,31M | **R$ 19,44M** |
 | **700** | **977.829** | **36,3%** | **7,2%** | **503.715** | **R$ 3,14M** | **R$ 22,61M** |
+
+> **Importante**: Os valores acima representam a **economia bruta** (perdas evitadas). Para a economia liquida, descontar a receita perdida por rejeicao de bons clientes — ver Secao 7.
 
 ### Calculo detalhado (cutoff 700)
 
@@ -95,16 +106,16 @@ Economia            = R$ 25,75M - R$ 3,14M = R$ 22,61M
 | Networking | VCN + Subnet | ~R$ 43 |
 | **Total** | | **~R$ 168/mes** |
 
-### ROI
+### ROI (sobre perdas brutas evitadas)
 
 | Metrica | Valor |
 |---------|-------|
 | Custo anual OCI | ~R$ 2.016 |
-| Economia anual (cutoff 700) | R$ 22,61M |
-| **ROI** | **> 11.000x** |
+| Perdas brutas evitadas (cutoff 700) | R$ 22,61M |
+| **ROI bruto** | **> 11.000x** |
 | Payback | < 1 dia |
 
-> Mesmo considerando custos de equipe, desenvolvimento e manutencao, o ROI permanece massivamente positivo. A cada R$ 1 investido em infra, o modelo evita R$ 11.000 em perdas.
+> **Nota**: O ROI acima e calculado sobre as **perdas brutas evitadas** vs custo de infraestrutura. Nao inclui a receita perdida por rejeicao de bons clientes (ver Secao 7). O custo-beneficio real depende da estrategia de cutoff e de acoes de mitigacao para clientes rejeitados (re-ofertas, produtos alternativos).
 
 ---
 
@@ -122,20 +133,29 @@ Ao rejeitar clientes com score baixo, a operadora tambem perde receita de bons c
 
 > **Nota importante**: A "Receita Perdida Estimada" assume que TODOS os bons rejeitados gerariam receita integral. Na pratica, muitos desses clientes podem ser reconquistados com ofertas diferenciadas ou limites de credito condicionais. O cutoff ideal depende da estrategia de negocio da operadora — o modelo fornece a **informacao** para essa decisao.
 
-### Cutoff recomendado: 700
+### Cenarios de Cutoff — Decisao de Negocio
 
-O cutoff 700 e o recomendado pelo modelo (`swap_summary.json`) porque:
-1. **FPD cai 66%** (21,3% → 7,2%) — reducao drastica de inadimplencia
-2. **Swap-out baixo**: apenas 7,2% dos aprovados sao maus pagadores
-3. Clientes rejeitados podem receber ofertas alternativas (pre-pago, limites menores)
+A escolha do cutoff e uma **decisao estrategica** que depende do apetite de risco, margem unitaria e metas comerciais da operadora:
+
+| Cenario | Cutoff | Economia Bruta | Receita Perdida | Economia Liquida | FPD Aprov. | Aprovados |
+|---------|--------|----------------|-----------------|------------------|------------|-----------|
+| **Agressivo** | 300 | R$ 4,92M | R$ 3,22M | **+R$ 1,70M** | 18,4% | 93,3% |
+| **Moderado** | 400 | R$ 9,99M | R$ 10,04M | **~Breakeven** | 15,6% | 83,5% |
+| **Conservador** | 700 | R$ 22,61M | R$ 54,56M | **-R$ 31,95M** | 7,2% | 36,3% |
+
+1. **Cutoff 300 (Agressivo)**: Unico cenario com economia liquida positiva (+R$ 1,70M). Aprova 93% da base mas mantem FPD em 18,4% — reducao de 14% vs baseline
+2. **Cutoff 400 (Moderado)**: Ponto de breakeven. Aprova 83% da base com FPD de 15,6% — reducao de 27% vs baseline
+3. **Cutoff 700 (Conservador)**: Maximiza protecao contra inadimplencia (FPD 7,2%, -66%), porem a receita perdida por rejeicao de bons clientes (R$ 54,6M) excede significativamente as perdas evitadas (R$ 22,6M)
+
+> **Recomendacao**: O modelo fornece a **informacao** para a decisao. Clientes rejeitados nao sao perdidos — podem receber ofertas alternativas (pre-pago, limites condicionais, re-avaliacao periodica). A mitigacao da receita perdida depende dessas acoes complementares
 
 ---
 
 ## 8. Analise de Sensibilidade ao LGD
 
-A economia varia conforme a premissa de perda (LGD). Sensibilidade para cutoff 700:
+A economia **bruta** varia conforme a premissa de perda (LGD). Sensibilidade para cutoff 700:
 
-| Premissa LGD | Valor | Perda Baseline | Economia (cutoff 700) |
+| Premissa LGD | Valor | Perda Baseline | Economia Bruta (cutoff 700) |
 |--------------|-------|----------------|----------------------|
 | Percentil 25 | R$ 19,90 | R$ 11,41M | R$ 10,02M |
 | **Mediana (p50)** | **R$ 44,89** | **R$ 25,75M** | **R$ 22,61M** |
@@ -144,7 +164,7 @@ A economia varia conforme a premissa de perda (LGD). Sensibilidade para cutoff 7
 
 *Percentil 75 estimado com base na distribuicao dos dados.
 
-> Em todos os cenarios, a economia e substancial. Mesmo no cenario mais conservador (p25), o modelo gera R$ 10M+ de economia.
+> Em todos os cenarios de LGD, as perdas brutas evitadas sao substanciais. Porem, a economia liquida (descontando receita perdida) depende do cutoff — ver Secao 7 para a analise completa de trade-off.
 
 ---
 

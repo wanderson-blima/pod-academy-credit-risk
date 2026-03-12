@@ -109,3 +109,8 @@ oci/artifacts/ensemble/ensemble_model.pkl
 oci/artifacts/ensemble/models_v2/RandomForest.pkl
 *.parquet
 _legacy/
+
+# ==========================================
+# Local scripts (diagram generator, presentation specs)
+# ==========================================
+/scripts/

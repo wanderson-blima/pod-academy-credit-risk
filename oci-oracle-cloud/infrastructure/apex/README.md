@@ -14,7 +14,7 @@ ADW (Always Free)
     └── App: Credit Risk ML Dashboard (Chart.js)
 ```
 
-**URL do Dashboard**: `https://G95D3985BD0D2FD-PODACADEMY.adb.sa-saopaulo-1.oraclecloudapps.com/ords/mlmonitor/dashboard/`
+**URL do Dashboard**: `https://G95D3985BD0D2FD-PODACADEMY2.adb.sa-saopaulo-1.oraclecloudapps.com/ords/mlmonitor/dashboard/`
 
 ## Pre-requisitos
 
@@ -58,7 +58,7 @@ ADW (Always Free)
 ```bash
 # Usar o endpoint ORDS para executar SQL remotamente
 curl -u "MLMONITOR:CreditRisk2026#ML" \
-  -X POST "https://G95D3985BD0D2FD-PODACADEMY.adb.sa-saopaulo-1.oraclecloudapps.com/ords/mlmonitor/_/sql" \
+  -X POST "https://G95D3985BD0D2FD-PODACADEMY2.adb.sa-saopaulo-1.oraclecloudapps.com/ords/mlmonitor/_/sql" \
   -H "Content-Type: application/sql" \
   --data-binary @02_create_tables.sql
 ```

@@ -71,11 +71,17 @@ Desenvolvido em parceria com **Claro** e **Oracle**, o projeto apresenta **duas 
 
 ### Impacto Financeiro
 
+| Cenario | Cutoff | Economia Bruta | Receita Perdida | **Economia Liquida** |
+|---------|--------|----------------|-----------------|----------------------|
+| Agressivo | 300 | R$ 4,92M | R$ 3,22M | **+R$ 1,70M** |
+| Moderado | 400 | R$ 9,99M | R$ 10,04M | **~Breakeven** |
+| Conservador | 700 | R$ 22,61M | R$ 54,56M | **-R$ 31,95M** |
+
 | Indicador | Valor |
 |-----------|-------|
-| **Economia de perda (cutoff 700)** | **R$ 22,9M** |
-| Reducao de FPD | 21,3% → 6,9% (-68%) |
-| ROI vs infra OCI | > 11.000x (~R$ 168/mes) |
+| Perdas brutas evitadas (cutoff 700) | R$ 22,6M |
+| Reducao de FPD (cutoff 700) | 21,3% → 7,2% (-66%) |
+| Custo infra OCI | ~R$ 168/mes |
 | Gain top 10% | 26,4% dos inadimplentes (lift 2,64x) |
 | Gain top 30% | 58,7% dos inadimplentes |
 

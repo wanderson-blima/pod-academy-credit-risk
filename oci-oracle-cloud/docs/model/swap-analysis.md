@@ -115,29 +115,31 @@ Para clientes sem FPD observado (1.203.757 registros):
 
 ---
 
-## 6. Recomendacao Operacional
+## 6. Cenarios Operacionais — Decisao de Negocio
 
-**Cutoff recomendado: 700** (score >= 700 para aprovacao)
+A escolha do cutoff e uma **decisao estrategica** que depende do apetite de risco, margem unitaria e metas comerciais. A tabela abaixo apresenta tres cenarios com o impacto financeiro completo (economia bruta vs receita perdida):
 
-Justificativa:
-- Aprova **36.3%** da populacao (977.829 clientes)
-- Taxa FPD entre aprovados: **7.15%** (versus 21.27% da populacao geral)
-- Swap-out: apenas **69.915** clientes maus aprovados (7.2% dos aprovados)
-- FPD entre aprovados <= 2x a taxa geral (critério de qualidade)
+| Cenario | Cutoff | Aprovados | FPD Aprov. | Swap-Out | Economia Bruta | Receita Perdida | **Economia Liquida** |
+|---------|--------|-----------|------------|----------|----------------|-----------------|----------------------|
+| **Agressivo** | 300 | 93.3% | 18.43% | 463K | R$ 4,92M | R$ 3,22M | **+R$ 1,70M** |
+| **Moderado** | 400 | 83.5% | 15.60% | 351K | R$ 9,99M | R$ 10,04M | **~Breakeven** |
+| **Conservador** | 700 | 36.3% | 7.15% | 70K | R$ 22,61M | R$ 54,56M | **-R$ 31,95M** |
 
-### Cenarios alternativos por apetite de risco
+### Analise por cenario
 
-| Perfil | Cutoff | Aprovados | FPD Aprov. | Uso |
-|--------|--------|-----------|------------|-----|
-| **Conservador** | 700 | 36.3% | 7.15% | Pos-pago, alto ARPU |
-| **Moderado** | 600 | 53.8% | 9.69% | Controle, pre-pago alto |
-| **Agressivo** | 500 | 69.6% | 12.47% | Pre-pago, baixo CAC |
+1. **Cutoff 300 (Agressivo)**: Unico cenario com economia liquida positiva. Maximiza volume (93%) com reducao moderada de FPD (18,4% vs 21,3%). Ideal para pre-pago ou operacoes com baixo CAC
+2. **Cutoff 400 (Moderado)**: Ponto de breakeven — economia bruta e receita perdida se equilibram. Aprova 83% com FPD de 15,6%. Indicado como ponto de partida para testes
+3. **Cutoff 700 (Conservador)**: Maximiza protecao contra inadimplencia (FPD 7,15%, reducao de 66%). Porem, rejeita 64% da base, gerando perda de receita de R$ 54,6M que excede as perdas evitadas (R$ 22,6M). Indicado apenas para pos-pago de alto ARPU onde a perda por inadimplente e significativamente maior que o LGD proxy usado (R$ 44,89)
 
-A decisao final de cutoff deve considerar:
+> **Nota**: A receita perdida assume que bons clientes rejeitados (swap-in) gerariam receita integral. Na pratica, parte desses clientes pode ser reconquistada com ofertas alternativas (pre-pago, limites condicionais), mitigando a perda. A decisao final e da operadora.
+
+### Fatores para a decisao
+
 1. Margem unitaria por produto (pre-pago vs pos-pago)
 2. Custo de aquisicao de cliente (CAC)
-3. Perda media por inadimplencia (LGD)
+3. Perda real por inadimplencia (LGD — o proxy usado e R$ 44,89)
 4. Metas comerciais de volume
+5. Capacidade de re-oferta a clientes rejeitados
 
 ---
 

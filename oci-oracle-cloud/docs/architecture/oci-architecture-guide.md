@@ -41,7 +41,7 @@ A plataforma de risco de credito foi implantada na Oracle Cloud Infrastructure (
 ### 4. Autonomous Data Warehouse (ADW)
 
 - **Tier**: Always Free
-- **APEX URL**: `https://G95D3985BD0D2FD-PODACADEMY.adb.sa-saopaulo-1.oraclecloudapps.com/ords/apex`
+- **APEX URL**: `https://G95D3985BD0D2FD-PODACADEMY2.adb.sa-saopaulo-1.oraclecloudapps.com/ords/apex`
 - **Funcao**: Armazenamento de metricas, dashboard de monitoramento
 
 ### 5. APEX Dashboard
@@ -390,4 +390,4 @@ terraform version
 | Compartment | `ocid1.compartment.oc1..aaaaaaaa7uh2lfpsc6qf73g7zalgbr262a2v6veb4lreykqn57gtjvoojeuq` |
 | Tenancy | `ocid1.tenancy.oc1..aaaaaaaahse5thvzinsvm7bkyrd3zravzao2i6kpfl4bfxkplbu7ppla5x5a` |
 | AD | `TjOZ:SA-SAOPAULO-1-AD-1` |
-| ADW APEX | `G95D3985BD0D2FD-PODACADEMY` |
+| ADW APEX | `G95D3985BD0D2FD-PODACADEMY2` |

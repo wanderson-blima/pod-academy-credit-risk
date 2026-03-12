@@ -247,7 +247,7 @@ oci db autonomous-database start \
 ### Acessar APEX (navegador)
 
 ```
-https://G95D3985BD0D2FD-PODACADEMY.adb.sa-saopaulo-1.oraclecloudapps.com/ords/apex
+https://G95D3985BD0D2FD-PODACADEMY2.adb.sa-saopaulo-1.oraclecloudapps.com/ords/apex
 ```
 
 **Credenciais**:

@@ -13,7 +13,7 @@ import datetime
 import requests
 
 # ---------- ADW ORDS config ----------
-ORDS_URL = "https://G95D3985BD0D2FD-PODACADEMY.adb.sa-saopaulo-1.oraclecloudapps.com/ords/mlmonitor/_/sql"
+ORDS_URL = "https://G95D3985BD0D2FD-PODACADEMY2.adb.sa-saopaulo-1.oraclecloudapps.com/ords/mlmonitor/_/sql"
 AUTH = ("MLMONITOR", "CreditRisk2026#ML")
 HEADERS = {"Content-Type": "application/sql"}
 

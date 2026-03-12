@@ -190,7 +190,7 @@ python oci/model/monitor_model.py \
 
 ### Live Dashboard
 
-**URL**: https://G95D3985BD0D2FD-PODACADEMY.adb.sa-saopaulo-1.oraclecloudapps.com/ords/mlmonitor/dashboard/
+**URL**: https://G95D3985BD0D2FD-PODACADEMY2.adb.sa-saopaulo-1.oraclecloudapps.com/ords/mlmonitor/dashboard/
 
 Dashboard dinamico servido via ORDS REST do ADW. 3 paginas:
 - **Executive Overview**: KPIs (KS, AUC, Gini, PSI) + charts de tendencia
@@ -200,7 +200,7 @@ Dashboard dinamico servido via ORDS REST do ADW. 3 paginas:
 Os dados atualizam automaticamente ao inserir novos registros nas tabelas do schema MLMONITOR.
 
 **APEX Builder** (para customizacao):
-- URL: `https://G95D3985BD0D2FD-PODACADEMY.adb.sa-saopaulo-1.oraclecloudapps.com/ords/apex`
+- URL: `https://G95D3985BD0D2FD-PODACADEMY2.adb.sa-saopaulo-1.oraclecloudapps.com/ords/apex`
 - Workspace: `MLMONITOR` | User: `DASHADMIN` | Pass: `CreditRisk2026#ML`
 
 **Nota**: O ADW precisa estar AVAILABLE para o dashboard funcionar. Para ligar: `oci db autonomous-database start --autonomous-database-id $ADW_OCID`

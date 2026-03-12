@@ -4,14 +4,14 @@
  * ============================================================================
  *
  * DEPLOYED DASHBOARD (LIVE):
- *   https://G95D3985BD0D2FD-PODACADEMY.adb.sa-saopaulo-1.oraclecloudapps.com/ords/mlmonitor/dashboard/
+ *   https://G95D3985BD0D2FD-PODACADEMY2.adb.sa-saopaulo-1.oraclecloudapps.com/ords/mlmonitor/dashboard/
  *
  *   The dashboard is served via ORDS REST from the ADW database.
  *   Source HTML: dashboard.html (self-contained, Chart.js, dark theme)
  *   Upload script: upload_dashboard.py
  *
  * APEX BUILDER ACCESS:
- *   URL:       https://G95D3985BD0D2FD-PODACADEMY.adb.sa-saopaulo-1.oraclecloudapps.com/ords/apex
+ *   URL:       https://G95D3985BD0D2FD-PODACADEMY2.adb.sa-saopaulo-1.oraclecloudapps.com/ords/apex
  *   Workspace: MLMONITOR
  *   Username:  DASHADMIN
  *   Password:  CreditRisk2026#ML
@@ -450,5 +450,5 @@ ORDER BY period;
 
 -- ============================================================================
 -- DONE! Run the application:
--- https://G95D3985BD0D2FD-PODACADEMY.adb.sa-saopaulo-1.oraclecloudapps.com/ords/r/mlmonitor/creditrisk/
+-- https://G95D3985BD0D2FD-PODACADEMY2.adb.sa-saopaulo-1.oraclecloudapps.com/ords/r/mlmonitor/creditrisk/
 -- ============================================================================

@@ -251,7 +251,7 @@ Os clientes rejeitados pelo modelo (score < cutoff) **nao precisam ser descartad
 3. **Trade-off consciente**: O cutoff deve ser escolhido conforme o produto — 700 para pos-pago (precision 93%), 600 para controle (equilibrio), 500 para controle basico (volume)
 4. **Reducao significativa**: Em qualquer cenario, o modelo reduz FPD em 43% a 68% vs baseline
 5. **Lift funcional**: Top 30% de piores scores concentra 58,7% dos inadimplentes — o ranking e confiavel
-6. **Economia validada**: R$ 22,9M em perdas evitadas no cutoff 700; R$ 20,0M no cutoff 600
+6. **Perdas brutas evitadas**: R$ 22,9M (cutoff 700) / R$ 20,0M (cutoff 600) — economia liquida depende do trade-off com receita perdida por rejeicao (ver `business-value-analysis.md`)
 7. **Monitoramento recomendado**: Acompanhar precision, recall e taxa FPD por SAFRA para detectar degradacao temporal. Se precision cair abaixo de 85% ou FPD entre aprovados ultrapassar 10%, reavaliar cutoff ou retreinar
 
 ---

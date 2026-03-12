@@ -9,7 +9,7 @@
 
 ## Dashboard ao Vivo
 
-> **URL**: https://G95D3985BD0D2FD-PODACADEMY.adb.sa-saopaulo-1.oraclecloudapps.com/ords/mlmonitor/dashboard/
+> **URL**: https://G95D3985BD0D2FD-PODACADEMY2.adb.sa-saopaulo-1.oraclecloudapps.com/ords/mlmonitor/dashboard/
 >
 > Dashboard dinamico servido via ORDS REST a partir do Oracle Autonomous Database.
 > Todos os dados sao carregados em tempo real das tabelas do ADW — sem valores hardcoded.
@@ -975,7 +975,7 @@ terraform apply -target=module.monitoring
 
 O dashboard foi implementado como uma aplicacao HTML servida via ORDS REST diretamente do ADW.
 
-**URL ao vivo**: https://G95D3985BD0D2FD-PODACADEMY.adb.sa-saopaulo-1.oraclecloudapps.com/ords/mlmonitor/dashboard/
+**URL ao vivo**: https://G95D3985BD0D2FD-PODACADEMY2.adb.sa-saopaulo-1.oraclecloudapps.com/ords/mlmonitor/dashboard/
 
 Para recriar o dashboard do zero:
 
